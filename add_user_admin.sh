@@ -4,23 +4,25 @@
 fonc_add_user_admin()
     {
     # choix de l'ulisateur:
+    echo "Voici la liste des utilisateurs : "   
+    awk -F':' '$3>=1000 { print $1 }' /etc/passwd  
     read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
 
     # l'utilisateur existe ?
     if 
-    cat /etc/passwd | grep $useraddadmin
+    cat /etc/passwd | grep -w "$useraddadmin"
 
     # si il existe on ajoute au groupe sudo
     then
-    usermod -aG sudo $useraddadmin
+    usermod -aG sudo "$useraddadmin"
     # On verfie si l'utilisateur a bien été ajouté
 
         if
-        cat /etc/group | grep sudo | grep $useraddadmin
+        cat /etc/group | grep sudo | grep "$useraddadmin"
         then
-        echo "l'utililateur a bien été ajouté au groupe sudo"
-        echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo ? "
-        read -p "tape o pour oui ou autre chose pour non " choix
+        echo "l'utililateur $useraddadmin a bien été ajouté au groupe sudo"
+        echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) ? "
+        read -p "tapez o pour oui ou autre chose pour non " choix
         
             if [ $choix = "o" ]
             # si oui on relance la fonction
@@ -117,22 +119,22 @@ fonc_exit_group()
 
     {
 
-    echo " Quel utilisateur souhaitez-vous sortir du groupe "
+    echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
     read userexitgroup
     # on verifie si l'utilisateur existe
     if 
-    cat /etc/passwd | grep -w $userexitgroup
+    cat /etc/passwd | grep -w "$userexitgroup"
     # si il existe on demande de quel groupe l'enlever
     then
     echo "C'est d'accord pour cet utilisateur "
-    echo " Voici le ou les groupes dans lequel $userexitgroup est présent "
-    cat /etc/group | grep ":$userexitgroup"
-    echo " Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
+    echo "Voici le ou les groupes dans lequel $userexitgroup est présent "
+    cat /etc/group | grep "[:,]$userexitgroup"
+    echo "Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
     read exitgroup 
         #si le groupe selectionné est valide on sort l'utilisateur
-        if cat /etc/group | grep $exitgroup && cat /etc/group | grep $userexitgroup 
+        if cat /etc/group | grep "$exitgroup" && cat /etc/group | grep "$userexitgroup"
         then 
-        usermod -rG $exitgroup $userexitgroup
+        usermod -rG "$exitgroup" "$userexitgroup"
         echo " l'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
         echo " souhaitez vous choisir un autre utilisateur ? "
         read -p "tape o pour oui ou autre chose non" choix
@@ -176,17 +178,20 @@ fonc_exit_menu()
 
 fonc_menu_group()
     {
-    echo "bonjour que voulez vous faire"
+    echo "###############################################"
+    echo "#               MENU GROUPES                  #"
+    echo "###############################################"
+    echo "#                                             #"
+    echo "# Choisissez une action :                     #"
+    echo "# 1. Ajouter un utilisateur au groupe sudo    #"
+    echo "# 2. Ajouter un utilisateur à un groupe       #"
+    echo "# 3. Retirer un utilisateur d'un groupe       #"
+    echo "# 4. Retour au menu précédent                 #"
+    echo "###############################################"                 
     echo ""
-    echo "1) Ajouter un utilisateur au groupe sudo"
-    echo "2) Ajouter un utilisateur à un groupe"
-    echo "3) Retirer un utilisateur d'un groupe"
-    echo "4) Retour au menu précédent"
-    echo  ""
     echo -n "Votre choix (1-4): "
 
     }
-
 
 
 fonc_menu_group

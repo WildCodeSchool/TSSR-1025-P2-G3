@@ -3,6 +3,10 @@
 
 fonc_add_user_admin()
     {
+    
+    echo "###############################################"
+    echo "#    Ajouter un utilisateur au groupe admin   #"
+    echo "###############################################"
     # choix de l'ulisateur:
     echo "Voici la liste des utilisateurs : "   
     awk -F':' '$3>=1000 { print $1 }' /etc/passwd  
@@ -10,7 +14,7 @@ fonc_add_user_admin()
 
     # l'utilisateur existe ?
     if 
-    cat /etc/passwd | grep -w "$useraddadmin" > dev/null
+    cat /etc/passwd | grep -w "$useraddadmin" 
 
     # si il existe on ajoute au groupe sudo
     then
@@ -55,6 +59,9 @@ fonc_add_user_admin()
 
 fonc_add_user_group()
     {
+    echo "###############################################"
+    echo "#      Ajouter un utlisateur à un groupe      #"
+    echo "###############################################"
     # choix de l'ulisateur:
     read -p "Quel utilisateur souhaitez vous ajouter au groupe ? : " useraddgroup
     # l'utilisateur existe ?
@@ -118,7 +125,9 @@ fonc_add_user_group()
 fonc_exit_group()
 
     {
-
+    echo "###############################################"
+    echo "#    Sortir un utlisateur d'un groupe         #"
+    echo "###############################################"
     echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
     read userexitgroup
     # on verifie si l'utilisateur existe

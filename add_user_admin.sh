@@ -10,7 +10,7 @@ fonc_add_user_admin()
 
     # l'utilisateur existe ?
     if 
-    cat /etc/passwd | grep -w "$useraddadmin"
+    cat /etc/passwd | grep -w "$useraddadmin" > dev/null
 
     # si il existe on ajoute au groupe sudo
     then

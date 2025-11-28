@@ -1,6 +1,6 @@
 
 # 📜 Projet 2 : The Scripting Project
-![README IMAGE](Ressources/images/readme/readme_presentation.png)
+![README IMAGE](Ressources/images/readme/readme_presentation_rounded.png)
 ## 📑 Sommaire 
 
 - [🎯 Présentation du projet](#-présentation-du-projet)

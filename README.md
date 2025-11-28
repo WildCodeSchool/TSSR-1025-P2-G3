@@ -47,6 +47,25 @@ Ce projet consiste à développer deux scripts d'administration système permett
 | Jérôme      |  |  |
 | Pierre Jean |  |  |
 
+### Sprint 3
+
+| Membre      | Rôle | Missions |
+|-------------|------|----------|
+| Safi        |  |  |
+| Christian   |  |  |
+| Jérôme      |  |  |
+| Pierre Jean |  |  |
+
+### Sprint 4
+
+| Membre      | Rôle | Missions |
+|-------------|------|----------|
+| Safi        |  |  |
+| Christian   |  |  |
+| Jérôme      |  |  |
+| Pierre Jean |  |  |
+
+
 ---
 
 ## ⚙️ Choix techniques

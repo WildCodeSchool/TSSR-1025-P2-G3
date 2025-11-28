@@ -137,7 +137,9 @@ fonc_exit_group()
     then
     echo "C'est d'accord pour cet utilisateur "
     echo "Voici le ou les groupes dans lequel $userexitgroup est présent "
-    cat /etc/group | grep "[:,]$userexitgroup"
+    groups $userexitgroup
+    #cat /etc/group | grep "[:,]$userexitgroup"
+    #awk -F ':' '/$userexitgroup/ { print $1 }' /etc/group 
     echo "Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
     read exitgroup 
         #si le groupe selectionné est valide on sort l'utilisateur

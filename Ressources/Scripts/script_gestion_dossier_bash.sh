@@ -1,20 +1,23 @@
+#!/bin/bash
+
+
 while true;
 do
 
     ##################################### Menu Gestion Répertoire Ubuntu ####################################
     function repertoireMenu(){
 
-            echo "##################################################"
-            echo "#              Gestion Répertoires Ubuntu        #"
-            echo "##################################################"
-            echo "#                                                #"
-            echo "#  Choisissez une action :                       #"
-            echo "#                                                #"
-            echo "#  1. Crée répertoire                            #"
-            echo "#  2. Supprimer répertoire                       #"
-            echo "#  3. Retour Menu président (sortire)            #"
-            echo "#                                                #"
-            echo "##################################################"
+        echo "##################################################"
+        echo "#              Gestion Répertoires Ubuntu        #"
+        echo "##################################################"
+        echo "#                                                #"
+        echo "#  Choisissez une action :                       #"
+        echo "#                                                #"
+        echo "#  1. Crée répertoire                            #"
+        echo "#  2. Supprimer répertoire                       #"
+        echo "#  3. Retour Menu président (sortire)            #"
+        echo "#                                                #"
+        echo "##################################################"
 
             read -p "# Choisissez une option : " choix
 
@@ -40,10 +43,10 @@ do
 ################################## Fonction demander chemin #######################################
 
     function fonction_demander_chemin(){
-            echo "##################################################"
-            echo "#          Entre le chemin du dossier:           #"
-            echo "##################################################"
-            read -r chemindossier
+        echo "##################################################"
+        echo "#          Entre le chemin du dossier:           #"
+        echo "##################################################"
+        read -r chemindossier
 
     # Vérifie si l'utilisateur a pas laissé vide
 
@@ -55,10 +58,10 @@ do
         return 0
     }
 
-    ################################## Fonction création répertoire #####################################
+################################## Fonction création répertoire #####################################
 
     function fonction_creer_dossier(){
-        clear
+        
         echo "##################################################"
         echo "#              Création de dossier               #"
         echo "##################################################"
@@ -84,13 +87,13 @@ do
         fi
     }
 
-    #################################### Fonction Supprimer un Dossier #####################################
+#################################### Fonction Supprimer un Dossier #####################################
 
     function fonction_supprimer_dossier(){
-    clear
-            echo "##################################################"
-            echo "#              Suppressin de dossier             #"
-            echo "##################################################"
+    
+        echo "##################################################"
+        echo "#              Suppressin de dossier             #"
+        echo "##################################################"
 
             fonction_demander_chemin
 
@@ -108,6 +111,6 @@ do
         fi
 
     }
-   
+
     repertoireMenu
 done 

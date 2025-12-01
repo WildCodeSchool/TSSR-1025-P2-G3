@@ -5,9 +5,9 @@
 #=====================================================
 # CHARGEMENT DES MODULES
 #=====================================================
-source scriptUsers.sh
-source scriptGroups.sh
-source scriptFolder.sh
+source ressources/scriptUsers.sh
+source ressources/scriptGroups.sh
+source ressources/scriptFolder.sh
 
 #=====================================================
 # VARIABLES DES COULEURS

@@ -10,6 +10,16 @@ source scriptGroups.sh
 source scriptFolder.sh
 
 #=====================================================
+# VARIABLES DES COULEURS
+#=====================================================
+
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export YELLOW='\033[1;33m'
+export BLUE='\033[0;34m'
+export NC='\033[0m'
+
+#=====================================================
 # VARIABLES DE CONNEXION
 #=====================================================
 
@@ -68,11 +78,11 @@ function chooseExecutionMode() {
 
         if ssh -o BatchMode=yes -o ConnectTimeout=5 -p"$portSSH" "$remoteUser@$remoteComputer" "echo 'Test connexion OK'" >/dev/null 2>&1; then
 
-            echo "► Connexion SSH réussie à $remoteUser@$remoteComputer"
+            echo -e "► ${GREEN}Connexion SSH réussie à $remoteUser@$remoteComputer:$portSSH. ${NC}"
             echo ""
         else
 
-            echo "► Impossible de se connecter à $remoteUser@$remoteComputer"
+            echo -e "► ${RED}Impossible de se connecter à $remoteUser@$remoteComputer:$portSSH. ${NC}"
             echo ""
             chooseExecutionMode
         fi

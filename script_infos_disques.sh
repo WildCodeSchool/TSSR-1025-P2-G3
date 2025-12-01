@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 ########################
@@ -61,48 +60,50 @@ systemes_de_fichiers_montes() {
 
 menu() {
     while true; do
-        echo "==============================="
-        echo "     MENU GESTION DISQUES     "
-        echo "==============================="
-        echo "1) Afficher le nombre de disques"
-        echo "2) Afficher les partitions"
-        echo "3) Afficher les lecteurs montés"
-        echo "4) Afficher les systèmes de fichiers montés"
-        echo "0) Quitter"
-        echo "-------------------------------"
+        echo "╭──────────────────────────────────────────────────╮"
+        echo "│              MENU GESTIONS DISQUES               │"
+        echo "├──────────────────────────────────────────────────┤"
+        echo "│                                                  │"
+        echo "│  1. Afficher le nombre de disques                │"
+        echo "│  2. Afficher les partitions                      │"
+        echo "│  3. Afficher les lecteurs montés                 │"
+        echo "│  4. Afficher les systèmes de fichiers montés     │"
+        echo "│  5. Retour au menu précédent                     │"
+        echo "│                                                  │"
+        echo "╰──────────────────────────────────────────────────╯"
         read -rp "Votre choix : " choix
         echo
 
         case "$choix" in
-            1)
-                nombre_disques
-                read -rp "Appuyez sur Entrée pour revenir au menu..." _
-                clear
-                ;;
-            2)
-                partitions
-                read -rp "Appuyez sur Entrée pour revenir au menu..." _
-                clear
-                ;;
-            3)
-                lecteurs_montes
-                read -rp "Appuyez sur Entrée pour revenir au menu..." _
-                clear
-                ;;
-            4)
-                systemes_de_fichiers_montes
-                read -rp "Appuyez sur Entrée pour revenir au menu..." _
-                clear
-                ;;
-            0)
-                echo "Au revoir !"
-                exit 0
-                ;;
-            *)
-                echo "Choix invalide."
-                sleep 1
-                clear
-                ;;
+        1)
+            nombre_disques
+            read -rp "Appuyez sur Entrée pour revenir au menu..." _
+            clear
+            ;;
+        2)
+            partitions
+            read -rp "Appuyez sur Entrée pour revenir au menu..." _
+            clear
+            ;;
+        3)
+            lecteurs_montes
+            read -rp "Appuyez sur Entrée pour revenir au menu..." _
+            clear
+            ;;
+        4)
+            systemes_de_fichiers_montes
+            read -rp "Appuyez sur Entrée pour revenir au menu..." _
+            clear
+            ;;
+        0)
+            echo "Au revoir !"
+            exit 0
+            ;;
+        *)
+            echo "Choix invalide."
+            sleep 1
+            clear
+            ;;
         esac
     done
 }

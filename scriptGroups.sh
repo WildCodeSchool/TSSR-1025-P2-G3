@@ -10,10 +10,10 @@ fonc_add_user_admin() {
     echo "│  2. Retour au menu précédent                     │"
     echo "╰──────────────────────────────────────────────────╯"
     read -p "Choisissez une option : " choix
-    case choix in
+    case $choix in
 
     1)
-        # choix de l'ulis ateur:
+        # choix de l'ulisateur:
         echo "Voici la liste des utilisateurs : "
         command awk -F':' '$3>=1000 { print $1 }' /etc/passwd
         read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
@@ -32,9 +32,9 @@ fonc_add_user_admin() {
             then
                 echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
                 echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) ? "
-                read -p "tapez o pour oui ou autre chose pour non " choix
+                read -p "tapez o pour oui ou autre chose pour non " conf
 
-                if [ $choix = "o" ]; then # si oui on relance la fonction
+                if [ $conf = "o" ]; then # si oui on relance la fonction
                     fonc_add_user_admin
                 else
                     # retour au menu
@@ -49,9 +49,9 @@ fonc_add_user_admin() {
         # si il n'existe pas
         else
             echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" choix
+            read -p "tape o pour oui ou autre chose non" conf
 
-            if [ $choix = "o" ]; then # si oui on relance la fonction
+            if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_add_user_admin
             else
                 fonc_menu_group
@@ -78,7 +78,7 @@ fonc_add_user_group() {
     echo "╰──────────────────────────────────────────────────╯"
     read -p "Choisissez une option : " choix
 
-    case choix in
+    case $choix in
     1)
         # choix de l'ulisateur:
         read -p "Quel utilisateur souhaitez vous ajouter au groupe ? : " useraddgroup
@@ -97,9 +97,9 @@ fonc_add_user_group() {
                     echo " l'utilisateur a bien été ajouté au groupe "
                     echo ""
                     echo " souhaitez-vous ajouter un autre utilisateur ?"
-                    read -p "tape o pour oui ou autre chose pour non " choix
+                    read -p "tape o pour oui ou autre chose pour non " conf
 
-                    if [ $choix = "o" ]; then # si oui on relance la fonction
+                    if [ $conf = "o" ]; then # si oui on relance la fonction
                         fonc_add_user_admin
                     else
                         # retour au menu
@@ -113,9 +113,9 @@ fonc_add_user_group() {
             #si le groupe n'existe pas
             else
                 echo "le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? "
-                read -p "tape o pour oui ou autre chose non" choix
+                read -p "tape o pour oui ou autre chose non" conf
 
-                if [ $choix = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
+                if [ $conf = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
                     command sudo groupadd $namegroup && usermod -aG $namegroup $useraddgroup
                 else
                     fonc_menu_group
@@ -124,9 +124,9 @@ fonc_add_user_group() {
 
         else
             echo "Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" choix
+            read -p "tape o pour oui ou autre chose non" conf
 
-            if [ $choix = "o" ]; then # si oui on relance la fonction
+            if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_add_user_group
             else
                 fonc_menu_group
@@ -155,7 +155,7 @@ fonc_exit_group() {
     echo "╰──────────────────────────────────────────────────╯"
     read -p "Choisissez une option : " choix
 
-    case choix in
+    case $choix in
 
     1)
         echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
@@ -191,9 +191,9 @@ fonc_exit_group() {
         else
             #si il n'existe pas
             echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" choix
+            read -p "tape o pour oui ou autre chose non" conf
 
-            if [ $choix = "o" ]; then # si oui on relance la fonction
+            if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_exit_group
             else
                 fonc_menu_group

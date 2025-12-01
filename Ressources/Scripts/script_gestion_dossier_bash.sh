@@ -1,116 +1,90 @@
 #!/bin/bash
 
+##################################### Menu Gestion Répertoire Ubuntu ####################################
+repertoireMenu() {
+while true; do
 
-while true;
-do
+echo "╭──────────────────────────────────────────────────╮"
+echo "│               Gestion Répertoires                │"
+echo "├──────────────────────────────────────────────────┤"
+echo "│                                                  │"
+echo "│  1. Créer un répertoire                          │"
+echo "│  2. Supprimer un répertoire                      │"
+echo "│  3. Retour au menu précédent                     │"
+echo "│                                                  │"
+echo "╰──────────────────────────────────────────────────╯"
 
-    ##################################### Menu Gestion Répertoire Ubuntu ####################################
-    function repertoireMenu(){
+    read -p "# Choisissez une option : " choix
 
-        echo "##################################################"
-        echo "#              Gestion Répertoires Ubuntu        #"
-        echo "##################################################"
-        echo "#                                                #"
-        echo "#  Choisissez une action :                       #"
-        echo "#                                                #"
-        echo "#  1. Crée répertoire                            #"
-        echo "#  2. Supprimer répertoire                       #"
-        echo "#  3. Retour Menu président (sortire)            #"
-        echo "#                                                #"
-        echo "##################################################"
+    case "$choix" in
+        1)
+            fonction_creer_dossier
+            ;;
+        2)
+            fonction_supprimer_dossier
+            ;;
+        3)
+            echo "Retour au menu principal..."
+            exit 0
+            ;;
+        *)
+            echo " Option invalide."
+            ;;
 
-            read -p "# Choisissez une option : " choix
-
-
-            case "$choix" in
-
-                1) 
-                    fonction_creer_dossier 
-                    ;;
-                2) 
-                    fonction_supprimer_dossier 
-                    ;;
-                3) 
-                    echo " Retour Menu principal "
-                    mainMenu 
-                    ;;
-
-            esac
-
-        }
-
+    esac
+    
+    done
+}
 
 ################################## Fonction demander chemin #######################################
 
-    function fonction_demander_chemin(){
-        echo "##################################################"
-        echo "#          Entre le chemin du dossier:           #"
-        echo "##################################################"
-        read -r chemindossier
+fonction_demander_chemin() {
+    echo "► Entrez le chemin du dossier :"
+    read -r chemindossier
 
-    # Vérifie si l'utilisateur a pas laissé vide
-
-        if [ -z "$chemindossier" ]
-            then 
-                echo " ********* Aucun chemin saisi ************ "
-                return 1
-        fi
-        return 0
-    }
+    if [ -z "$chemindossier" ]; then
+        echo "► Aucun chemin saisi"
+        return 1
+    fi
+    return 0
+}
 
 ################################## Fonction création répertoire #####################################
 
-    function fonction_creer_dossier(){
-        
-        echo "##################################################"
-        echo "#              Création de dossier               #"
-        echo "##################################################"
-        fonction_demander_chemin
-        # Vérifie si l'utilisateur a pas laissé vide
+fonction_creer_dossier() {
+    echo "► Création de dossier"
+    fonction_demander_chemin || return
 
-        # Vérificaton si le répertoire existe déja
-
-        if [ -d "$chemindossier" ]
-            then 
-
-                echo " ******* Le Dossier existe déja pas de création ********* "
-
-            else
-                echo " Création do Dossier"
-                mkdir "$chemindossier"
-
-                # vrification que dossier à bien été créé
-                if [ $? -eq 0 ]
-                    then echo " ******** Le dossier à bien été créé ********** "
-                    else echo " ******** Le dossier à été pas créé  ********** "
-                fi
+    if [ -d "$chemindossier" ]; then
+        echo "► Le dossier existe déjà"
+    else
+        mkdir "$chemindossier" 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo "► Le dossier a été créé"
+        else
+            echo "► Erreur : dossier non créé"
         fi
-    }
+    fi
+}
 
-#################################### Fonction Supprimer un Dossier #####################################
+#################################### Fonction supprimer dossier #####################################
 
-    function fonction_supprimer_dossier(){
-    
-        echo "##################################################"
-        echo "#              Suppressin de dossier             #"
-        echo "##################################################"
+fonction_supprimer_dossier() {
+    echo "► Suppression de dossier"
+    fonction_demander_chemin || return
 
-            fonction_demander_chemin
-
-    # Vérificaton si le dossier exist déja
-
-        if [ ! -d "$chemindossier" ]
-            then 
-                echo " ****** Le Dossier n'existe, pas de Supprition ******* "
-            else
-                rm -r "$chemindossier" 2>/dev/null
-                if [ $? -eq 0 ]
-                    then echo " ********* Le dossier à bien été Suprimé ********* "
-                    else echo " ********* Le dossier à été pas Suprimé ********** "
-                fi
+    if [ ! -d "$chemindossier" ]; then
+        echo "► Le dossier n'existe pas"
+    else
+        rm -r "$chemindossier" 2>/dev/null
+        if [ $? -eq 0 ]; then
+            echo "► Dossier supprimé"
+        else
+            echo "► Erreur : dossier non supprimé"
         fi
+    fi
+}
 
-    }
+#################################### Boucle principale ##############################################
 
     repertoireMenu
-done 

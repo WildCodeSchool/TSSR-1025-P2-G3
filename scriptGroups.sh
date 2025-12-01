@@ -7,82 +7,32 @@ fonc_add_user_admin() {
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Ajouter un utilisateur au groupe sudo        │"
-    echo "│                                                  │"
+    echo "│  2. Retour au menu précédent                     │"
     echo "╰──────────────────────────────────────────────────╯"
-    # choix de l'ulis ateur:
-    echo "Voici la liste des utilisateurs : "
-    command awk -F':' '$3>=1000 { print $1 }' /etc/passwd
-    read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
+    read -p "Choisissez une option : " choix
+    case choix in
 
-    # l'utilisateur existe ?
-    if
-        command cat /etc/passwd | grep -w "$useraddadmin" >/dev/null
+    1)
+        # choix de l'ulis ateur:
+        echo "Voici la liste des utilisateurs : "
+        command awk -F':' '$3>=1000 { print $1 }' /etc/passwd
+        read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
 
-    # si il existe on ajoute au groupe sudo
-    then
-        command sudo usermod -aG sudo "$useraddadmin"
-        # On verfie si l'utilisateur a bien été ajouté
-
+        # l'utilisateur existe ?
         if
-            command cat /etc/group | grep sudo | grep "$useraddadmin" >/dev/null
+            command cat /etc/passwd | grep -w "$useraddadmin" >/dev/null
+
+        # si il existe on ajoute au groupe sudo
         then
-            echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
-            echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) ? "
-            read -p "tapez o pour oui ou autre chose pour non " choix
+            command sudo usermod -aG sudo "$useraddadmin"
+            # On verfie si l'utilisateur a bien été ajouté
 
-            if [ $choix = "o" ]; then # si oui on relance la fonction
-                fonc_add_user_admin
-            else
-                # retour au menu
-                fonc_menu_group
-            fi
-
-        else
-            echo "erreur"
-            exit 130
-
-        fi
-    # si il n'existe pas
-    else
-        echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-        read -p "tape o pour oui ou autre chose non" choix
-
-        if [ $choix = "o" ]; then # si oui on relance la fonction
-            fonc_add_user_admin
-        else
-            fonc_menu_group
-        fi
-
-    fi
-
-}
-
-fonc_add_user_group() {
-    echo "╭──────────────────────────────────────────────────╮"
-    echo "│                   MENU GROUPES                   │"
-    echo "├──────────────────────────────────────────────────┤"
-    echo "│                                                  │"
-    echo "│  2. Ajouter un utilisateur à un groupe           │"
-    echo "│                                                  │"
-    echo "╰──────────────────────────────────────────────────╯"
-    # choix de l'ulisateur:
-    read -p "Quel utilisateur souhaitez vous ajouter au groupe ? : " useraddgroup
-    # l'utilisateur existe ?
-    if
-        command cat /etc/passwd | grep -w $useraddgroup >/dev/null
-    # si il existe on demande le groupe auquel ajouter l'utilisateur
-    then
-        echo "Ok pour cet utilisateur, a quel groupe souhaitez vous l'ajouter ?"
-        read namegroup
-        #si le groupe existe
-        if command cat /etc/group | grep -w $namegroup >/dev/null; then
-            command sudo usermod -aG $namegroup $useraddgroup
-            # on confirme l'ajout de l'utilisateur au groupe.
-            if cat /etc/group | grep $namegroup | grep $useraddgroup >/dev/null; then
-                echo " l'utilisateur a bien été ajouté au groupe "
-                echo ""
-                echo " souhaitez-vous ajouter un autre utilisateur ?"
-                read -p "tape o pour oui ou autre chose pour non " choix
+            if
+                command cat /etc/group | grep sudo | grep "$useraddadmin" >/dev/null
+            then
+                echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
+                echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) ? "
+                read -p "tapez o pour oui ou autre chose pour non " choix
 
                 if [ $choix = "o" ]; then # si oui on relance la fonction
                     fonc_add_user_admin
@@ -94,30 +44,104 @@ fonc_add_user_group() {
             else
                 echo "erreur"
                 exit 130
+
             fi
-        #si le groupe n'existe pas
+        # si il n'existe pas
         else
-            echo "le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? "
+            echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" choix
 
-            if [ $choix = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
-                command sudo groupadd $namegroup && usermod -aG $namegroup $useraddgroup
+            if [ $choix = "o" ]; then # si oui on relance la fonction
+                fonc_add_user_admin
             else
                 fonc_menu_group
             fi
+
         fi
+        ;;
+    2)
+        fonc_menu_group
+        ;;
+    *)
+        echo "Erreur de saisie"
+        ;;
+    esac
+}
 
-    else
-        echo "Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-        read -p "tape o pour oui ou autre chose non" choix
+fonc_add_user_group() {
+    echo "╭──────────────────────────────────────────────────╮"
+    echo "│                   MENU GROUPES                   │"
+    echo "├──────────────────────────────────────────────────┤"
+    echo "│                                                  │"
+    echo "│  1. Ajouter un utilisateur à un groupe           │"
+    echo "│  2. Retour au menu précédent                     │"
+    echo "╰──────────────────────────────────────────────────╯"
+    read -p "Choisissez une option : " choix
 
-        if [ $choix = "o" ]; then # si oui on relance la fonction
-            fonc_add_user_group
+    case choix in
+    1)
+        # choix de l'ulisateur:
+        read -p "Quel utilisateur souhaitez vous ajouter au groupe ? : " useraddgroup
+        # l'utilisateur existe ?
+        if
+            command cat /etc/passwd | grep -w $useraddgroup >/dev/null
+        # si il existe on demande le groupe auquel ajouter l'utilisateur
+        then
+            echo "Ok pour cet utilisateur, a quel groupe souhaitez vous l'ajouter ?"
+            read namegroup
+            #si le groupe existe
+            if command cat /etc/group | grep -w $namegroup >/dev/null; then
+                command sudo usermod -aG $namegroup $useraddgroup
+                # on confirme l'ajout de l'utilisateur au groupe.
+                if cat /etc/group | grep $namegroup | grep $useraddgroup >/dev/null; then
+                    echo " l'utilisateur a bien été ajouté au groupe "
+                    echo ""
+                    echo " souhaitez-vous ajouter un autre utilisateur ?"
+                    read -p "tape o pour oui ou autre chose pour non " choix
+
+                    if [ $choix = "o" ]; then # si oui on relance la fonction
+                        fonc_add_user_admin
+                    else
+                        # retour au menu
+                        fonc_menu_group
+                    fi
+
+                else
+                    echo "erreur"
+                    exit 130
+                fi
+            #si le groupe n'existe pas
+            else
+                echo "le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? "
+                read -p "tape o pour oui ou autre chose non" choix
+
+                if [ $choix = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
+                    command sudo groupadd $namegroup && usermod -aG $namegroup $useraddgroup
+                else
+                    fonc_menu_group
+                fi
+            fi
+
         else
-            fonc_menu_group
+            echo "Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
+            read -p "tape o pour oui ou autre chose non" choix
 
+            if [ $choix = "o" ]; then # si oui on relance la fonction
+                fonc_add_user_group
+            else
+                fonc_menu_group
+
+            fi
         fi
-    fi
+        ;;
+
+    2)
+        fonc_menu_group
+        ;;
+    *)
+        echo "Erreur de saisie"
+        ;;
+    esac
 }
 
 fonc_exit_group() {
@@ -126,27 +150,47 @@ fonc_exit_group() {
     echo "│                   MENU GROUPES                   │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
-    echo "│  3. Retirer un utilisateur d'un groupe           │"
-    echo "│                                                  │"
+    echo "│  1. Retirer un utilisateur d'un groupe           │"
+    echo "│  2. Retour au menu précédent                     │"
     echo "╰──────────────────────────────────────────────────╯"
-    echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
-    read userexitgroup
-    # on verifie si l'utilisateur existe
-    if
-        command cat /etc/passwd | grep -w "$userexitgroup"
-    # si il existe on demande de quel groupe l'enlever
-    then
-        echo "C'est d'accord pour cet utilisateur "
-        echo "Voici le ou les groupes dans lequel $userexitgroup est présent "
-        command cat /etc/group | grep "[:,]$userexitgroup"
-        echo "Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
-        read exitgroup
-        #si le groupe selectionné est valide on sort l'utilisateur
-        if command cat /etc/group | grep "$exitgroup" && cat /etc/group | grep "$userexitgroup"; then
+    read -p "Choisissez une option : " choix
 
-            command sudo usermod -rG "$exitgroup" "$userexitgroup"
-            echo " l'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
-            echo " souhaitez vous choisir un autre utilisateur ? "
+    case choix in
+
+    1)
+        echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
+        read userexitgroup
+        # on verifie si l'utilisateur existe
+        if
+            command cat /etc/passwd | grep -w "$userexitgroup"
+        # si il existe on demande de quel groupe l'enlever
+        then
+            echo "C'est d'accord pour cet utilisateur "
+            echo "Voici le ou les groupes dans lequel $userexitgroup est présent "
+            command cat /etc/group | grep "[:,]$userexitgroup"
+            echo "Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
+            read exitgroup
+            #si le groupe selectionné est valide on sort l'utilisateur
+            if command cat /etc/group | grep "$exitgroup" && cat /etc/group | grep "$userexitgroup"; then
+
+                command sudo usermod -rG "$exitgroup" "$userexitgroup"
+                echo " l'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
+                echo " souhaitez vous choisir un autre utilisateur ? "
+                read -p "tape o pour oui ou autre chose non" choix
+
+                if [ $choix = "o" ]; then # si oui on relance la fonction
+                    fonc_exit_group
+                else
+                    fonc_menu_group
+                fi
+            else
+                echo "il y a eu une erreur pour la sortie du groupe..retour au menu.."
+                fonc_menu_group
+            fi
+
+        else
+            #si il n'existe pas
+            echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" choix
 
             if [ $choix = "o" ]; then # si oui on relance la fonction
@@ -154,24 +198,17 @@ fonc_exit_group() {
             else
                 fonc_menu_group
             fi
-        else
-            echo "il y a eu une erreur pour la sortie du groupe..retour au menu.."
-            fonc_menu_group
+
         fi
+        ;;
+    2)
+        fonc_menu_group
+        ;;
 
-    else
-        #si il n'existe pas
-        echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-        read -p "tape o pour oui ou autre chose non" choix
-
-        if [ $choix = "o" ]; then # si oui on relance la fonction
-            fonc_exit_group
-        else
-            fonc_menu_group
-        fi
-
-    fi
-
+    *)
+        echo "Erreur de saisie"
+        ;;
+    esac
 }
 
 fonc_exit_menu() {

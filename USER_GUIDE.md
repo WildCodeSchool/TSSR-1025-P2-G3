@@ -21,7 +21,7 @@
 4 machines Virtuelle sous **PROXMOX** :    
 Groupe 3    
 **Réseau: 172.16.30.0/24**    
-**BROADCAST 172.16.30.254**  
+**BROADCAST: 172.16.30.254**  
 **DNS : 8.8.8.8**  
 
 - **Serveur Debian** :   

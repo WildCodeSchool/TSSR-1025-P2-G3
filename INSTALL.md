@@ -27,9 +27,9 @@ Groupe 3
 	Nom : **srvlx01**  
 	IP : **172.16.30.10**  
 	
- - **Serveur Windows 2022** :
-	Nom : **srvwin01**
-	IP : **172.16.30.5**
+ - **Serveur Windows 2022** :  
+	Nom : **srvwin01**  
+	IP : **172.16.30.5**  
 
 - **Client Windows** 11 :  
 	Nom : **cliwin01**  

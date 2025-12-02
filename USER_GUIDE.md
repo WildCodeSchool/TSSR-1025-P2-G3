@@ -38,8 +38,9 @@ Groupe 3
 	Nom : **clilin01**  
 	IP : **172.16.30.30/24**  
 
-Il faut un compte **ROOT** et **Administrator** sur les 2 serveurs  
-Il faut un compte utilisateur **wilder** sur les 4 VM  
+Il faut un compte **ROOT** et un compte **wilder** sur le  serveur **Debian** 
+Il faut un compte **Administrator** et un compte **wilder** sur le **Serveur Windows**
+Il faut un compte utilisateur **wilder** sur les 2 VM **Client Windows** et **Client Linux**
 
 ## 2. Configuration sur le serveur Debian ( Debian 12.9 )
 

@@ -40,12 +40,13 @@ Ce projet consiste à développer deux scripts d'administration système permett
 
 ### Sprint 2
 
-| Membre      | Rôle | Missions |
-|-------------|------|----------|
-| Safi        |  |  |
-| Christian   |  |  |
-| Jérôme      |  |  |
-| Pierre Jean |  |  |
+| Membre      | Rôle           | Missions principales |
+|-------------|----------------|----------------------|
+| Safi        | Technicien     | • Script Bash Gestion Ordinateurs |
+| Christian   | Scrum Master   | • Script Bash Gestion des des Menu et SSH |
+| Jérôme      | Product Owner  | • Sacript Bash Information Ordinateur |
+| Pierre Jean | Technicien     | • Script Bash Information Utilisateur |
+
 
 ### Sprint 3
 

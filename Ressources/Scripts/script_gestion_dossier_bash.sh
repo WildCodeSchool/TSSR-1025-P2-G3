@@ -120,23 +120,3 @@ fonction_supprimer_dossier() {
         fi
     fi
 }
-
-###################################### Fonction redémarrage #######################################
-
-#fonction de redemarage poste distante
-fonction_redemarrage() {
-    # demande redémarrer la machine en ssh
-    logEvent " connexion en ssh "
-    sudo ssh -p "$portSSH" "$remoteUser@$remoteComputer"
-    
-    # vérifier si la commande avant (ssh) a bien été exécuté je fais redémarrer l'ordinateur, si non je donne la message erreur
-    if [ $? -eq 0 ]; then
-    logEvent "conextion fait avec succès l'ordinateur va redémarre"
-	echo "► l'ordinateur va redémarrer "
-    sudo reboot
-    else 
-    logEvent " ► Erreur ssh ou la commande redémarrage n'est pas fonctionné "
-	echo "► Erreur : commande n'est pas fonctionné "
-	fi
-    
-}

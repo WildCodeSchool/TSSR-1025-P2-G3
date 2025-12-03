@@ -5,6 +5,7 @@
 #=====================================================
 # CHARGEMENT DES MODULES
 #=====================================================
+
 source scriptUsers.sh
 source scriptGroups.sh
 source scriptFolder.sh
@@ -20,6 +21,88 @@ export BLUE='\033[0;34m'
 export NC='\033[0m'
 
 #=====================================================
+# JOURNALISATION
+#=====================================================
+
+# Chemin du fichier log
+log_file="log_evt.log"
+
+# Vérification si le fichier existe, sinon création.
+function logInit() {
+
+    if [ ! -f "$log_file" ]; then
+
+        sudo touch "$log_file"
+        sudo chmod 777 "$log_file"
+
+    fi
+}
+
+# Enregistrement des évènements
+
+function logEvent() {
+
+    event="$1"
+    date=$(date +%Y-%m-%d)
+    heure=$(date +%H:%M:%S)
+    utilisateur=$(whoami)
+
+
+    context="local"
+    if [ "$connexionMode" = "ssh" ]; then
+        context="ssh:${remoteUser}@${remoteComputer}"
+    fi
+
+    entry="${date}_${heure}_${utilisateur}_${context}_${event}"
+
+    echo "$entry" >>"$log_file"
+
+}
+
+function logEventUser() {
+
+    event="$1"
+    date=$(date +%Y-%m-%d)
+    heure=$(date +%H:%M:%S)
+    utilisateur=$(whoami)
+
+
+    context="local"
+    if [ "$connexionMode" = "ssh" ]; then
+        context="ssh:${remoteUser}@${remoteComputer}"
+    fi
+
+    entry="${date}_${heure}_${utilisateur}_${context}_"USER"_${event}"
+
+    echo "$entry" >>"$log_file"
+
+}
+
+function logEventComputer() {
+
+    event="$1"
+    date=$(date +%Y-%m-%d)
+    heure=$(date +%H:%M:%S)
+    utilisateur=$(whoami)
+
+    context="local"
+    if [ "$connexionMode" = "ssh" ]; then
+        context="ssh:${remoteUser}@${remoteComputer}"
+    fi
+
+    entry="${date}_${heure}_${utilisateur}_${context}_"COMPUTER"_${event}"
+
+    echo "$entry" >>"$log_file"
+
+}
+
+function startScript(){
+    logEvent "Start script"
+}
+
+
+logInit
+#=====================================================
 # VARIABLES DE CONNEXION
 #=====================================================
 
@@ -27,13 +110,14 @@ export connexionMode=""
 export remoteUser=""
 export remoteComputer=""
 export portSSH=""
+export remoteOS=""
 
 #=====================================================
 # MENU EXECUTION LOCAL OU SSH
 #=====================================================
 
 function chooseExecutionMode() {
-
+    logEvent "Menu Execution"
     echo ""
     echo "╭────────────────────────────────────────────────╮"
     echo "│           MENU EXECUTION LOCAL OU SSH          │"
@@ -47,13 +131,14 @@ function chooseExecutionMode() {
     echo ""
 
     read -p "► Voulez-vous exécuter le script en Local ou à distance ? " executionMode
+    logEvent "Entrée utilisateur $executionMode"
 
     case $executionMode in
 
     1)
         connexionMode="local"
         export connexionMode
-
+        logEvent "Exécution du script sur la machine hôte"
         echo "► Exécution du script sur la machine hôte"
         echo ""
         ;;
@@ -65,8 +150,11 @@ function chooseExecutionMode() {
 
         echo ""
         read -p "► Entrez une Adresse IP ou Hostname : " remoteComputer
+        logEvent "Adresse IP ou Hostname : $remoteComputer"
         read -p "► Entrez un Nom d'utilisateur : " remoteUser
+        logEvent "Nom d'utilisateur : $remoteUser"
         read -p "► Entrez un Port : " portSSH
+        logEvent "Port : $portSSH"
         echo ""
 
         export remoteComputer
@@ -89,7 +177,7 @@ function chooseExecutionMode() {
         ;;
 
     3)
-
+        logEvent "Stop Script"
         echo "► Fermeture du script"
         exit 0
         ;;
@@ -100,7 +188,26 @@ function chooseExecutionMode() {
         chooseExecutionMode
         ;;
     esac
+    detectionRemoteOS
+}
 
+#=====================================================
+# DETECTION DU SYSTEME D'EXPLOITATION
+#=====================================================
+
+function detectionRemoteOS() {
+
+    if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
+        remoteOS="Linux"
+        export remoteOS
+        echo "► Système d'exploitation détecté : Linux"
+    fi
+
+    if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
+        remoteOS="Windows"
+        export remoteOS
+        echo "► Système d'exploitation détecté : Windows"
+    fi
 }
 
 #=====================================================
@@ -131,6 +238,11 @@ function sudo_command() {
     fi
 }
 
+# Fonction pour les commandes Powershell
+# function powershell_command(){
+
+# }
+
 #=====================================================
 # MENU PRINCPAL
 #=====================================================
@@ -140,7 +252,7 @@ function mainMenu() {
     while true; do
         echo ""
         echo "╭──────────────────────────────────────────────────╮"
-        echo "│                  MENU PRICINPAL                  │"
+        echo "│                  MENU PRINCIPAL                  │"
         echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Gestion des Utilisateurs                     │"
@@ -185,6 +297,9 @@ function mainMenu() {
         7)
             read -p "► Voulez-vous fermer le script ? (o/n) " fermetureScript
             if [ "$fermetureScript" = "o" ]; then
+                logEvent "Stop Script"
+                echo ""
+                echo "► Fermeture du script."
                 exit 0
             fi
             ;;
@@ -393,5 +508,6 @@ function logsMainMenu() {
 # EXECUTION DU SCRIPT
 #=====================================================
 
+startScript
 chooseExecutionMode
 mainMenu

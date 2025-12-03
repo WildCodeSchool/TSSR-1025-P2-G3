@@ -1,29 +1,36 @@
 #!/bin/bash
+
+# Script de gestion groupes et utilisateurs
+# Auteur : Pierre-Jan
 #---------------------------------Fonctions-------------------------------------------
 
 fonc_add_user_admin() {
+
     echo "╭──────────────────────────────────────────────────╮"
-    echo "│                   MENU GROUPES                   │"
+    echo "│      AJOUTER UTILISATEUR AU GROUPE SUDO          │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
-    echo "│  1. Ajouter un utilisateur au groupe sudo        │"
+    echo "│  1. Saisir un nom d'utilisateur à ajouter        │"
     echo "│  2. Retour au menu précédent                     │"
     echo "╰──────────────────────────────────────────────────╯"
     read -p "Choisissez une option : " choix
     case $choix in
 
     1)
-        # choix de l'ulisateur:
+        # choix de l'utilisateur:
         echo "Voici la liste des utilisateurs : "
         command awk -F':' '$3>=1000 { print $1 }' /etc/passwd
         read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
+        logEventUser "Entrée d'utilisateur : $useraddadmin"
 
         # l'utilisateur existe ?
         if
+            logEventUser "Commande de vérification existence utilisateur"
             command cat /etc/passwd | grep -w "$useraddadmin" >/dev/null
 
         # si il existe on ajoute au groupe sudo
         then
+            logEventUser "ajout de l'utilsateur $useraddadmin"
             command sudo usermod -aG sudo "$useraddadmin"
             # On verfie si l'utilisateur a bien été ajouté
 
@@ -69,6 +76,7 @@ fonc_add_user_admin() {
 }
 
 fonc_add_user_group() {
+
     echo "╭──────────────────────────────────────────────────╮"
     echo "│                   MENU GROUPES                   │"
     echo "├──────────────────────────────────────────────────┤"
@@ -220,7 +228,7 @@ fonc_exit_menu() {
 #-------------------------------Menu--------------------------------
 
 fonc_menu_group() {
-
+    logEvent "Menu Groupes"
     while true; do
 
         echo "╭──────────────────────────────────────────────────╮"
@@ -240,12 +248,15 @@ fonc_menu_group() {
         case $selection in
 
         1)
+            logEvent "Ajout d'utilisateur au groupe admin"
             fonc_add_user_admin
             ;;
         2)
+            logEvent "Ajout d'un utilisateur à un groupe"
             fonc_add_user_group
             ;;
         3)
+            logEvent "Sortie d'un utlisateur d'un groupe"
             fonc_exit_group
             ;;
         4)
@@ -262,4 +273,3 @@ fonc_menu_group() {
 
 }
 
-fonc_menu_group

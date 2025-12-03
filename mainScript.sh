@@ -24,6 +24,8 @@ export NC='\033[0m'
 # JOURNALISATION
 #=====================================================
 
+#### TEMPORAIRE ####
+
 # Chemin du fichier log
 log_file="log_evt.log"
 

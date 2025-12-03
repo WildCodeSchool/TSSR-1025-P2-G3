@@ -9,6 +9,7 @@
 
 # Sous menu "Utilisateurs"
 function userMenu() {
+    logEvent "Menu Utilisateur"
 
     while true; do
 
@@ -31,14 +32,17 @@ function userMenu() {
         case $menuUser in
 
         1)
+            logEvent "Sélection menu ajout utilisateur"
             addUserMenu
             ;;
 
         2)
+            logEvent "Sélection menu suppression utilisateur"
             deleteUserMenu
             ;;
 
-        3)
+        3)  
+            logEvent "Sélection menu suppression utilisateur"
             changePasswordUserMenu
             ;;
 
@@ -47,6 +51,7 @@ function userMenu() {
             echo ""
             echo "► Liste des utilisateurs : "
             command "awk -F':' '\$3 >= 1000 {print \$1, \$3}' /etc/passwd | sort -k 2"
+            logEventUser "Demande de la liste utilisateur"
             ;;
 
         5)
@@ -88,12 +93,14 @@ function addUserMenu() {
         while [ "$userCreationChoice" = "o" ]; do
 
             read -p "► Entrez un nom d'utilisateur : " addUserCommand
+            logEventUser "Entrée utilisateur : $addUserCommand"
+            logEventUser "Commande de vérification des utilisateurs"
             command "grep '^$addUserCommand:' /etc/passwd >/dev/null"
 
             if [ $? = 1 ]; then
 
                 read -p "► Voulez-vous créer l'utilisateur $addUserCommand ? (o/n) : " confirmUser
-
+                logEventUser "Entrée utilisateur : $addUserCommand"
                 if [ "$confirmUser" = "o" ]; then
                     sudo_command "useradd ${addUserCommand}"
 

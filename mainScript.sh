@@ -9,6 +9,9 @@
 source scriptUsers.sh
 source scriptGroups.sh
 source scriptGestionOrdi.sh
+# source script1.sh
+# source script2.sh
+# source script3.sh
 
 #=====================================================
 # VARIABLES DES COULEURS
@@ -40,8 +43,7 @@ function logInit() {
     fi
 }
 
-# Enregistrement des évènements
-
+# Fonction enregistrement des évènements
 function logEvent() {
 
     event="$1"
@@ -60,8 +62,21 @@ function logEvent() {
 
 }
 
+# Fonction ajout aux logs du lancement du script
 function startScript() {
-    logEvent "Start script"
+
+    logEvent "START_SCRIPT"
+
+}
+
+# Fonction arrêt script avec ajout log
+function stopScript() {
+
+    logEvent "STOP_SCRIPT"
+    echo ""
+    echo -e "${YELLOW}► Fermeture du script${NC}"
+    exit 0
+
 }
 
 logInit
@@ -80,7 +95,9 @@ export remoteOS=""
 #=====================================================
 
 function chooseExecutionMode() {
-    logEvent "Menu Execution"
+
+    logEvent "MENU_EXECUTION"
+
     echo ""
     echo "╭────────────────────────────────────────────────╮"
     echo "│           MENU EXECUTION LOCAL OU SSH          │"
@@ -98,7 +115,7 @@ function chooseExecutionMode() {
     case $executionMode in
 
     1)
-        logEvent "Execution Locale choisie"
+        logEvent "EXECUTION_LOCAL"
         connexionMode="local"
         export connexionMode
         logEvent "Exécution du script sur la machine hôte"
@@ -107,17 +124,19 @@ function chooseExecutionMode() {
         ;;
 
     2)
-        logEvent "Execution distante (SSH) choisie"
+        logEvent "EXECUTION_DISTANTE_SSH"
         connexionMode="ssh"
         export connexionMode
 
         echo ""
         read -p "► Entrez une Adresse IP ou Hostname : " remoteComputer
-        logEvent "Adresse IP ou Hostname : $remoteComputer"
+        logEvent "ADRESSE_IP_OU_HOSTNAME:$remoteComputer"
+
         read -p "► Entrez un Nom d'utilisateur : " remoteUser
-        logEvent "Nom d'utilisateur : $remoteUser"
+        logEvent "NOM_UTILISATEUR:$remoteUser"
+
         read -p "► Entrez un Port : " portSSH
-        logEvent "Port : $portSSH"
+        logEvent "PORT:$portSSH"
         echo ""
 
         export remoteComputer
@@ -127,29 +146,37 @@ function chooseExecutionMode() {
         echo "► Connexion en cours : $remoteUser@$remoteComputer"
         echo ""
 
+        logEvent "SSH_CONNEXION:$remoteUser@$remoteComputer:$portSSH"
+
         if ssh -o BatchMode=yes -o ConnectTimeout=5 -p"$portSSH" "$remoteUser@$remoteComputer" "echo 'Test connexion OK'" >/dev/null 2>&1; then
 
             echo -e "► ${GREEN}Connexion SSH réussie à $remoteUser@$remoteComputer:$portSSH. ${NC}"
             echo ""
+            logEvent "SSH_CONNEXION_REUSSIE:$remoteUser@$remoteComputer:$portSSH"
+
         else
 
             echo -e "► ${RED}Impossible de se connecter à $remoteUser@$remoteComputer:$portSSH. ${NC}"
             echo ""
+            logEvent "SSH_CONNEXION_ECHEC:$remoteUser@$remoteComputer:$portSSH"
+
             chooseExecutionMode
         fi
         ;;
 
     3)
-        logEvent "Stop Script"
-        echo "► Fermeture du script"
-        exit 0
+
+        stopScript
         ;;
 
     *)
+
+        logEvent "MENU_EXECUTION:ENTREE_INVALIDE"
         echo "► Entrée Invalide !\n Retour au menu"
         echo ""
         chooseExecutionMode
         ;;
+
     esac
     detectionRemoteOS
 }
@@ -164,12 +191,14 @@ function detectionRemoteOS() {
         remoteOS="Linux"
         export remoteOS
         echo "► Système d'exploitation détecté : Linux"
+        logEvent "DETECTION_OS:Linux"
     fi
 
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
         remoteOS="Windows"
         export remoteOS
         echo "► Système d'exploitation détecté : Windows"
+        logEvent "DETECTION_OS:Windows"
     fi
 }
 
@@ -212,6 +241,8 @@ function sudo_command() {
 
 function mainMenu() {
 
+    logEvent "MENU_PRINCIPAL"
+
     while true; do
         echo ""
         echo "╭──────────────────────────────────────────────────╮"
@@ -234,44 +265,60 @@ function mainMenu() {
         case $userChoiceMainMenu in
 
         1)
+            logEvent "MENU_PRINCIPAL:GESTION_UTILISATEURS"
             userMainMenu
             ;;
 
         2)
+            logEvent "MENU_PRINCIPAL:GESTION_ORDINATEURS"
             computerMainMenu
             ;;
 
         3)
+            logEvent "MENU_PRINCIPAL:INFORMATIONS_SYSTEME"
             informationMainMenu
             ;;
 
         4)
+            logEvent "MENU_PRINCIPAL:INFORMATIONS_UTILISATEURS"
             informationUserMainMenu
             ;;
 
         5)
+            logEvent "MENU_PRINCIPAL:JOURNALISATION"
             logsMainMenu
             ;;
 
         6)
+            logEvent "MENU_PRINCIPAL:CHANGER_MODE_EXECUTION"
             chooseExecutionMode
             ;;
 
         7)
             read -p "► Voulez-vous fermer le script ? (o/n) " fermetureScript
             if [ "$fermetureScript" = "o" ]; then
-                logEvent "Stop Script"
-                echo ""
-                echo "► Fermeture du script."
-                exit 0
+                stopScript
             fi
             ;;
+
+        *)
+            logEvent "MENU_PRINCIPAL:ENTREE_INVALIDE"
+            echo "► Entrée invalide"
+            userMainMenu
+            ;;
+
         esac
     done
 
 }
 
+#=====================================================
+# MENU GESTION UTILISATEUR
+#=====================================================
+
 function userMainMenu() {
+
+    logEvent "MENU_GESTION_UTILISATEUR"
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -290,26 +337,39 @@ function userMainMenu() {
     case $userMainMenu in
 
     1)
+
+        logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
         userMenu
         ;;
 
     2)
+
+        logEvent "MENU_GESTION_UTILISATEUR:GROUPES"
         fonc_menu_group
         ;;
 
     3)
+
+        logEvent "MENU_GESTION_UTILISATEUR:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
-        echo "► Entrée Invalide"
+        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
+        echo "► Entrée invalide"
         userMainMenu
         ;;
     esac
 
 }
 
+#=====================================================
+# MENU GESTION ORDINATEURS
+#=====================================================
+
 function computerMainMenu() {
+
+    logEvent "MENU_GESTION_ORDINATEUR"
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -335,51 +395,57 @@ function computerMainMenu() {
 
     1)
         #appel au script de gestion de repertoire
-        logEvent "Sélection menu gestion repertoire"
+        logEvent "MENU_GESTION_ORDINATEURS:GESTION_REPERTOIRE"
         gestion_repertoire_menu
         ;;
 
     2)
         # appel la fonction de redemarrage
-        logEvent "Sélection Redemarrage"
+        logEvent "MENU_GESTION_ORDINATEURS:REDEMARRAGE"
         fonction_redemarrage
         ;;
 
     3)
 
         # appel la fonction de prise à main distance
-        logEvent "Sélection Prise à main distance"
+        logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
         fonction_prise_main
         ;;
 
     4)
         # appel la fonction de activer le parefeu
-        logEvent "Sélection Activer le parefeu"
+        logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
         fonction_activer_parefeu
         ;;
 
     5)
         # appel la fonction de excution de script locale
-        logEvent "Sélection excution de script locale"
+        logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
         fonction_exec_script
         ;;
 
     6)
         # retour au menu principal
-        logEvent "Sélectionretour au menu principal"
+        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
         return
         ;;
 
     *)
         # si autre chosse c'est un valide
-        logEvent "Sélection Option invalide"
-        echo "► Option invalide"
+        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
+        echo "► Entrée invalide"
         ;;
 
     esac
 }
 
+#=====================================================
+# MENU INFORMATIONS SYSTEME
+#=====================================================
+
 function informationMainMenu() {
+
+    logEvent "MENU_INFOMATIONS_SYSTEME"
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -387,33 +453,66 @@ function informationMainMenu() {
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Liste des utilisateurs                       │"
-    echo "│  2. Afficher adresse IP, masque, passerelle      │"
-    echo "│  3. Informations disque dur                      │"
-    echo "│  4. Version de l'OS                              │"
-    echo "│  5. Mises à jour critiques manquantes            │"
-    echo "│  6. Afficher marque/modèle de l'ordinateur       │"
-    echo "│  7. Statut UAC                                   │"
-    echo "│  8. Menu Principal                               │"
+    echo "│  2. Afficher les 5 derniers logins               │"
+    echo "│  3. Afficher adresse IP, masque, passerelle      │"
+    echo "│  4. Informations disque dur                      │"
+    echo "│  5. Version de l'OS                              │"
+    echo "│  6. Mises à jour critiques manquantes            │"
+    echo "│  7. Afficher marque/modèle de l'ordinateur       │"
+    echo "│  8. Statut UAC                                   │"
+    echo "│  9. Menu Principal                               │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
 
     read -p "► Choisissez une option : " informationMainMenu
-    echo ""
 
     case $informationMainMenu in
 
     1)
 
-        echo "blabla"
+        logEvent "MENU_INFORMATIONS_SYSTEME:LISTE_UTILISATEURS"
+        echo "Liste des utilisateurs"
+        ;;
+
+    2)
+
+        logEvent "MENU_INFORMATIONS_SYSTEME:5_DERNIERS_LOGINS"
+        echo "Afficher les 5 derniers logins"
+        ;;
+    3)
+        logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
+        echo "Afficher adresse IP, masque, passerelle"
+        ;;
+    4)
+        logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
+        echo "Informations disque dur"
+        ;;
+    5)
+        logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
+        echo "Version de l'OS"
+        ;;
+    6)
+        logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
+        echo "Mises à jour critiques manquantes"
+        ;;
+    7)
+        logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
+        echo "Afficher marque/modèle de l'ordinateur"
         ;;
 
     8)
+        logEvent "MENU_INFORMATIONS_SYSTEME:STATUS_UAC"
+        echo "Statut UAC"
+        ;;
 
+    9)
+        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
+        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationMainMenu
         ;;
@@ -421,18 +520,23 @@ function informationMainMenu() {
     esac
 }
 
+#=====================================================
+# MENU INFORMATIONS UTILISATEUR
+#=====================================================
+
 function informationUserMainMenu() {
+
+    logEvent "MENU_INFORMATIONS_UTILISATEUR"
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
-    echo "│          MENU INFORMATIONS UTILISATEURS          │"
+    echo "│          MENU INFORMATIONS UTILISATEUR           │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Date dernière connexion                      │"
     echo "│  2. Date dernière modification de mot de passe   │"
     echo "│  3. Liste des sessions ouvertes                  │"
-    echo "│  4. Afficher les 5 derniers logins               │"
-    echo "│  5. Menu Principal                               │"
+    echo "│  4. Menu Principal                               │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
@@ -443,18 +547,28 @@ function informationUserMainMenu() {
 
     1)
 
-        echo "blabla"
+        logEvent "MENU_INFORMATION_UTILISATEUR:DATE_DERNIERE_CONNEXION"
+        echo "bDate dernière connexion"
         ;;
     2)
 
-        echo "blabla"
+        logEvent "MENU_INFORMATION_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
+        echo "Date dernière modification de mot de passe"
         ;;
 
-    5)
+    3)
+
+        logEvent "MENU_INFORMATION_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
+        echo "Liste des sessions ouvertes"
+        ;;
+    4)
+
+        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
+        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationUserMainMenu
         ;;
@@ -462,7 +576,13 @@ function informationUserMainMenu() {
     esac
 }
 
+#=====================================================
+# MENU JOURNALISATION
+#=====================================================
+
 function logsMainMenu() {
+
+    logEvent "MENU_JOURNALISATION"
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -482,18 +602,23 @@ function logsMainMenu() {
 
     1)
 
+        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_UTILISATEUR"
         echo "blabla"
         ;;
     2)
 
+        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS"
         echo "blabla"
         ;;
     3)
 
+        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
+
+        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         logsMainMenu
         ;;

@@ -8,7 +8,7 @@
 
 source scriptUsers.sh
 source scriptGroups.sh
-source scriptFolder.sh
+source scriptGestionOrdi.sh
 
 #=====================================================
 # VARIABLES DES COULEURS
@@ -49,7 +49,6 @@ function logEvent() {
     heure=$(date +%H:%M:%S)
     utilisateur=$(whoami)
 
-
     context="local"
     if [ "$connexionMode" = "ssh" ]; then
         context="ssh:${remoteUser}@${remoteComputer}"
@@ -61,47 +60,9 @@ function logEvent() {
 
 }
 
-function logEventUser() {
-
-    event="$1"
-    date=$(date +%Y-%m-%d)
-    heure=$(date +%H:%M:%S)
-    utilisateur=$(whoami)
-
-
-    context="local"
-    if [ "$connexionMode" = "ssh" ]; then
-        context="ssh:${remoteUser}@${remoteComputer}"
-    fi
-
-    entry="${date}_${heure}_${utilisateur}_${context}_"USER"_${event}"
-
-    echo "$entry" >>"$log_file"
-
-}
-
-function logEventComputer() {
-
-    event="$1"
-    date=$(date +%Y-%m-%d)
-    heure=$(date +%H:%M:%S)
-    utilisateur=$(whoami)
-
-    context="local"
-    if [ "$connexionMode" = "ssh" ]; then
-        context="ssh:${remoteUser}@${remoteComputer}"
-    fi
-
-    entry="${date}_${heure}_${utilisateur}_${context}_"COMPUTER"_${event}"
-
-    echo "$entry" >>"$log_file"
-
-}
-
-function startScript(){
+function startScript() {
     logEvent "Start script"
 }
-
 
 logInit
 #=====================================================
@@ -133,11 +94,11 @@ function chooseExecutionMode() {
     echo ""
 
     read -p "► Voulez-vous exécuter le script en Local ou à distance ? " executionMode
-    logEvent "Entrée utilisateur $executionMode"
 
     case $executionMode in
 
     1)
+        logEvent "Execution Locale choisie"
         connexionMode="local"
         export connexionMode
         logEvent "Exécution du script sur la machine hôte"
@@ -146,7 +107,7 @@ function chooseExecutionMode() {
         ;;
 
     2)
-
+        logEvent "Execution distante (SSH) choisie"
         connexionMode="ssh"
         export connexionMode
 
@@ -352,35 +313,69 @@ function computerMainMenu() {
 
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
-    echo "│             MENU GESTION ORDINATEUR              │"
+    echo "│               Gestion Ordinateurs                │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
-    echo "│  1. Répertoire                                   │"
-    echo "│  2. Redémarrer                                   │"
-    echo "│  3. Activer le Pare-Feu                          │"
-    echo "│  4. Prise de main à distance (CLI)               │"
-    echo "│  5. Exécuter un script                           │"
-    echo "│  6. Menu Principal                               │"
+    echo "│  1. Gestion Repertoire                           │"
+    echo "│  2. Redémarrage                                  │"
+    echo "│  3. Prise de main à distance (CLI)               │"
+    echo "│  4. Activation du pare-feu                       │"
+    echo "│  5. Exécution de script sur machine distante     │"
+    echo "│  6. Retour au menu principal                     │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
 
-    read -p "► Choisissez une option : " computerMainMenu
+    # Demande de faire un choix
+    read -p "► Choisissez une option : " choix
+    echo ""
 
-    case $computerMainMenu in
+    # structure case prend la valeur $choix de cherche et excécute
+    case "$choix" in
 
     1)
-        repertoireMenu
+        #appel au script de gestion de repertoire
+        logEvent "Sélection menu gestion repertoire"
+        gestion_repertoire_menu
+        ;;
+
+    2)
+        # appel la fonction de redemarrage
+        logEvent "Sélection Redemarrage"
+        fonction_redemarrage
+        ;;
+
+    3)
+
+        # appel la fonction de prise à main distance
+        logEvent "Sélection Prise à main distance"
+        fonction_prise_main
+        ;;
+
+    4)
+        # appel la fonction de activer le parefeu
+        logEvent "Sélection Activer le parefeu"
+        fonction_activer_parefeu
+        ;;
+
+    5)
+        # appel la fonction de excution de script locale
+        logEvent "Sélection excution de script locale"
+        fonction_exec_script
         ;;
 
     6)
-        mainMenu
+        # retour au menu principal
+        logEvent "Sélectionretour au menu principal"
+        return
         ;;
 
     *)
-        echo "► Entrée Invalide"
-        computerMainMenu
+        # si autre chosse c'est un valide
+        logEvent "Sélection Option invalide"
+        echo "► Option invalide"
         ;;
+
     esac
 }
 
@@ -404,6 +399,7 @@ function informationMainMenu() {
     echo ""
 
     read -p "► Choisissez une option : " informationMainMenu
+    echo ""
 
     case $informationMainMenu in
 

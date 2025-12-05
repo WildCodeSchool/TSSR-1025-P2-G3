@@ -80,6 +80,7 @@ function stopScript() {
 }
 
 logInit
+
 #=====================================================
 # VARIABLES DE CONNEXION
 #=====================================================
@@ -118,7 +119,6 @@ function chooseExecutionMode() {
         logEvent "EXECUTION_LOCAL"
         connexionMode="local"
         export connexionMode
-        logEvent "Exécution du script sur la machine hôte"
         echo "► Exécution du script sur la machine hôte"
         echo ""
         ;;
@@ -178,6 +178,7 @@ function chooseExecutionMode() {
         ;;
 
     esac
+
     detectionRemoteOS
 }
 
@@ -216,6 +217,7 @@ function command() {
     else
         ssh -p "$portSSH" "$remoteUser@$remoteComputer" "$cmd"
     fi
+
 }
 
 # Fonction pour les commandes exigeant SUDO
@@ -228,6 +230,7 @@ function sudo_command() {
     else
         ssh -t -o logLevel=ERROR -p "$portSSH" "$remoteUser@$remoteComputer" "sudo $cmd"
     fi
+
 }
 
 # Fonction pour les commandes Powershell

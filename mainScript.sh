@@ -9,7 +9,7 @@
 source scriptUsers.sh
 source scriptGroups.sh
 source scriptGestionOrdi.sh
-# source script1.sh
+source scriptSearchLog.sh
 # source script2.sh
 # source script3.sh
 
@@ -30,7 +30,7 @@ export NC='\033[0m'
 #### TEMPORAIRE ####
 
 # Chemin du fichier log
-log_file="log_evt.log"
+log_file="/var/log/log_evt.log"
 
 # Vérification si le fichier existe, sinon création.
 function logInit() {
@@ -362,6 +362,7 @@ function userMainMenu() {
         echo "► Entrée invalide"
         userMainMenu
         ;;
+
     esac
 
 }
@@ -484,37 +485,48 @@ function informationMainMenu() {
         echo "Afficher les 5 derniers logins"
         ;;
     3)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
         echo "Afficher adresse IP, masque, passerelle"
         ;;
     4)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
         echo "Informations disque dur"
         ;;
+
     5)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
         echo "Version de l'OS"
         ;;
+
     6)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
         echo "Mises à jour critiques manquantes"
         ;;
+
     7)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
         echo "Afficher marque/modèle de l'ordinateur"
         ;;
 
     8)
+
         logEvent "MENU_INFORMATIONS_SYSTEME:STATUS_UAC"
         echo "Statut UAC"
         ;;
 
     9)
+
         logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
+
         logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationMainMenu
@@ -564,6 +576,7 @@ function informationUserMainMenu() {
         logEvent "MENU_INFORMATION_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
         echo "Liste des sessions ouvertes"
         ;;
+
     4)
 
         logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
@@ -571,6 +584,7 @@ function informationUserMainMenu() {
         ;;
 
     *)
+
         logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationUserMainMenu
@@ -593,8 +607,10 @@ function logsMainMenu() {
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Recherche log Utilisateur                    │"
-    echo "│  2. Recherche log Ordinateur                     │"
-    echo "│  3. Menu Principal                               │"
+    echo "│  2. Recherche log utilisateur distant (SSH)      │"
+    echo "│  3. Recherche log Ordinateur local               │"
+    echo "│  4. Recherche log Ordinateur distant (SSH)       │"
+    echo "│  5. Menu Principal                               │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
@@ -606,22 +622,35 @@ function logsMainMenu() {
     1)
 
         logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_UTILISATEUR"
-        echo "blabla"
+        searchUser
         ;;
+
     2)
 
-        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS"
-        echo "blabla"
+        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_UTILISATEUR_SSH"
+        searchUserSsh
         ;;
-    3)
 
-        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
+    3)
+        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS_LOCAL"
+        searchComputerLocal
+        ;;
+
+    4)
+
+        logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS_DISTANT_SSH"
+        searchComputerSsh
+        ;;
+
+    5)
+
+        logEvent "MENU_JOURNALISATION:RETOUR_MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
 
-        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
+        logEvent "MENU_JOURNALISATION:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         logsMainMenu
         ;;

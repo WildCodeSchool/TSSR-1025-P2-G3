@@ -8,13 +8,17 @@
 
 # LINUX
 source Ressources/scripts_module/linux/scriptUsersLinux.sh
-source Ressources/scripts_module/scriptGroups.sh
-source Ressources/scripts_module/scriptGestionOrdi.sh
-source Ressources/scripts_module/scriptSearchLog.sh
-source Ressources/scripts_module/scriptInfosUsers.sh
+source Ressources/scripts_module/linux/scriptGroupsLinux.sh
+source Ressources/scripts_module/linux/scriptGestionOrdiLinux.sh
+source Ressources/scripts_module/linux/scriptSearchLogLinux.sh
+source Ressources/scripts_module/linux/scriptInfosUsersLinux.sh
 
 # WINDOWS
 source Ressources/scripts_module/windows/scriptUsersWindows.sh
+source Ressources/scripts_module/windows/scriptGroupsWindows.sh
+source Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
+source Ressources/scripts_module/windows/scriptSearchLogWindows.sh
+source Ressources/scripts_module/windows/scriptInfosUsersWindows.sh
 
 #=====================================================
 # VARIABLES DES COULEURS

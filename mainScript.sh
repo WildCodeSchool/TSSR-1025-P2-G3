@@ -6,12 +6,15 @@
 # CHARGEMENT DES MODULES
 #=====================================================
 
-source scriptUsers.sh
-source scriptGroups.sh
-source scriptGestionOrdi.sh
-source scriptSearchLog.sh
-# source script2.sh
-# source script3.sh
+# LINUX
+source Ressources/scripts_module/linux/scriptUsersLinux.sh
+source Ressources/scripts_module/scriptGroups.sh
+source Ressources/scripts_module/scriptGestionOrdi.sh
+source Ressources/scripts_module/scriptSearchLog.sh
+source Ressources/scripts_module/scriptInfosUsers.sh
+
+# WINDOWS
+source Ressources/scripts_module/windows/scriptUsersWindows.sh
 
 #=====================================================
 # VARIABLES DES COULEURS
@@ -78,8 +81,6 @@ function stopScript() {
     exit 0
 
 }
-
-logInit
 
 #=====================================================
 # VARIABLES DE CONNEXION
@@ -233,10 +234,39 @@ function sudo_command() {
 
 }
 
-# Fonction pour les commandes Powershell
-# function powershell_command(){
+# Fonction pour les commandes PowerShell
+function powershell_command() {
 
-# }
+    local cmd="$1"
+
+    ssh -p "$portSSH" "$remoteUser@$remoteComputer" "powershell.exe -Command \"$cmd\""
+
+}
+
+#=====================================================
+# FICHIERS STOCKAGE INFORMATIONS
+#=====================================================
+
+function infoFile() {
+    local cible="$1"
+    local description="$2"
+    local informations="$3"
+
+    local date=$(date +%Y%m%d)
+    local dossierInfo="info"
+    local fichierInfo="${dossierInfo}/info_${cible}_${date}.txt"
+
+    if [ ! -d "$dossierInfo" ]; then
+        mkdir -p "$dossierInfo"
+    fi
+
+    if [ ! -f "$fichierInfo" ]; then
+        touch "$fichierInfo"
+    fi
+
+    local time=$(date +"%Y-%m-%d %H:%M:%S")
+    echo "[$time] $description : $informations" >>"$fichierInfo"
+}
 
 #=====================================================
 # MENU PRINCPAL
@@ -342,7 +372,15 @@ function userMainMenu() {
     1)
 
         logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
-        userMenu
+        if [ "$remoteOS" = "Linux" ]; then
+
+            userMenuLinux
+
+        else
+
+            userMenuWindows
+
+        fi
         ;;
 
     2)
@@ -521,13 +559,13 @@ function informationMainMenu() {
 
     9)
 
-        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
+        logEvent "MENU_INFORMATIONS_SYSTEME:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
 
-        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
+        logEvent "MENU_INFORMATIONS_SYSTEME:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationMainMenu
         ;;
@@ -562,30 +600,30 @@ function informationUserMainMenu() {
 
     1)
 
-        logEvent "MENU_INFORMATION_UTILISATEUR:DATE_DERNIERE_CONNEXION"
-        echo "bDate dernière connexion"
+        logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_CONNEXION"
+        fonc_date_lastconnection
         ;;
     2)
 
-        logEvent "MENU_INFORMATION_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
-        echo "Date dernière modification de mot de passe"
+        logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
+        fonc_date_lastpassmodif
         ;;
 
     3)
 
-        logEvent "MENU_INFORMATION_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
-        echo "Liste des sessions ouvertes"
+        logEvent "MENU_INFORMATIONS_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
+        fonc_opensessions
         ;;
 
     4)
 
-        logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
+        logEvent "MENU_INFORMATIONS_UTILISATEUR:MENU_PRINCIPAL"
         mainMenu
         ;;
 
     *)
 
-        logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
+        logEvent "MENU_INFORMATIONS_UTILISATEUR:ENTREE_INVALIDE"
         echo "► Entrée Invalide"
         informationUserMainMenu
         ;;
@@ -610,7 +648,8 @@ function logsMainMenu() {
     echo "│  2. Recherche log utilisateur distant (SSH)      │"
     echo "│  3. Recherche log Ordinateur local               │"
     echo "│  4. Recherche log Ordinateur distant (SSH)       │"
-    echo "│  5. Menu Principal                               │"
+    echo "│  5. Afficher le fichier de journalisation        │"
+    echo "│  6. Menu Principal                               │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
@@ -644,6 +683,12 @@ function logsMainMenu() {
 
     5)
 
+        logEvent "MENU_JOURNALISATION:AFFICHAGE_FICHIER_JOURNALISATION"
+        less +G /var/log/log_evt.log
+        ;;
+
+    6)
+
         logEvent "MENU_JOURNALISATION:RETOUR_MENU_PRINCIPAL"
         mainMenu
         ;;
@@ -663,6 +708,7 @@ function logsMainMenu() {
 # EXECUTION DU SCRIPT
 #=====================================================
 
+logInit
 startScript
 chooseExecutionMode
 mainMenu

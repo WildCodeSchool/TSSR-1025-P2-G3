@@ -3,8 +3,6 @@
 # Script pour récupérer des informations sur un utilisateur
 # Auteur : Pierre-Jean
 
-#Date de dernière connexion d’un utilisateur
-
 fonc_menu_infosutilisateurs() {
     echo "╭──────────────────────────────────────────────────╮"
     echo "│          MENU INFORMATIONS UTILISATEURS          │"
@@ -22,15 +20,15 @@ fonc_menu_infosutilisateurs() {
 
     case $selection in
     1)
-        logEvent "Recherche dernière connection utilisateur"
+        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRE_CONNECTION_UTILISATEUR"
         fonc_date_lastconnection
         ;;
     2)
-        logEvent "Recherche dernière modification de mot de passe"
+        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRE_MODIFICATION_DE_MOT_DE_PASSE"
         fonc_date_lastpassmodif
         ;;
     3)
-        logEvent "Recherche dernières sessions ouvertes"
+        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRES_SESSIONS_OUVERTES"
         fonc_opensessions
         ;;
     *)
@@ -58,12 +56,12 @@ fonc_date_lastconnection() {
         # l'utilisateur existe ?
         if
             command "cat /etc/passwd | grep -w $userlastconnect >/dev/null"
-
+            logEvent "ENTRÉE_D'UTILISATEUR:$userlastconnect"
         # si il existe on affiche l'info
         then
             echo "L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
             command "last -1 \$userlastconnect | head -1 | awk '{print \$4, \$5, \$6, \$7}'"
-            logEvent "affichage de la dernière connection de l'utilisateur"
+            logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
             echo "Souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" conf
 
@@ -75,6 +73,7 @@ fonc_date_lastconnection() {
         # sinon on retoure au menu précédent
         else
             echo "Erreur de saisie, retour au menu précédent"
+            logEvent "ERREUR_DE_SAISIE,_RETOUR_AU_MENU_PRÉCÉDENT"
             fonc_date_lastconnection
         fi
         ;;
@@ -103,6 +102,7 @@ fonc_date_lastpassmodif() {
         echo "Voici la liste des utilisateurs : "
         command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
         read -p "Quel utilisateur choisissez-vous  ? : " userlastpass
+        logEvent "ENTRÉE_D'UTILISATEUR:$userlastpass"
 
         # l'utilisateur existe ?
         if
@@ -112,7 +112,7 @@ fonc_date_lastpassmodif() {
         then
             echo "L'utilisateur $userlastpass à changé son mot de passe la dernière fois : "
             command "chage -l $userlastpass | head -1 | awk '{print \$8, \$9, \$10}'"
-            logEvent "affichage de la date du dernier changement de mdp de l'utilisateur"
+            logEvent "AFFICHAGE_DE_LA_DATE_DU_DERNIER_CHANGEMENT_DE_MDP_DE_L'UTILISATEUR"
             echo "Souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" conf
 
@@ -124,6 +124,7 @@ fonc_date_lastpassmodif() {
         # sinon on retoure au menu précédent
         else
             echo "Erreur de saisie, retour au menu précédent"
+            logEvent "ERREUR_DE_SAISIE"
             fonc_date_lastconnection
         fi
         ;;
@@ -153,6 +154,7 @@ fonc_opensessions() {
         echo "Voici la liste des utilisateurs : "
         command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
         read -p "Quel utilisateur choisissez-vous  ? : " userlastsession
+        logEvent "ENTRÉE_D'UTILISATEUR:$userlastsession"
 
         # l'utilisateur existe ?
         if
@@ -162,7 +164,7 @@ fonc_opensessions() {
         then
             echo "voici la liste des sessions ouvertes par $userlastsession : "
             command "who | grep $userlastsession"
-            logEvent "Affichage de la liste des sessions ouvertes par l'utilisateur"
+            logEvent "AFFICHAGE_DE_LA_LISTE_DES_SESSIONS_OUVERTES_PAR_L'UTILISATEUR"
             echo "Souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" conf
 
@@ -171,6 +173,10 @@ fonc_opensessions() {
             else
                 fonc_menu_infosutilisateurs
             fi
+        else
+            echo "Erreur de saisie, retour au menu précédent"
+            logEvent "ERREUR_DE_SAISIE"
+            fonc_date_lastconnection
         fi
         ;;
     2)

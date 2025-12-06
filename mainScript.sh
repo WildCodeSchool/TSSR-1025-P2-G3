@@ -372,6 +372,7 @@ function userMainMenu() {
     1)
 
         logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
+
         if [ "$remoteOS" = "Linux" ]; then
 
             userMenuLinux
@@ -386,7 +387,17 @@ function userMainMenu() {
     2)
 
         logEvent "MENU_GESTION_UTILISATEUR:GROUPES"
-        fonc_menu_group
+        logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
+
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonc_menu_group_linux
+
+        else
+
+            fonc_menu_group_windows
+
+        fi
         ;;
 
     3)
@@ -438,32 +449,73 @@ function computerMainMenu() {
     1)
         #appel au script de gestion de repertoire
         logEvent "MENU_GESTION_ORDINATEURS:GESTION_REPERTOIRE"
-        gestion_repertoire_menu
+
+        if [ "$remoteOS" = "Linux" ]; then
+
+            gestion_repertoire_menu_linux
+
+        else
+
+            gestion_repertoire_menu_windows
+
+        fi
         ;;
 
     2)
         # appel la fonction de redemarrage
         logEvent "MENU_GESTION_ORDINATEURS:REDEMARRAGE"
-        fonction_redemarrage
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_redemarrage_linux
+
+        else
+
+            fonction_redemarrage_windows
+
+        fi
         ;;
 
     3)
 
         # appel la fonction de prise à main distance
         logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
-        fonction_prise_main
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_prise_main_linux
+
+        else
+
+            fonction_prise_main_windows
+
+        fi
         ;;
 
     4)
         # appel la fonction de activer le parefeu
         logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
-        fonction_activer_parefeu
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_activer_parefeu_linux
+
+        else
+
+            fonction_activer_parefeu_windows
+
+        fi
         ;;
 
     5)
         # appel la fonction de excution de script locale
         logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
-        fonction_exec_script
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_exec_script_linux
+
+        else
+
+            fonction_exec_script_windows
+
+        fi
         ;;
 
     6)
@@ -601,18 +653,43 @@ function informationUserMainMenu() {
     1)
 
         logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_CONNEXION"
-        fonc_date_lastconnection
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonc_date_lastconnection_linux
+
+        else
+
+            fonc_date_lastconnection_windows
+
+        fi
         ;;
     2)
 
         logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
-        fonc_date_lastpassmodif
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonc_date_lastpassmodif_linux
+
+        else
+
+            fonc_date_lastpassmodif_windows
+
+        fi
         ;;
 
     3)
 
         logEvent "MENU_INFORMATIONS_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
-        fonc_opensessions
+
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonc_opensessions_linux
+
+        else
+
+            fonc_opensessions_windows
+
+        fi
         ;;
 
     4)

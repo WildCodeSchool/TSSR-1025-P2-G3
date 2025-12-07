@@ -193,6 +193,10 @@ function chooseExecutionMode() {
 
 function detectionRemoteOS() {
 
+    if [ "$connexionMode" = "local" ]; then
+        remoteOS="Linux"
+    fi
+
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
         remoteOS="Linux"
         export remoteOS
@@ -207,6 +211,7 @@ function detectionRemoteOS() {
         logEvent "DETECTION_OS:Windows"
     fi
 }
+
 
 #=====================================================
 # FONCTION DES COMMANDES

@@ -17,11 +17,10 @@
 
 Ce projet consiste à développer deux scripts d'administration système permettant la gestion à distance de machines clientes :
 
-- **Script Bash** : déployé sur un serveur Debian pour administrer des clients Ubuntu
-- **Script PowerShell** : déployé sur un serveur Windows Server pour administrer des clients Windows
+- **Script Bash** : déployé sur un serveur Debian pour administrer des clients linux et windows
+- **Script PowerShell** : déployé sur un serveur Windows Server pour administrer des clients Windows et linux
 
 **Objectifs** :
-- Automatiser les tâches d'administration courantes
 - Exécuter des actions à distance sur les machines clientes
 - Documenter chaque fonctionnalité implémentée
 

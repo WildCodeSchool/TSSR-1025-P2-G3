@@ -4,7 +4,7 @@
 
 # fonction de gestion de répertoires
 gestion_repertoire_menu() {
-    logEvent " menu gestion répertoire "
+    logEvent "MENU_GESTION_RÉPERTOIRE"
 
     # boucle menue gestion de répertoires
     while true; do
@@ -21,33 +21,33 @@ gestion_repertoire_menu() {
 
         # Demande de faire un choix
         read -p "► Choisissez une option : " choix
-        logEvent "$choix"
+        logEvent "${choix^^}"
 
         # structure case prend la valeur $choix de cherche et excécute
         case "$choix" in
 
         1)
             # fonction de creation de dossier
-            logEvent "Sélection creation de dossier"
+            logEvent "SÉLECTION_CRÉATION_DE_DOSSIER"
             fonction_creer_dossier
             ;;
 
         2)
             # fonction de supprition de dossier
-            logEvent "Sélection supprition de dossier"
+            logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
             fonction_supprimer_dossier
             ;;
 
         3)
             # fonction gestion ordinateur menue précédent
-            logEvent "Sélection Retour au menu précédent"
+            logEvent "SÉLECTION_RETOUR_AU_MENU_PRÉCÉDENT"
             echo "Retour au menu précédent"
             return
             ;;
 
         *)
             # si autre chosse c'est un valide
-            logEvent "Sélection Option invalide"
+            logEvent "OPTION_INVALIDE"
             echo " Option invalide."
             ;;
 
@@ -59,16 +59,16 @@ gestion_repertoire_menu() {
 ################################## Fonction demander chemin #######################################
 fonction_demander_chemin() {
 
-    logEvent " Entrez le chemin du dossier "
+    logEvent "ENTREZ_LE_CHEMIN_DU_DOSSIER"
     echo "► Entrez le chemin du dossier :"
 
     # Demande donner un chemin dossier
     read -r chemindossier
-    logEvent "Entrée utilisateur : $chemindossier"
+    logEvent "ENTRÉE_UTILISATEUR:$chemindossier"
 
     # vérifier si au moin un chemin a ete saisie
     if [ -z "$chemindossier" ]; then
-        logEvent " Aucun chemin saisi, retour "
+        logEvent "AUCUN_CHEMIN_SAISI"
         echo "► Aucun chemin saisi"
 
         return 1
@@ -79,7 +79,7 @@ fonction_demander_chemin() {
 ################################## Fonction création répertoire #####################################
 
 fonction_creer_dossier() {
-    logEvent " demande chemin Création de dossier "
+    logEvent "CRÉATION_DE_DOSSIER"
     echo "► Création de dossier"
 
     fonction_demander_chemin || return
@@ -87,7 +87,7 @@ fonction_creer_dossier() {
     # vérifier si le dossier existe
     if [ -d "$chemindossier" ]; then
 
-        logEvent " Le dossier existe déjà "
+        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"
 
     # si le dossier existe pas créé le dossier
@@ -97,12 +97,12 @@ fonction_creer_dossier() {
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
 
-            logEvent " Le dossier a été créé $chemindossier "
+            logEvent "DOSSIER_CRÉÉ:$chemindossier"
             echo "► Le dossier a été créé $chemindossier "
 
         else
 
-            logEvent " Erreur : dossier non créé "
+            logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
             echo "► Erreur : dossier non créé"
 
         fi
@@ -113,22 +113,22 @@ fonction_creer_dossier() {
 
 fonction_supprimer_dossier() {
 
-    logEvent " demande chemin Suppression de dossier "
+    logEvent "SUPPRESSION_DE_DOSSIER"
     echo "► Suppression de dossier"
     fonction_demander_chemin || return
 
     # vérifier si le dossier existe pas si existe supprime
     if [ ! -d "$chemindossier" ]; then
-        logEvent " Le dossier $chemindossier n'existe pas "
+        logEvent "DOSSIER_INEXISTANT:$chemindossier"
         echo "► Le dossier $chemindossier n'existe pas"
     else
         sudo_command rm -r "$chemindossier" 2>/dev/null
         #vérifier si le dossier à bien été supprimé
         if [ $? -eq 0 ]; then
-            logEvent " Dossier supprimé : $chemindossier"
+            logEvent "DOSSIER_SUPPRIMÉ:$chemindossier"
             echo "► Dossier supprimé : $chemindossier"
         else
-            logEvent " Dossier : $chemindossier non supprimé "
+            logEvent "ERREUR_SUPPRESSION:$chemindossier"
             echo "► Erreur : dossier $chemindossier non supprimé"
         fi
     fi
@@ -138,16 +138,18 @@ fonction_supprimer_dossier() {
 
 #fonction de redemarage poste distante
 fonction_redemarrage() {
-
+    # Demande si Voulez-vous redémarrer l'ordinateur distant 
+    logEvent "DEMANDE_VOULEZ_VOUS_REDEMARRER_L'ORDINATEUR"
     read -p "► Voulez-vous redémarrer l'ordinateur distant ? (o/n) " restartComputer
 
-    # vérifier si la commande avant (ssh) a bien été exécuté je fais redémarrer l'ordinateur, si non je donne la message erreur
+    # Si la reponse est (o) alors redémarre l'ordinateur distante sinon erreur.
     if [ "$restartComputer" = "o" ]; then
-        logEvent "conextion fait avec succès l'ordinateur va redémarre"
+        logEvent "REBOOT_ORDINATEUR"
         echo "► l'ordinateur va redémarrer "
         sudo_command "reboot"
+
     else
-        logEvent " ► Erreur ssh ou la commande redémarrage n'est pas fonctionné "
+        logEvent "ERREUR_REDEMARRAGE"
         echo "► Erreur : commande n'est pas fonctionné "
     fi
 
@@ -156,30 +158,19 @@ fonction_redemarrage() {
 ################################### Fonction prise de main (CLI) ###################################
 fonction_prise_main() {
 
-    # local remoteComputer
-    # local remoteUser
-    # local portSSH
-
-    # # Connexion SSH à la machine distante
-    # logEvent " demande info connexion en ssh "
-    # read -p "► Entrez une Adresse IP ou Hostname : " remoteComputer
-    # logEvent "Adresse IP ou Hostname : $remoteComputer"
-    # read -p "► Entrez un Nom d'utilisateur : " remoteUser
-    # logEvent "Nom d'utilisateur : $remoteUser"
-    # read -p "► Entrez un Port : " portSSH
-    # logEvent "Port : $portSSH"
-
+    # apple au variables mainScript.sh (variables de connexion SSH)
+    logEvent "DEMANDE_PRISE_DE_MAIN_DISTANTE_SSH"
     ssh -p "$portSSH" "$remoteUser@$remoteComputer"
 
-    # vérifier si la connexion ssh à bien été effectué
+    # Condition si le dernier commande c'est bien exécutée  
     if [ $? -eq 0 ]; then
 
-        logEvent " conextion fait avec succès "
+        logEvent "CONNEXION_SUCCESS"
         echo "► Vous êtes prise de main distante en (SSH)."
 
     else
 
-        logEvent " ► Erreur ssh à pas été connecté "
+        logEvent "ERREUR_SSH"
         echo "► Erreur : Vous êtes pas prise de main à distante en (SSH)."
 
     fi
@@ -187,27 +178,30 @@ fonction_prise_main() {
 
 ################################### Fonction activation pare-feu ####################################
 fonction_activer_parefeu() {
-    logEvent " demande d'activation de pare-feu "
+
+    logEvent "DEMANDE_ACTIVATION_UFW"
     echo "► Activation du pare-feu UFW "
 
+    # Demmande si l'utilisateur veut activer le pare-feu UFW
     read -p "► Voulez-vous activer le pare-feu UFW ? (o/n) " activateFirewall
-    # activation de pare-feu
 
-    # vérifier si le activation à bien été effectué
+    # Si la reponse est (o) alors active le pare-feu UFW sinon retourne au menu principal.
     if [ "$activateFirewall" = "o" ]; then
 
         sudo_command "ufw enable"
 
+        # vérifier si le pare-feu a bien été activé
         if [ $? -eq 0 ]; then
 
-            logEvent " activation de par-feu avec succès "
+            logEvent "PAREFEU_ACTIVÉ"
             echo "► Pare-feu activé avec succès."
 
         else
 
-            logEvent " Erreur : impossible d'activer le pare-feu "
+            logEvent "ERREUR_ACTIVATION_UFW"
             echo "► Erreur : impossible d'activer le pare-feu."
         fi
+    # si la reponse est (n) retourne au menu Gestion Ordinateur
     else
         computerMainMenu
     fi
@@ -216,22 +210,24 @@ fonction_activer_parefeu() {
 ################################# Fonction exécution script local ###################################
 fonction_exec_script() {
 
-    logEvent " demande chemin du script "
+    logEvent "DEMANDE_CHEMIN_SCRIPT"
     echo "► Entrez le chemin du script local à exécuter :"
 
-    ## Demande donner le chemin de script
+    # Demande donner un chemin de script local
     read -r scriptlocal
-    logEvent " $scriptlocal été choisi "
+    logEvent "SCRIPT_SÉLECTIONNÉ:$scriptlocal"
 
-    # condition si le dossier existe pas retourne
+    # vérifier si le fichier script existe
+
     if [ ! -f "$scriptlocal" ]; then
-        logEvent " $scriptlocal inrouvable "
+        logEvent "SCRIPT_INTROUVABLE:$scriptlocal"
         echo "► Erreur : fichier introuvable."
         return
     fi
 
-    # exécution de script demandé
-    logEvent " Exécution du script : $scriptlocal "
+    logEvent "EXÉCUTION_SCRIPT:$scriptlocal"
     echo "► Exécution du script : $scriptlocal"
+    # exécute le script local sur l'ordinateur distant
     sudo_command "bash $scriptlocal"
+
 }

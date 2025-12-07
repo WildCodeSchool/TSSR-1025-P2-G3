@@ -340,7 +340,7 @@ function mainMenu() {
 
         *)
             logEvent "MENU_PRINCIPAL:ENTREE_INVALIDE"
-            echo "► Entrée invalide"
+            echo -e "► ${RED}Entrée invalide !${NC}"
             userMainMenu
             ;;
 
@@ -412,7 +412,7 @@ function userMainMenu() {
 
     *)
         logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
-        echo "► Entrée invalide"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         userMainMenu
         ;;
 
@@ -531,7 +531,7 @@ function computerMainMenu() {
     *)
         # si autre chosse c'est un valide
         logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
-        echo "► Entrée invalide"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         ;;
 
     esac
@@ -622,7 +622,7 @@ function informationMainMenu() {
     *)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:ENTREE_INVALIDE"
-        echo "► Entrée Invalide"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         informationMainMenu
         ;;
 
@@ -705,7 +705,7 @@ function informationUserMainMenu() {
     *)
 
         logEvent "MENU_INFORMATIONS_UTILISATEUR:ENTREE_INVALIDE"
-        echo "► Entrée Invalide"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         informationUserMainMenu
         ;;
 
@@ -777,7 +777,7 @@ function logsMainMenu() {
     *)
 
         logEvent "MENU_JOURNALISATION:ENTREE_INVALIDE"
-        echo "► Entrée Invalide"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         logsMainMenu
         ;;
 

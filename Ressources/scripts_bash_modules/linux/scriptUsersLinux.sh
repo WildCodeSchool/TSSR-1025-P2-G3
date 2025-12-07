@@ -172,7 +172,7 @@ function addUserMenuLinux() {
     *)
 
         logEvent "MENU_AJOUT_UTILISATEUR:ENTREE_INVALIDE"
-        echo "► ${RED}Entrée Invalide!!!{NC}"
+        echo -e "► ${RED}Entrée Invalide!!!{NC}"
         echo "► Retour au menu précédent."
         echo ""
         ;;
@@ -220,7 +220,7 @@ function deleteUserMenuLinux() {
             if [ $? = 1 ]; then
 
                 echo ""
-                echo "► ${RED}L'utilisateur n'existe pas.${NC}"
+                echo -e "► ${RED}L'utilisateur n'existe pas.${NC}"
                 echo ""
                 logEvent "SUPPRIMER_UTILISATEUR:UTILISATEUR_INEXISTANT:$delUserCommand"
 
@@ -243,7 +243,7 @@ function deleteUserMenuLinux() {
 
                     if [ $? = 1 ]; then
 
-                        echo "► ${GREEN}L'utilisateur $delUserCommand a été supprimé.${NC}"
+                        echo -e "► ${GREEN}L'utilisateur $delUserCommand a été supprimé.${NC}"
                         logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION_REUSSIE:$delUserCommand"
 
                         read -p "► Voulez-vous supprimer un autre utilisateur ? (o/n) " delAnotherUser
@@ -253,7 +253,7 @@ function deleteUserMenuLinux() {
                     else
 
                         echo ""
-                        echo "► ${RED}L'utilisateur $delUserCommand n'a pas été supprimé.${NC}"
+                        echo -e "► ${RED}L'utilisateur $delUserCommand n'a pas été supprimé.${NC}"
                         echo ""
                         logEvent "SUPPRIMER_UTILISATEUR:ECHEC_SUPPRESSION:$delUserCommand"
 
@@ -289,7 +289,7 @@ function deleteUserMenuLinux() {
     *)
 
         logEvent "MENU_SUPPRIMER_UTILISATEUR:ENTREE_INVALIDE"
-        echo "► Entrée invalide !"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         ;;
 
     esac
@@ -333,7 +333,7 @@ function changePasswordUserMenuLinux() {
 
             if [ $? = 1 ]; then
 
-                echo "► ${RED}Cet utilisateur n'existe pas ${NC}"
+                echo -e "► ${RED}Cet utilisateur n'existe pas ${NC}"
                 logEvent "CHANGEMENT_MOT_DE_PASSE:UTILISATEUR_INEXISTANT:$changePasswordUser"
 
             else
@@ -392,7 +392,7 @@ function changePasswordUserMenuLinux() {
     *)
 
         logEvent "MENU_CHANGER_MOT_DE_PASSE:ENTREE_INVALIDE"
-        echo "► Entrée invalide !"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         ;;
 
     esac

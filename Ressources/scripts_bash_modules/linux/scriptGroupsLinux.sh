@@ -44,10 +44,10 @@ fonc_add_user_admin_linux() {
                 logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
 
                 if [ $conf = "o" ]; then # si oui on relance la fonction
-                    fonc_add_user_admin
+                    fonc_add_user_admin_linux
                 else
                     # retour au menu
-                    fonc_menu_group
+                    fonc_menu_group_linux
                 fi
 
             else
@@ -62,15 +62,15 @@ fonc_add_user_admin_linux() {
             read -p "tape o pour oui ou autre chose non : " conf
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                fonc_add_user_admin
+                fonc_add_user_admin_linux
             else
-                fonc_menu_group
+                fonc_menu_group_linux
             fi
 
         fi
         ;;
     2)
-        fonc_menu_group
+        fonc_menu_group_linux
         ;;
     *)
         echo "Erreur de saisie"
@@ -103,8 +103,8 @@ fonc_add_user_group_linux() {
             read namegroup
             #si le groupe existe
             if command "cat /etc/group | grep -w $namegroup >/dev/null"; then
-                add=$(sudo_command "usermod -aG $namegroup $useraddgroup" | tee /dev/tty)
-                infoFile "$useraddgroup" "Ajouté au groupe" "$namegroup"
+                sudo_command "usermod -aG $namegroup $useraddgroup"
+
                 # on confirme l'ajout de l'utilisateur au groupe.
                 if cat /etc/group | grep $namegroup | grep $useraddgroup >/dev/null; then
                     echo " l'utilisateur a bien été ajouté au groupe "
@@ -113,7 +113,7 @@ fonc_add_user_group_linux() {
                     echo " souhaitez-vous ajouter un autre utilisateur ?"
                     read -p "tape o pour oui ou autre chose pour non " conf
 
-                    if [ $conf = "o" ]; then # si oui on relance la fonction
+                    if [ "$conf" = "o" ]; then # si oui on relance la fonction
                         fonc_add_user_admin_linux
                     else
                         # retour au menu
@@ -121,7 +121,7 @@ fonc_add_user_group_linux() {
                     fi
 
                 else
-                    echo "erreur su script"
+                    echo "Erreur du script"
                     logEvent "ERREUR_DANS_LE_SCRIPT_À_L'AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
                     exit 130
                 fi
@@ -130,9 +130,10 @@ fonc_add_user_group_linux() {
                 echo "le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? "
                 read -p "tape o pour oui ou autre chose non" conf
 
-                if [ $conf = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
-                    userplusadd=$(sudo_command "groupadd $namegroup && usermod -aG $namegroup $useraddgroup" | tee /dev/tty)
-                    infoFile "$useraddgroup" "A été ajouté au groupe" "$userplusadd"
+                if [ "$conf" = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
+                    sudo_command "groupadd $namegroup"
+                    sudo_command "usermod -aG $namegroup $useraddgroup"
+
                     logEvent "AJOUT_DE_DE_L'UTILISATEUR:$useraddgroup AU_GROUPE:$namegroup"
                 else
                     fonc_menu_group_linux
@@ -143,7 +144,7 @@ fonc_add_user_group_linux() {
             echo "Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
             read -p "tape o pour oui ou autre chose non" conf
 
-            if [ $conf = "o" ]; then # si oui on relance la fonction
+            if [ "$conf" = "o" ]; then # si oui on relance la fonction
                 logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
                 fonc_add_user_group_linux
             else
@@ -192,8 +193,8 @@ fonc_exit_group_linux() {
             #si le groupe selectionné est valide on sort l'utilisateur
             if command "cat /etc/group | grep $exitgroup && cat /etc/group | grep $userexitgroup"; then
 
-                exit=$(sudo_command "usermod -rG $exitgroup $userexitgroup" | tee /dev/tty)
-                infoFile "$userexitgroup" "Sortie du groupe" "$exitgroup"
+                sudo_command "usermod -rG $exitgroup $userexitgroup"
+
                 echo " l'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
                 logEvent "UTILISATEUR_'$userexitgroup'_A_ÉTÉ_RETIRÉ_DU_GROUPE_$exitgroup"
                 echo " souhaitez vous choisir un autre utilisateur ? "

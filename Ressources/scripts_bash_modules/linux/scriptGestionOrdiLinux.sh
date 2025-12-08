@@ -66,25 +66,6 @@ gestion_repertoire_menu_linux() {
     done
 }
 
-################################## Fonction demander chemin #######################################
-# fonction_demander_chemin_linux() {
-
-#     logEvent "ENTREZ_LE_CHEMIN_DU_DOSSIER"
-#     echo "► Entrez le chemin du dossier :"
-
-#     # Demande donner un chemin dossier
-#     read -r chemindossier
-#     logEvent "ENTRÉE_UTILISATEUR:$chemindossier"
-
-#     # vérifier si au moin un chemin a ete saisie
-#     if [ -z "$chemindossier" ]; then
-#         logEvent "AUCUN_CHEMIN_SAISI"
-#         echo "► Aucun chemin saisi"
-
-#         return 1
-#     fi
-#     return 0
-# }
 
 ################################## Fonction création répertoire #####################################
 

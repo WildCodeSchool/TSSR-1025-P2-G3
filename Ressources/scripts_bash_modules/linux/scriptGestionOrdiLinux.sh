@@ -16,8 +16,9 @@ gestion_repertoire_menu_linux() {
         echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Créer un répertoire                          │"
-        echo "│  2. Supprimer un répertoire                      │"
-        echo "│  3. Retour au menu précédent                     │"
+        echo "│  2. Créer une répertoire (SUDO)                  │"
+        echo "│  3. Supprimer un répertoire                      │"
+        echo "│  4. Retour au menu précédent                     │"
         echo "│                                                  │"
         echo "╰──────────────────────────────────────────────────╯"
         echo ""
@@ -38,10 +39,16 @@ gestion_repertoire_menu_linux() {
         2)
             # fonction de supprition de dossier
             logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
-            fonction_supprimer_dossier_linux
+            fonction_creer_dossier_sudo_linux
             ;;
 
         3)
+            # fonction de supprition de dossier
+            logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
+            fonction_supprimer_dossier_linux
+            ;;
+
+        4)
             # fonction gestion ordinateur menue précédent
             logEvent "SÉLECTION_RETOUR_AU_MENU_PRÉCÉDENT"
             echo "Retour au menu précédent"
@@ -60,53 +67,91 @@ gestion_repertoire_menu_linux() {
 }
 
 ################################## Fonction demander chemin #######################################
-fonction_demander_chemin_linux() {
+# fonction_demander_chemin_linux() {
 
-    logEvent "ENTREZ_LE_CHEMIN_DU_DOSSIER"
-    echo "► Entrez le chemin du dossier :"
+#     logEvent "ENTREZ_LE_CHEMIN_DU_DOSSIER"
+#     echo "► Entrez le chemin du dossier :"
 
-    # Demande donner un chemin dossier
-    read -r chemindossier
-    logEvent "ENTRÉE_UTILISATEUR:$chemindossier"
+#     # Demande donner un chemin dossier
+#     read -r chemindossier
+#     logEvent "ENTRÉE_UTILISATEUR:$chemindossier"
 
-    # vérifier si au moin un chemin a ete saisie
-    if [ -z "$chemindossier" ]; then
-        logEvent "AUCUN_CHEMIN_SAISI"
-        echo "► Aucun chemin saisi"
+#     # vérifier si au moin un chemin a ete saisie
+#     if [ -z "$chemindossier" ]; then
+#         logEvent "AUCUN_CHEMIN_SAISI"
+#         echo "► Aucun chemin saisi"
 
-        return 1
-    fi
-    return 0
-}
+#         return 1
+#     fi
+#     return 0
+# }
 
 ################################## Fonction création répertoire #####################################
 
 fonction_creer_dossier_linux() {
 
     logEvent "CRÉATION_DE_DOSSIER"
-    echo "► Création de dossier"
 
-    fonction_demander_chemin_linux || return
+    read -rp "► /home/$USER/" creation_dossier
+
+    # fonction_demander_chemin_linux || return
 
     # vérifier si le dossier existe
-    if [ -d "$chemindossier" ]; then
+    if [ -d "$creation_dossier" ]; then
 
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"
 
     # si le dossier existe pas créé le dossier
     else
-        command "mkdir '$chemindossier' 2>/dev/null"
+        command "mkdir '$creation_dossier' 2>/dev/null"
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
 
-            logEvent "DOSSIER_CRÉÉ:$chemindossier"
-            echo "► Le dossier a été créé $chemindossier "
+            logEvent "DOSSIER_CRÉÉ:$creation_dossier"
+            echo ""
+            echo "► Le dossier a été créé $creation_dossier "
 
         else
 
             logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
+            echo ""
+            echo "► Erreur : dossier non créé"
+
+        fi
+    fi
+}
+
+################################## Fonction création répertoire SUDO #####################################
+
+fonction_creer_dossier_sudo_linux() {
+
+    logEvent "CRÉATION_DE_DOSSIER"
+
+    read -p "► Entrez le chemin du dossier : " creation_dossier_sudo
+
+    # vérifier si le dossier existe
+    if [ -d "$creation_dossier_sudo" ]; then
+
+        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
+        echo "► Le dossier existe déjà"
+
+    # si le dossier existe pas créé le dossier
+    else
+        sudo_command "mkdir '$creation_dossier_sudo' 2>/dev/null"
+
+        # vérifier si le dossier a bien été créé
+        if [ $? -eq 0 ]; then
+
+            logEvent "DOSSIER_CRÉÉ:$creation_dossier_sudo"
+            echo ""
+            echo "► Le dossier a été créé $creation_dossier_sudo "
+
+        else
+
+            logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
+            echo ""
             echo "► Erreur : dossier non créé"
 
         fi

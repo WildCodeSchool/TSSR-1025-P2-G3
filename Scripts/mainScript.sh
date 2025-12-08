@@ -12,7 +12,7 @@ source Ressources/scripts_bash_modules/linux/scriptGroupsLinux.sh
 source Ressources/scripts_bash_modules/linux/scriptGestionOrdiLinux.sh
 source Ressources/scripts_bash_modules/scriptInfosUsersLinux.sh
 source Ressources/scripts_bash_modules/scriptInfoOrdiLinux.sh
-source Ressources/scripts_bash_modulesscriptSearchLog.sh
+source Ressources/scripts_bash_modules/scriptSearchLog.sh
 
 # WINDOWS
 # source Ressources/scripts_module/windows/scriptUsersWindows.sh

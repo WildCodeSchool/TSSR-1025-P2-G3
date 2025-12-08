@@ -114,10 +114,10 @@ fonc_add_user_group_linux() {
                     read -p "tape o pour oui ou autre chose pour non " conf
 
                     if [ $conf = "o" ]; then # si oui on relance la fonction
-                        fonc_add_user_admin
+                        fonc_add_user_admin_linux
                     else
                         # retour au menu
-                        fonc_menu_group
+                        fonc_menu_group_linux
                     fi
 
                 else
@@ -135,7 +135,7 @@ fonc_add_user_group_linux() {
                     infoFile "$useraddgroup" "A été ajouté au groupe" "$userplusadd"
                     logEvent "AJOUT_DE_DE_L'UTILISATEUR:$useraddgroup AU_GROUPE:$namegroup"
                 else
-                    fonc_menu_group
+                    fonc_menu_group_linux
                 fi
             fi
 
@@ -217,9 +217,9 @@ fonc_exit_group_linux() {
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                fonc_exit_group
+                fonc_exit_group_linux
             else
-                fonc_menu_group
+                fonc_menu_group_linux
             fi
 
         fi

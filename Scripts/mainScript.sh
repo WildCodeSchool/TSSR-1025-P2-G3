@@ -575,41 +575,41 @@ function informationMainMenu() {
     1)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:LISTE_UTILISATEURS"
-        echo "Liste des utilisateurs"
+        fonction_liste_utilisateurs_linux
         ;;
 
     2)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:5_DERNIERS_LOGINS"
-        echo "Afficher les 5 derniers logins"
+        fonction_5_derniers_logins_linux
         ;;
     3)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
-        echo "Afficher adresse IP, masque, passerelle"
+        fonction_infos_reseau_linux
         ;;
     4)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
-        echo "Informations disque dur"
+        gestion_disques_menu_linux
         ;;
 
     5)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
-        echo "Version de l'OS"
+        fonction_version_os_linux
         ;;
 
     6)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
-        echo "Mises à jour critiques manquantes"
+        fonction_mises_a_jour_linux
         ;;
 
     7)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
-        echo "Afficher marque/modèle de l'ordinateur"
+        fonction_marque_modele_linux
         ;;
 
     8)

@@ -3,21 +3,24 @@
 ##################################### Menu Gestion Répertoire ####################################
 
 # fonction de gestion de répertoires
-gestion_repertoire_menu() {
+gestion_repertoire_menu_linux() {
+
     logEvent "MENU_GESTION_RÉPERTOIRE"
 
     # boucle menue gestion de répertoires
     while true; do
 
+        echo ""
         echo "╭──────────────────────────────────────────────────╮"
         echo "│               Gestion Répertoires                │"
         echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Créer un répertoire                          │"
-        echo "│  2. Supprimer un répertotour                     │"
+        echo "│  2. Supprimer un répertoire                      │"
         echo "│  3. Retour au menu précédent                     │"
         echo "│                                                  │"
         echo "╰──────────────────────────────────────────────────╯"
+        echo ""
 
         # Demande de faire un choix
         read -p "► Choisissez une option : " choix
@@ -29,20 +32,20 @@ gestion_repertoire_menu() {
         1)
             # fonction de creation de dossier
             logEvent "SÉLECTION_CRÉATION_DE_DOSSIER"
-            fonction_creer_dossier
+            fonction_creer_dossier_linux
             ;;
 
         2)
             # fonction de supprition de dossier
             logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
-            fonction_supprimer_dossier
+            fonction_supprimer_dossier_linux
             ;;
 
         3)
             # fonction gestion ordinateur menue précédent
             logEvent "SÉLECTION_RETOUR_AU_MENU_PRÉCÉDENT"
             echo "Retour au menu précédent"
-            return
+            computerMainMenu
             ;;
 
         *)
@@ -57,7 +60,7 @@ gestion_repertoire_menu() {
 }
 
 ################################## Fonction demander chemin #######################################
-fonction_demander_chemin() {
+fonction_demander_chemin_linux() {
 
     logEvent "ENTREZ_LE_CHEMIN_DU_DOSSIER"
     echo "► Entrez le chemin du dossier :"
@@ -78,11 +81,12 @@ fonction_demander_chemin() {
 
 ################################## Fonction création répertoire #####################################
 
-fonction_creer_dossier() {
+fonction_creer_dossier_linux() {
+
     logEvent "CRÉATION_DE_DOSSIER"
     echo "► Création de dossier"
 
-    fonction_demander_chemin || return
+    fonction_demander_chemin_linux || return
 
     # vérifier si le dossier existe
     if [ -d "$chemindossier" ]; then
@@ -92,8 +96,7 @@ fonction_creer_dossier() {
 
     # si le dossier existe pas créé le dossier
     else
-        sudo_command mkdir "$chemindossier" 2>/dev/null
-        powershell_command mkdir "$chemindossier"
+        command "mkdir '$chemindossier' 2>/dev/null"
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -112,36 +115,31 @@ fonction_creer_dossier() {
 
 #################################### Fonction supprimer dossier #####################################
 
-fonction_supprimer_dossier() {
+fonction_supprimer_dossier_linux() {
 
     logEvent "SUPPRESSION_DE_DOSSIER"
     echo "► Suppression de dossier"
-    fonction_demander_chemin || return
+
+    # fonction_demander_chemin_linux || return
+    read -rp "Entrez un chemin: " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
-    if [ ! -d "$chemindossier" ]; then
-        logEvent "DOSSIER_INEXISTANT:$chemindossier"
-        echo "► Le dossier $chemindossier n'existe pas"
+    if [ -d "$delfolder" ]; then
+
+        sudo_command "rm -r $delfolder"
+
     else
-        sudo_command rm -r "$chemindossier" 2>/dev/null
-        powershell_command rmdir "$chemindossier" -Recurse -Force
-        
-        #vérifier si le dossier à bien été supprimé
-        if [ $? -eq 0 ]; then
-            logEvent "DOSSIER_SUPPRIMÉ:$chemindossier"
-            echo "► Dossier supprimé : $chemindossier"
-        else
-            logEvent "ERREUR_SUPPRESSION:$chemindossier"
-            echo "► Erreur : dossier $chemindossier non supprimé"
-        fi
+        logEvent "DOSSIER_INEXISTANT:$delfolder"
+        echo "► Le dossier $delfolder n'existe pas"
+
     fi
 }
 
 ###################################### Fonction redémarrage #######################################
 
 #fonction de redemarage poste distante
-fonction_redemarrage() {
-    # Demande si Voulez-vous redémarrer l'ordinateur distant 
+fonction_redemarrage_linux() {
+    # Demande si Voulez-vous redémarrer l'ordinateur distant
     logEvent "DEMANDE_VOULEZ_VOUS_REDEMARRER_L'ORDINATEUR"
     read -p "► Voulez-vous redémarrer l'ordinateur distant ? (o/n) " restartComputer
 
@@ -150,39 +148,40 @@ fonction_redemarrage() {
         logEvent "REBOOT_ORDINATEUR"
         echo "► l'ordinateur va redémarrer "
         sudo_command "reboot"
-        powershell_command "Restart-Computer"
+        computerMainMenu
 
     else
         logEvent "ERREUR_REDEMARRAGE"
         echo "► Erreur : commande n'est pas fonctionné "
+        computerMainMenu
     fi
 
 }
 
 ################################### Fonction prise de main (CLI) ###################################
-fonction_prise_main() {
+fonction_prise_main_linux() {
 
     # apple au variables mainScript.sh (variables de connexion SSH)
     logEvent "DEMANDE_PRISE_DE_MAIN_DISTANTE_SSH"
     ssh -p "$portSSH" "$remoteUser@$remoteComputer"
-    powershell_command Enter-PSSession -ComputerName "$remoteComputer" -Credential "$remoteUser"
 
-    # Condition si le dernier commande c'est bien exécutée  
+    # Condition si le dernier commande c'est bien exécutée
     if [ $? -eq 0 ]; then
 
         logEvent "CONNEXION_SUCCESS"
         echo "► Vous êtes prise de main distante en (SSH)."
-
+        computerMainMenu
     else
 
         logEvent "ERREUR_SSH"
         echo "► Erreur : Vous êtes pas prise de main à distante en (SSH)."
+        computerMainMenu
 
     fi
 }
 
 ################################### Fonction activation pare-feu ####################################
-fonction_activer_parefeu() {
+fonction_activer_parefeu_linux() {
 
     logEvent "DEMANDE_ACTIVATION_UFW"
     echo "► Activation du pare-feu UFW "
@@ -194,18 +193,18 @@ fonction_activer_parefeu() {
     if [ "$activateFirewall" = "o" ]; then
 
         sudo_command "ufw enable"
-        powershell_command "netsh advfirewall set allprofiles state on"
 
         # vérifier si le pare-feu a bien été activé
         if [ $? -eq 0 ]; then
 
             logEvent "PAREFEU_ACTIVÉ"
             echo "► Pare-feu activé avec succès."
-
+            computerMainMenu
         else
 
             logEvent "ERREUR_ACTIVATION_UFW"
             echo "► Erreur : impossible d'activer le pare-feu."
+            computerMainMenu
         fi
     # si la reponse est (n) retourne au menu Gestion Ordinateur
     else
@@ -214,7 +213,7 @@ fonction_activer_parefeu() {
 }
 
 ################################# Fonction exécution script local ###################################
-fonction_exec_script() {
+fonction_exec_script_linux() {
 
     logEvent "DEMANDE_CHEMIN_SCRIPT"
     echo "► Entrez le chemin du script local à exécuter :"
@@ -235,5 +234,5 @@ fonction_exec_script() {
     echo "► Exécution du script : $scriptlocal"
     # exécute le script local sur l'ordinateur distant
     sudo_command "bash $scriptlocal"
-    powershell_command "$scriptlocal"
+
 }

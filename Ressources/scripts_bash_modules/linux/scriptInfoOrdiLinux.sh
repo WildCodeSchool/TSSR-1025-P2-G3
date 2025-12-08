@@ -4,7 +4,7 @@
 ##################################### Menu Gestion Disques ####################################
 
 # Menu principal de gestion des disques
-gestion_disques_menu() {
+gestion_disques_menu_linux() {
 
 logEvent "MENU_GESTION_DISQUES"
 
@@ -66,7 +66,7 @@ done
 #################################### Fonction Nombre de disques ##########################################
 
 # Compte et affiche le nombre de disques physiques
-fonction_nombre_disques() {
+fonction_nombre_disques_linux() {
 
     logEvent "DEMANDE_NOMBRE_DISQUES"
     echo " ► Nombre de disques : "
@@ -79,7 +79,7 @@ fonction_nombre_disques() {
 #################################### Fonction Partitions ###################################################
 
 # Affiche les partitions avec leurs détails et leur nombre total
-fonction_partitions() {
+fonction_partitions_linux() {
 
     logEvent "DEMANDE_LISTE_PARTITIONS"
     echo " ► Partitions Nom, FS, Taille : "
@@ -96,7 +96,7 @@ fonction_partitions() {
 #################################### Fonction Lecteurs montés ############################################
 
 # Affiche tous les lecteurs physiques actuellement montés
-fonction_lecteurs_montes() {
+fonction_lecteurs_montes_linux() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
     echo " ► Lecteurs montés disque, USB, CD, etc.: "
@@ -110,7 +110,7 @@ fonction_lecteurs_montes() {
 #################################### Fonction liste utilisateurs locaux #################################
 
 # Liste les utilisateurs locaux (non système)
-fonction_liste_utilisateurs() {
+fonction_liste_utilisateurs_linux() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
     echo " ► Liste des utilisateurs locaux "
@@ -123,7 +123,7 @@ fonction_liste_utilisateurs() {
 #################################### Fonction 5 derniers logins #######################################
 
 # Affiche les 5 dernières connexions utilisateurs
-fonction_5_derniers_logins() {
+fonction_5_derniers_logins_linux() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
     echo " ► Les 5 derniers logins :"
@@ -136,7 +136,7 @@ fonction_5_derniers_logins() {
 #################################### Fonction IP, masque, passerelle ####################################
 
 # Affiche les informations réseau (IP, masque et passerelle)
-fonction_infos_reseau() {
+fonction_infos_reseau_linux() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
     echo  " ► Adresse IP et masque "
@@ -153,7 +153,7 @@ fonction_infos_reseau() {
 #################################### Fonction : Version OS ####################################
 
 # Affiche la version du système d'exploitation
-fonction_version_os() {
+fonction_version_os_linux() {
 
     logEvent "DEMANDE_VERSION_OS"
     echo " ► Version de l'OS : "
@@ -166,7 +166,7 @@ fonction_version_os() {
 #################################### Fonction : Mises à jour critiques ####################################
 
 # Liste les mises à jour disponibles
-fonction_mises_a_jour() {
+fonction_mises_a_jour_linux() {
 
     logEvent "DEMANDE_MISES_A_JOUR"
     echo " ► Mises à jour critiques manquantes: "
@@ -180,7 +180,7 @@ fonction_mises_a_jour() {
 #################################### Fonction : Marque / Modèle ####################################
 
 # Affiche les informations matérielles marque et modèle
-fonction_marque_modele() {
+fonction_marque_modele_linux() {
 
     logEvent "DEMANDE_MARQUE_MODELE"
     echo "► Marque / Modèle de l'ordinateur :"

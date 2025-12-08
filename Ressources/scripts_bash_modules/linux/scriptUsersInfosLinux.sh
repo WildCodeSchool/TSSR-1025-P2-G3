@@ -19,7 +19,7 @@ fonc_date_lastconnection_linux() {
 
     1)
         echo ""
-        echo "Voici la liste des utilisateurs : "
+        echo "► Voici la liste des utilisateurs : "
         command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd"
         read -p "► Quel utilisateur choisissez-vous  ? : " userlastconnect
 
@@ -30,7 +30,7 @@ fonc_date_lastconnection_linux() {
         # si il existe on affiche l'info
         then
             echo ""
-            echo "L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
+            echo "► L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
             lastconnection=$(command "last -1 \$userlastconnect | head -1 | awk '{print \$4, \$5, \$6, \$7}'" | tee /dev/tty)
             infoFile "$userlastconnect" "Dernière connexion" "$lastconnection"
             logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
@@ -74,7 +74,7 @@ fonc_date_lastpassmodif_linux() {
 
     1)
         echo ""
-        echo "Voici la liste des utilisateurs : "
+        echo "► Voici la liste des utilisateurs : "
         command "awk -F':' '\$3>=1000  && \$3<60000 { print \$1 }' /etc/passwd"
         read -p "► Quel utilisateur choisissez-vous  ? : " userlastpass
         logEvent "ENTRÉE_D'UTILISATEUR:$userlastpass"

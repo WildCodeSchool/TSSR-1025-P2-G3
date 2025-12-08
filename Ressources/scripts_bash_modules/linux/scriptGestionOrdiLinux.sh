@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 ##################################### Menu Gestion Répertoire ####################################
@@ -94,6 +93,7 @@ fonction_creer_dossier() {
     # si le dossier existe pas créé le dossier
     else
         sudo_command mkdir "$chemindossier" 2>/dev/null
+        powershell_command mkdir "$chemindossier"
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -124,6 +124,8 @@ fonction_supprimer_dossier() {
         echo "► Le dossier $chemindossier n'existe pas"
     else
         sudo_command rm -r "$chemindossier" 2>/dev/null
+        powershell_command rmdir "$chemindossier" -Recurse -Force
+        
         #vérifier si le dossier à bien été supprimé
         if [ $? -eq 0 ]; then
             logEvent "DOSSIER_SUPPRIMÉ:$chemindossier"
@@ -148,6 +150,7 @@ fonction_redemarrage() {
         logEvent "REBOOT_ORDINATEUR"
         echo "► l'ordinateur va redémarrer "
         sudo_command "reboot"
+        powershell_command "Restart-Computer"
 
     else
         logEvent "ERREUR_REDEMARRAGE"
@@ -162,6 +165,7 @@ fonction_prise_main() {
     # apple au variables mainScript.sh (variables de connexion SSH)
     logEvent "DEMANDE_PRISE_DE_MAIN_DISTANTE_SSH"
     ssh -p "$portSSH" "$remoteUser@$remoteComputer"
+    powershell_command Enter-PSSession -ComputerName "$remoteComputer" -Credential "$remoteUser"
 
     # Condition si le dernier commande c'est bien exécutée  
     if [ $? -eq 0 ]; then
@@ -190,6 +194,7 @@ fonction_activer_parefeu() {
     if [ "$activateFirewall" = "o" ]; then
 
         sudo_command "ufw enable"
+        powershell_command "netsh advfirewall set allprofiles state on"
 
         # vérifier si le pare-feu a bien été activé
         if [ $? -eq 0 ]; then
@@ -230,5 +235,4 @@ fonction_exec_script() {
     echo "► Exécution du script : $scriptlocal"
     # exécute le script local sur l'ordinateur distant
     sudo_command "bash $scriptlocal"
-
-}
+    powershell_command "$scriptlocal"

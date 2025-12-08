@@ -236,3 +236,4 @@ fonction_exec_script() {
     # exécute le script local sur l'ordinateur distant
     sudo_command "bash $scriptlocal"
     powershell_command "$scriptlocal"
+}

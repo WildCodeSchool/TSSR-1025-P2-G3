@@ -7,19 +7,19 @@
 #=====================================================
 
 # LINUX
-source Ressources/scripts_bash_modules/linux/scriptUsersLinux.sh
-source Ressources/scripts_bash_modules/linux/scriptGroupsLinux.sh
-source Ressources/scripts_bash_modules/linux/scriptGestionOrdiLinux.sh
-source Ressources/scripts_bash_modules/scriptInfosUsersLinux.sh
-source Ressources/scripts_bash_modules/scriptInfoOrdiLinux.sh
-source Ressources/scripts_bash_modules/scriptSearchLog.sh
+source ../Ressources/scripts_bash_modules/linux/scriptUsersLinux.sh
+source ../Ressources/scripts_bash_modules/linux/scriptGroupsLinux.sh
+source ../Ressources/scripts_bash_modules/linux/scriptGestionOrdiLinux.sh
+source ../Ressources/scripts_bash_modules/scriptInfosUsersLinux.sh
+source ../Ressources/scripts_bash_modules/scriptInfoOrdiLinux.sh
+source ../Ressources/scripts_bash_modules/scriptSearchLog.sh
 
 # WINDOWS
-# source Ressources/scripts_module/windows/scriptUsersWindows.sh
-# source Ressources/scripts_module/windows/scriptGroupsWindows.sh
-# source Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
-# source Ressources/scripts_module/windows/scriptSearchLogWindows.sh
-# source Ressources/scripts_module/windows/scriptInfosUsersWindows.sh
+source ../Ressources/scripts_module/windows/scriptUsersWindows.sh
+source ../Ressources/scripts_module/windows/scriptGroupsWindows.sh
+source ../Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
+source ../Ressources/scripts_module/windows/scriptSearchLogWindows.sh
+source ../Ressources/scripts_module/windows/scriptInfosUsersWindows.sh
 
 #=====================================================
 # VARIABLES DES COULEURS

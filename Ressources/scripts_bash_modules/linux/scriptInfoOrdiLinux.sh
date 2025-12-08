@@ -1,15 +1,15 @@
 #!/bin/bash
 
-
 ##################################### Menu Gestion Disques ####################################
 
 # Menu principal de gestion des disques
 gestion_disques_menu_linux() {
 
-logEvent "MENU_GESTION_DISQUES"
+    logEvent "MENU_GESTION_DISQUES"
 
-        while true; do
+    while true; do
 
+        echo ""
         echo "╭──────────────────────────────────────────╮"
         echo "|             Gestion Des Disques          │"
         echo "├──────────────────────────────────────────┤"
@@ -20,47 +20,47 @@ logEvent "MENU_GESTION_DISQUES"
         echo "│  4. Retour au menu précédent             │"
         echo "│                                          │"
         echo "╰──────────────────────────────────────────╯"
+        echo ""
 
-    read -p "# Choisissez une option : " choix
+        read -p "# Choisissez une option : " choix
 
-    logEvent  " Choisie ${choix^^} "
+        logEvent " Choisie ${choix^^} "
 
-
-    case "$choix" in
+        case "$choix" in
 
         1)
             # Appel de la fonction pour compter les disques
             logEvent "SELECTION_NOMBRE_DISQUES"
-            fonction_nombre_disques
-        ;;
+            fonction_nombre_disques_linux
+            ;;
 
         2)
             # Appel de la fonction pour lister les partitions
             logEvent "SELECTION_PARTITIONS"
-            fonction_partitions
-        ;;
+            fonction_partitions_linux
+            ;;
 
         3)
             # Appel de la fonction pour afficher les lecteurs montés
             logEvent "SELECTION_LECTEURS_MONTES"
-            fonction_lecteurs_montes
-        ;;
+            fonction_lecteurs_montes_linux
+            ;;
 
         4)
             # Retour au menu principal
             logEvent "RETOUR_MENU_PRECEDENT"
             echo "Retour au menu précédent"
             return
-        ;;
+            ;;
 
         *)
             # Gestion des choix invalides
             logEvent "OPTION_INVALIDE_GESTION_DISQUES"
             echo " ► Option invalide. "
-        ;;
-    esac
+            ;;
+        esac
 
-done
+    done
 }
 
 #################################### Fonction Nombre de disques ##########################################
@@ -106,19 +106,18 @@ fonction_lecteurs_montes_linux() {
 
 }
 
-
 #################################### Fonction liste utilisateurs locaux #################################
 
 # Liste les utilisateurs locaux (non système)
 fonction_liste_utilisateurs_linux() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
-    echo " ► Liste des utilisateurs locaux "
+    echo "► Liste des utilisateurs locaux :"
 
     # Affiche les utilisateurs avec UID >= 1000
-    command " awk -F':' '$3>=1000 { print $1 }' /etc/passwd "
+    userList=$(command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd" | tee /dev/tty)
+    infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 }
-
 
 #################################### Fonction 5 derniers logins #######################################
 
@@ -126,12 +125,12 @@ fonction_liste_utilisateurs_linux() {
 fonction_5_derniers_logins_linux() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
-    echo " ► Les 5 derniers logins :"
+    echo "► Les 5 derniers logins :"
 
     # Affiche l'historique des 5 dernières connexions
-    command " last -n 5 "
-}
+    command "last -n 5"
 
+}
 
 #################################### Fonction IP, masque, passerelle ####################################
 
@@ -139,15 +138,16 @@ fonction_5_derniers_logins_linux() {
 fonction_infos_reseau_linux() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
-    echo  " ► Adresse IP et masque "
+    echo "► Adresse IP et masque "
 
     # Affiche l'adresse IP et le masque
-    command " ip -4 -o addr show | awk '$2 != 'lo' {print "→ " $4}' "
+    command "ip -4 -o addr show | awk '\$2 != \"lo\" {print \"→ \" \$4}'"
 
-    echo " ► Passerelle par défaut "
+    echo "► Passerelle par défaut "
 
     # Affiche la passerelle par défaut
-    command " ip route | awk '/default/ {print '→ ' $3}' "
+    command "ip route | awk '/default/ {print \"→ \" \$3}'"
+
 }
 
 #################################### Fonction : Version OS ####################################
@@ -156,10 +156,10 @@ fonction_infos_reseau_linux() {
 fonction_version_os_linux() {
 
     logEvent "DEMANDE_VERSION_OS"
-    echo " ► Version de l'OS : "
+    echo "► Version de l'OS :"
 
     # Affiche les informations de version (distribution, release, codename)
-    command " lsb_release -a " 
+    command " lsb_release -a "
 
 }
 
@@ -169,11 +169,12 @@ fonction_version_os_linux() {
 fonction_mises_a_jour_linux() {
 
     logEvent "DEMANDE_MISES_A_JOUR"
-    echo " ► Mises à jour critiques manquantes: "
+    echo "► Mises à jour critiques manquantes: "
 
     # Affiche les paquets qui ont des mises à jour à faire
-    sudo_command apt list --upgradable 2>/dev/null
-
+    command "apt list --upgradable 2>/dev/null"
+    # sudo_command "unattended-upgrade --dry-run -d"
+    echo ""
 
 }
 
@@ -185,11 +186,16 @@ fonction_marque_modele_linux() {
     logEvent "DEMANDE_MARQUE_MODELE"
     echo "► Marque / Modèle de l'ordinateur :"
 
-    # Extrait et affiche le fabricant du système
-    sudo_command dmidecode -t system | grep "Manufacturer" | cut -d ':' -f2 
-    # Extrait et affice le nom du modèle
-    sudo_command dmidecode -t system | grep "Product Name" | cut -d ':' -f2 
-    # Extrait et affiche la version du modèle
-    sudo_command dmidecode -t system | grep "Version" | cut -d ':' -f2 
+    # Fabricant
+    echo "► Fabricant:"
+    command "cat /sys/class/dmi/id/sys_vendor"
+
+    # Nom du modèle
+    echo "► Modèle:"
+    command "cat /sys/class/dmi/id/product_name"
+
+    # Version
+    echo "► Version:"
+    command "cat /sys/class/dmi/id/product_version"
 
 }

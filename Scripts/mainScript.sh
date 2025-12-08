@@ -10,15 +10,16 @@
 source Ressources/scripts_module/linux/scriptUsersLinux.sh
 source Ressources/scripts_module/linux/scriptGroupsLinux.sh
 source Ressources/scripts_module/linux/scriptGestionOrdiLinux.sh
-source Ressources/scripts_module/linux/scriptSearchLogLinux.sh
+source Ressources/scripts_module/scriptSearchLog.sh
 source Ressources/scripts_module/linux/scriptInfosUsersLinux.sh
+source Ressources/scripts_module/linux/scriptInfoOrdiLinux.sh
 
 # WINDOWS
-source Ressources/scripts_module/windows/scriptUsersWindows.sh
-source Ressources/scripts_module/windows/scriptGroupsWindows.sh
-source Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
-source Ressources/scripts_module/windows/scriptSearchLogWindows.sh
-source Ressources/scripts_module/windows/scriptInfosUsersWindows.sh
+# source Ressources/scripts_module/windows/scriptUsersWindows.sh
+# source Ressources/scripts_module/windows/scriptGroupsWindows.sh
+# source Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
+# source Ressources/scripts_module/windows/scriptSearchLogWindows.sh
+# source Ressources/scripts_module/windows/scriptInfosUsersWindows.sh
 
 #=====================================================
 # VARIABLES DES COULEURS
@@ -211,7 +212,6 @@ function detectionRemoteOS() {
         logEvent "DETECTION_OS:Windows"
     fi
 }
-
 
 #=====================================================
 # FONCTION DES COMMANDES
@@ -438,7 +438,7 @@ function computerMainMenu() {
     echo "│               Gestion Ordinateurs                │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
-    echo "│  1. Gestion Repertoire                           │"
+    echo "│  1. Gestion Répertoire                           │"
     echo "│  2. Redémarrage                                  │"
     echo "│  3. Prise de main à distance (CLI)               │"
     echo "│  4. Activation du pare-feu                       │"
@@ -530,7 +530,7 @@ function computerMainMenu() {
     6)
         # retour au menu principal
         logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
-        return
+        mainMenu
         ;;
 
     *)

@@ -16,7 +16,7 @@ fonc_date_lastconnection_linux() {
 
     1)
         echo "Voici la liste des utilisateurs : "
-        command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
+        command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd"
         read -p "Quel utilisateur choisissez-vous  ? : " userlastconnect
 
         # l'utilisateur existe ?
@@ -29,13 +29,13 @@ fonc_date_lastconnection_linux() {
             lastconnection=$(command "last -1 \$userlastconnect | head -1 | awk '{print \$4, \$5, \$6, \$7}'" | tee /dev/tty)
             infoFile "$userlastconnect" "Dernière connexion" "$lastconnection"
             logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
-            echo "Souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+
+            read -p "Souhaitez vous choisir un autre utilisateur ? (o/n) " conf
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_date_lastconnection_linux
             else
-                fonc_menu_infosutilisateurs_linux
+                informationUserMainMenu
             fi
         # sinon on retoure au menu précédent
         else
@@ -45,7 +45,7 @@ fonc_date_lastconnection_linux() {
         fi
         ;;
     2)
-        fonc_menu_infosutilisateurs_linux
+        informationUserMainMenu
         ;;
     *)
         echo "erreur de saisie"
@@ -87,7 +87,7 @@ fonc_date_lastpassmodif_linux() {
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_date_lastpassmodif_linux
             else
-                fonc_menu_infosutilisateurs_linux
+                informationUserMainMenu
             fi
         # sinon on retoure au menu précédent
         else
@@ -98,7 +98,7 @@ fonc_date_lastpassmodif_linux() {
         ;;
 
     2)
-        fonc_menu_infosutilisateurs_linux
+        informationUserMainMenu
         ;;
     *)
         echo "erreur de saisie"
@@ -140,7 +140,7 @@ fonc_opensessions_linux() {
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 fonc_opensessions_linux
             else
-                fonc_menu_infosutilisateurs_linux
+                informationUserMainMenu
             fi
         else
             echo "Erreur de saisie, retour au menu précédent"
@@ -149,7 +149,7 @@ fonc_opensessions_linux() {
         fi
         ;;
     2)
-        fonc_menu_infosutilisateurs_linux
+        informationUserMainMenu
         ;;
     *)
         echo "erreur de saisie"

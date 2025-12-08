@@ -226,7 +226,7 @@ function deleteUserMenuLinux() {
 
             else
 
-                read -p "# Souhaitez-vous supprimer l'utilisateur $delUserCommand ? (o/n) " delUserChoice
+                read -p "► Souhaitez-vous supprimer l'utilisateur $delUserCommand ? (o/n) " delUserChoice
                 logEvent "SUPPRIMER_UTILISATEUR:CONFIRMATION:$delUserChoice:$delUserCommand"
 
                 if [ "$delUserChoice" = "o" ]; then
@@ -354,6 +354,8 @@ function changePasswordUserMenuLinux() {
 
                         echo "► Le mot de passe de l'utilisateur $changePasswordUser a été modifié."
                         logEvent "CHANGEMENT_MOT_DE_PASSE:MODIFICATION_REUSSIE:$changePasswordUser"
+
+                        read -p "► Voulez-vous changer le mot de passe d'un autre utilisateur ? (o/n) " changeAnotherPassword
 
                     else
 

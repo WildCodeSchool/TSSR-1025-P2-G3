@@ -72,7 +72,7 @@ fonction_nombre_disques_linux() {
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    lsblk | grep "disk" | wc -l
+    command "lsblk | grep 'disk' | wc -l"
 
 }
 
@@ -85,11 +85,11 @@ fonction_partitions_linux() {
     echo " ► Partitions Nom, FS, Taille : "
 
     # Affiche les partitions avec nom, type de système de fichiers et taille
-    lsblk -o NAME,FSTYPE,SIZE,TYPE | grep "part"
+    command " lsblk -o NAME,FSTYPE,SIZE,TYPE | grep 'part' "
 
     echo " ► Nombre de partitions : "
     # Compte le nombre total de partitions
-    lsblk -o NAME,TYPE | grep "part" | wc -l
+    command " lsblk -o NAME,TYPE | grep 'part' | wc -l "
 
 }
 
@@ -102,7 +102,7 @@ fonction_lecteurs_montes_linux() {
     echo " ► Lecteurs montés disque, USB, CD, etc.: "
 
     # Affiche les lecteurs montés avec leur espace disque
-    df -h | grep "^/dev/"
+    command " df -h | grep '^/dev/' "
 
 }
 
@@ -116,7 +116,7 @@ fonction_liste_utilisateurs_linux() {
     echo " ► Liste des utilisateurs locaux "
 
     # Affiche les utilisateurs avec UID >= 1000
-    awk -F':' '$3>=1000 { print $1 }' /etc/passwd
+    command " awk -F':' '$3>=1000 { print $1 }' /etc/passwd "
 }
 
 
@@ -129,7 +129,7 @@ fonction_5_derniers_logins_linux() {
     echo " ► Les 5 derniers logins :"
 
     # Affiche l'historique des 5 dernières connexions
-    last -n 5
+    command " last -n 5 "
 }
 
 
@@ -141,13 +141,13 @@ fonction_infos_reseau_linux() {
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
     echo  " ► Adresse IP et masque "
 
-    # Affiche l'adresse IP et le masque hors loopback
-    ip -4 -o addr show | awk '$2 != "lo" {print "→ " $4}'
+    # Affiche l'adresse IP et le masque
+    command " ip -4 -o addr show | awk '$2 != 'lo' {print "→ " $4}' "
 
     echo " ► Passerelle par défaut "
 
     # Affiche la passerelle par défaut
-    ip route | awk '/default/ {print "→ " $3}'
+    command " ip route | awk '/default/ {print '→ ' $3}' "
 }
 
 #################################### Fonction : Version OS ####################################
@@ -159,7 +159,7 @@ fonction_version_os_linux() {
     echo " ► Version de l'OS : "
 
     # Affiche les informations de version (distribution, release, codename)
-    lsb_release -a
+    command " lsb_release -a " 
 
 }
 
@@ -172,7 +172,7 @@ fonction_mises_a_jour_linux() {
     echo " ► Mises à jour critiques manquantes: "
 
     # Affiche les paquets qui ont des mises à jour à faire
-    apt list --upgradable 2>/dev/null
+    sudo_command apt list --upgradable 2>/dev/null
 
 
 }
@@ -186,10 +186,10 @@ fonction_marque_modele_linux() {
     echo "► Marque / Modèle de l'ordinateur :"
 
     # Extrait et affiche le fabricant du système
-    sudo_command dmidecode -t system | grep "Manufacturer" | cut -d ':' -f2
+    sudo_command dmidecode -t system | grep "Manufacturer" | cut -d ':' -f2 
     # Extrait et affice le nom du modèle
-    sudo_command dmidecode -t system | grep "Product Name" | cut -d ':' -f2
+    sudo_command dmidecode -t system | grep "Product Name" | cut -d ':' -f2 
     # Extrait et affiche la version du modèle
-    sudo_command dmidecode -t system | grep "Version" | cut -d ':' -f2
+    sudo_command dmidecode -t system | grep "Version" | cut -d ':' -f2 
 
 }

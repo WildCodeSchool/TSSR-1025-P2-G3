@@ -73,7 +73,7 @@ fonction_creer_dossier_linux() {
 
     logEvent "CRÉATION_DE_DOSSIER"
 
-    read -rp "► /home/$USER/" creation_dossier
+    read -rp "►" creation_dossier
 
     # fonction_demander_chemin_linux || return
 
@@ -147,13 +147,19 @@ fonction_supprimer_dossier_linux() {
     echo "► Suppression de dossier"
 
     # fonction_demander_chemin_linux || return
-    read -rp "Entrez un chemin: " delfolder
+    read -rp "► Entrez un chemin: " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
     if [ -d "$delfolder" ]; then
 
         sudo_command "rm -r $delfolder"
+	
+	if [ $? -eq 0 ]; then
 
+            logEvent "SUPPRESSION_EFFECTUE"
+            echo " "
+            echo "► Suppression de dossier effectue "
+	fi
     else
         logEvent "DOSSIER_INEXISTANT:$delfolder"
         echo "► Le dossier $delfolder n'existe pas"

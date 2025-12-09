@@ -3,188 +3,224 @@
 # Script pour récupérer des informations sur un utilisateur
 # Auteur : Pierre-Jean
 
-fonc_menu_infosutilisateurs() {
-    echo "╭──────────────────────────────────────────────────╮"
-    echo "│          MENU INFORMATIONS UTILISATEURS          │"
-    echo "├──────────────────────────────────────────────────┤"
-    echo "│                                                  │"
-    echo "│  1. Date de dernière connexion                   │"
-    echo "│  2. Date de dernière modification du mot de passe│"
-    echo "│  3. Liste des sessions ouvertes                  │"
-    echo "│  4. Retour au menu précédent                     │"
-    echo "│                                                  │"
-    echo "╰──────────────────────────────────────────────────╯"
+fonc_date_lastconnection_windows() {
+
     echo ""
-    echo -n "Votre choix (1-4): "
-    read selection
-
-    case $selection in
-    1)
-        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRE_CONNECTION_UTILISATEUR"
-        fonc_date_lastconnection
-        ;;
-    2)
-        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRE_MODIFICATION_DE_MOT_DE_PASSE"
-        fonc_date_lastpassmodif
-        ;;
-    3)
-        logEvent "MENU_GROUPES:RECHERCHE_DERNIÈRES_SESSIONS_OUVERTES"
-        fonc_opensessions
-        ;;
-    *)
-        echo "erreur de saisie"
-        ;;
-    esac
-}
-
-fonc_date_lastconnection() {
     echo "╭──────────────────────────────────────────────────╮"
     echo "│          DATE DE DERNIÈRE CONNEXION              |"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Saisir un nom d'utilisateur                  │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+    read -p "► Choisissez une option : " choix
+
     case $choix in
 
     1)
-        echo "Voici la liste des utilisateurs : "
-        command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
-        read -p "Quel utilisateur choisissez-vous  ? : " userlastconnect
+        echo ""
+        echo "► Voici la liste des utilisateurs : "
+
+        powershell_command "Get-LocalUser | Select-Object Name"
+
+        read -p "► Quel utilisateur choisissez-vous  ? : " userlastconnect
 
         # l'utilisateur existe ?
         if
-            command "cat /etc/passwd | grep -w $userlastconnect >/dev/null"
+            powershell_command "Get-LocalUser -Name '$userlastconnect' -ErrorAction SilentlyContinue" >/dev/null
             logEvent "ENTRÉE_D'UTILISATEUR:$userlastconnect"
+
         # si il existe on affiche l'info
         then
-            echo "L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
-            command "last -1 \$userlastconnect | head -1 | awk '{print \$4, \$5, \$6, \$7}'"
+            echo ""
+            echo "► L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
+
+            lastconnection=$(powershell_command Get-ADUser -Identity "$userlastconnect" -Properties LastLogonDate | Select-Object Name, LastLogonDate | tee /dev/tty)
+            infoFile "$userlastconnect" "Dernière connexion" "$lastconnection"
             logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
-            echo "Souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+
+            read -p "► Souhaitez vous choisir un autre utilisateur ? (o/n) " conf
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
-                fonc_date_lastconnection
+
+                fonc_date_lastconnection_linux
+
             else
-                fonc_menu_infosutilisateurs
+
+                informationUserMainMenu
+
             fi
+
         # sinon on retoure au menu précédent
         else
-            echo "Erreur de saisie, retour au menu précédent"
+
+            echo "► Erreur de saisie, retour au menu précédent"
             logEvent "ERREUR_DE_SAISIE,_RETOUR_AU_MENU_PRÉCÉDENT"
-            fonc_date_lastconnection
+            fonc_date_lastconnection_linux
+
         fi
         ;;
+
     2)
-        fonc_menu_infosutilisateurs
+
+        informationUserMainMenu
         ;;
+
     *)
+
         echo "erreur de saisie"
         ;;
+
     esac
 }
 
-fonc_date_lastpassmodif() {
+fonc_date_lastpassmodif_windows() {
+    echo ""
     echo "╭──────────────────────────────────────────────────╮"
     echo "│  DATE DE DERNIÈRE MODIFICATION DE MOT DE PASSE   │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Saisir un nom d'utilisateur                  │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+    read -p "► Choisissez une option : " choix
+
     case $choix in
 
     1)
+        echo ""
+        echo "► Voici la liste des utilisateurs : "
 
-        echo "Voici la liste des utilisateurs : "
-        command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
-        read -p "Quel utilisateur choisissez-vous  ? : " userlastpass
+        powershell_command "Get-LocalUser | Select-Object Name"
+
+        read -p "► Quel utilisateur choisissez-vous  ? : " userlastpass
         logEvent "ENTRÉE_D'UTILISATEUR:$userlastpass"
 
         # l'utilisateur existe ?
         if
-            command "cat /etc/passwd | grep -w $userlastpass >/dev/null"
+
+            powershell_command "Get-LocalUser -Name '$userlastpass' -ErrorAction SilentlyContinue" >/dev/null
 
         # si il existe on affiche l'info
         then
-            echo "L'utilisateur $userlastpass à changé son mot de passe la dernière fois : "
-            command "chage -l $userlastpass | head -1 | awk '{print \$8, \$9, \$10}'"
+
+            echo ""
+            echo "► L'utilisateur $userlastpass à changé son mot de passe la dernière fois : "
+            lastpasschange=$(powershell_command Get-ADUser -Identity $userlastpass -Properties PasswordLastSet | Select-Object Name, PasswordLastSet | tee /dev/tty)
+            infoFile "$userlastpass" "À changé son mot de passe pour la dernière fois" "$lastpasschange"
             logEvent "AFFICHAGE_DE_LA_DATE_DU_DERNIER_CHANGEMENT_DE_MDP_DE_L'UTILISATEUR"
-            echo "Souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+            echo ""
+
+            read -p "Souhaitez vous choisir un autre utilisateur (o/n) ? : " conf
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
-                fonc_date_lastpassmodif
+
+                fonc_date_lastpassmodif_windows
+
             else
-                fonc_menu_infosutilisateurs
+
+                informationUserMainMenu
+
             fi
+
         # sinon on retoure au menu précédent
         else
-            echo "Erreur de saisie, retour au menu précédent"
+
+            echo "► Erreur de saisie, retour au menu précédent"
             logEvent "ERREUR_DE_SAISIE"
-            fonc_date_lastconnection
+            fonc_date_lastconnection_windows
+
         fi
         ;;
 
     2)
-        fonc_menu_infosutilisateurs
+
+        informationUserMainMenu
         ;;
+
     *)
+
         echo "erreur de saisie"
         ;;
+
     esac
 
 }
 
-fonc_opensessions() {
+fonc_opensessions_linux() {
+
+    echo ""
     echo "╭──────────────────────────────────────────────────╮"
     echo "│  LISTE DES SESSIONS OUVERTES PAR L'UTILISATEUR   │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Saisir un nom d'utilisateur                  │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+
+    read -p "► Choisissez une option : " choix
+
     case $choix in
 
     1)
-        echo "Voici la liste des utilisateurs : "
-        command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
-        read -p "Quel utilisateur choisissez-vous  ? : " userlastsession
+        echo "► Voici la liste des utilisateurs : "
+        powershell_command "Get-LocalUser | Select-Object Name"
+
+        read -p "► Quel utilisateur choisissez-vous  ? : " userlastsession
         logEvent "ENTRÉE_D'UTILISATEUR:$userlastsession"
 
         # l'utilisateur existe ?
         if
-            command "cat /etc/passwd | grep -w $userlastsession" >/dev/null
+
+            powershell_command "Get-LocalUser -Name '$userlastconnect' -ErrorAction SilentlyContinue" >/dev/null
 
         # si il existe on affiche l'info
         then
-            echo "voici la liste des sessions ouvertes par $userlastsession : "
-            command "who | grep $userlastsession"
+            echo ""
+            echo "► Voici la liste des sessions ouvertes par $userlastsession : "
+
+            lastsession=$(powershell_command quser | Select-String "$userlastsession" | tee /dev/tty)
+            infoFile "$userlastsession" "Sessions ouvertes" "$lastsession"
             logEvent "AFFICHAGE_DE_LA_LISTE_DES_SESSIONS_OUVERTES_PAR_L'UTILISATEUR"
-            echo "Souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+
+            echo ""
+            read -p "► Souhaitez vous choisir un autre utilisateur (o/n) ? : " conf
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
-                fonc_opensessions
+
+                fonc_opensessions_linux
+
             else
-                fonc_menu_infosutilisateurs
+
+                informationUserMainMenu
+
             fi
+
         else
-            echo "Erreur de saisie, retour au menu précédent"
+
+            echo "► Erreur de saisie, retour au menu précédent"
             logEvent "ERREUR_DE_SAISIE"
-            fonc_date_lastconnection
+            fonc_date_lastconnection_linux
+
         fi
         ;;
+
     2)
-        fonc_menu_infosutilisateurs
+
+        informationUserMainMenu
         ;;
+
     *)
+
         echo "erreur de saisie"
         ;;
+
     esac
 
 }

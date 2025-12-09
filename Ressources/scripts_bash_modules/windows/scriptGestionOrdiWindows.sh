@@ -3,7 +3,7 @@
 ##################################### Menu Gestion Répertoire ####################################
 
 # fonction de gestion de répertoires
-gestion_repertoire_menu_linux() {
+gestion_repertoire_menu_windows() {
 
     logEvent "MENU_GESTION_RÉPERTOIRE"
 
@@ -33,19 +33,19 @@ gestion_repertoire_menu_linux() {
         1)
             # fonction de creation de dossier
             logEvent "SÉLECTION_CRÉATION_DE_DOSSIER"
-            fonction_creer_dossier_linux
+            fonction_creer_dossier_windows
             ;;
 
         2)
             # fonction de supprition de dossier
             logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
-            fonction_creer_dossier_sudo_linux
+            fonction_creer_dossier_sudo_windows
             ;;
 
         3)
             # fonction de supprition de dossier
             logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
-            fonction_supprimer_dossier_linux
+            fonction_supprimer_dossier_windows
             ;;
 
         4)
@@ -68,13 +68,11 @@ gestion_repertoire_menu_linux() {
 
 ################################## Fonction création répertoire #####################################
 
-fonction_creer_dossier_linux() {
+fonction_creer_dossier_windows() {
 
     logEvent "CRÉATION_DE_DOSSIER"
 
     read -rp "►" creation_dossier
-
-    # fonction_demander_chemin_linux || return
 
     # vérifier si le dossier existe
     if [ -d "$creation_dossier" ]; then
@@ -84,7 +82,7 @@ fonction_creer_dossier_linux() {
 
     # si le dossier existe pas créé le dossier
     else
-        command "mkdir '$creation_dossier' 2>/dev/null"
+        powershell_command "New-Item -Path "$creation_dossier" -ItemType Directory"
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -105,7 +103,7 @@ fonction_creer_dossier_linux() {
 
 ################################## Fonction création répertoire SUDO #####################################
 
-fonction_creer_dossier_sudo_linux() {
+fonction_creer_dossier_sudo_windows() {
 
     logEvent "CRÉATION_DE_DOSSIER"
 
@@ -119,7 +117,7 @@ fonction_creer_dossier_sudo_linux() {
 
     # si le dossier existe pas créé le dossier
     else
-        sudo_command "mkdir '$creation_dossier_sudo' 2>/dev/null"
+        powershell_command "New-Item -Path "$creation_dossier_sudo" -ItemType Directory"
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -140,18 +138,17 @@ fonction_creer_dossier_sudo_linux() {
 
 #################################### Fonction supprimer dossier #####################################
 
-fonction_supprimer_dossier_linux() {
+fonction_supprimer_dossier_windows() {
 
     logEvent "SUPPRESSION_DE_DOSSIER"
     echo "► Suppression de dossier"
 
-    # fonction_demander_chemin_linux || return
     read -rp "► Entrez un chemin: " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
     if [ -d "$delfolder" ]; then
 
-        sudo_command "rm -r $delfolder"
+        powershell_command "Remove-Item -path "$delfolder" -Recurse"
 
         if [ $? -eq 0 ]; then
 
@@ -169,7 +166,8 @@ fonction_supprimer_dossier_linux() {
 ###################################### Fonction redémarrage #######################################
 
 #fonction de redemarage poste distante
-fonction_redemarrage_linux() {
+fonction_redemarrage_windows() {
+
     # Demande si Voulez-vous redémarrer l'ordinateur distant
     logEvent "DEMANDE_VOULEZ_VOUS_REDEMARRER_L'ORDINATEUR"
     read -p "► Voulez-vous redémarrer l'ordinateur distant ? (o/n) " restartComputer
@@ -178,7 +176,8 @@ fonction_redemarrage_linux() {
     if [ "$restartComputer" = "o" ]; then
         logEvent "REBOOT_ORDINATEUR"
         echo "► l'ordinateur va redémarrer "
-        sudo_command "reboot"
+
+        powershell_command "Restart-Computer"
         computerMainMenu
 
     else
@@ -190,11 +189,11 @@ fonction_redemarrage_linux() {
 }
 
 ################################### Fonction prise de main (CLI) ###################################
-fonction_prise_main_linux() {
+fonction_prise_main_windows() {
 
     # apple au variables mainScript.sh (variables de connexion SSH)
     logEvent "DEMANDE_PRISE_DE_MAIN_DISTANTE_SSH"
-    ssh -p "$portSSH" "$remoteUser@$remoteComputer"
+    command "ssh -p '$portSSH' '$remoteUser@$remoteComputer' "
 
     # Condition si le dernier commande c'est bien exécutée
     if [ $? -eq 0 ]; then
@@ -212,7 +211,7 @@ fonction_prise_main_linux() {
 }
 
 ################################### Fonction activation pare-feu ####################################
-fonction_activer_parefeu_linux() {
+fonction_activer_parefeu_windows() {
 
     logEvent "DEMANDE_ACTIVATION_UFW"
     echo "► Activation du pare-feu UFW "
@@ -223,7 +222,7 @@ fonction_activer_parefeu_linux() {
     # Si la reponse est (o) alors active le pare-feu UFW sinon retourne au menu principal.
     if [ "$activateFirewall" = "o" ]; then
 
-        sudo_command "ufw enable"
+        powershell_command "Set-NetfirewallProfile -Enabled True"
 
         # vérifier si le pare-feu a bien été activé
         if [ $? -eq 0 ]; then
@@ -244,7 +243,7 @@ fonction_activer_parefeu_linux() {
 }
 
 ################################# Fonction exécution script local ###################################
-fonction_exec_script_linux() {
+fonction_exec_script_windows() {
 
     logEvent "DEMANDE_CHEMIN_SCRIPT"
     echo "► Entrez le chemin du script local à exécuter :"
@@ -263,7 +262,8 @@ fonction_exec_script_linux() {
 
     logEvent "EXÉCUTION_SCRIPT:$scriptlocal"
     echo "► Exécution du script : $scriptlocal"
+
     # exécute le script local sur l'ordinateur distant
-    sudo_command "bash $scriptlocal"
+    powershell_command "& $scriptlocal"
 
 }

@@ -4,49 +4,53 @@
 # Auteur : Pierre-Jan
 #---------------------------------Fonctions-------------------------------------------
 
-fonc_add_user_admin() {
-
+fonc_add_user_admin_windows() {
+    echo ""
     echo "╭──────────────────────────────────────────────────╮"
-    echo "│      AJOUTER UTILISATEUR AU GROUPE SUDO          │"
+    echo "│      AJOUTER UTILISATEUR AU GROUPE ADMIN         │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Saisir un nom d'utilisateur à ajouter        │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+
+    read -p "► Choisissez une option : " choix
     case $choix in
 
     1)
         # choix de l'utilisateur:
-        echo "Voici la liste des utilisateurs : "
-        command "awk -F':' '\$3>=1000 { print \$1 }' /etc/passwd"
-        read -p "Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
+        echo ""
+        echo "► Voici la liste des utilisateurs : "
+        powershell_command "Get-LocalUser | Select-Object Name"
+        echo ""
+        read -p "► Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
         logEvent "ENTRÉE_D'UTILISATEUR:$useraddadmin"
 
         # l'utilisateur existe ?
         if
             logEvent "_COMMANDE_DE_VÉRIFICATION_EXISTENCE_UTILISATEUR"
-            command "cat /etc/passwd | grep -w $useraddadmin >/dev/null"
-
+            powershell_command "Get-LocalUser -Name '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null
         # si il existe on ajoute au groupe sudo
         then
+            echo ""
             logEvent "AJOUT_DE_L'UTILSATEUR:$useraddadmin"
-            sudo_command "usermod -aG sudo $useraddadmin"
+
             # On verfie si l'utilisateur a bien été ajouté
 
             if
                 command "cat /etc/group | grep sudo | grep $useraddadmin" >/dev/null
             then
                 echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
-                echo " souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) ? "
-                read -p "tapez o pour oui ou autre chose pour non " conf
+                read -p "► Souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) : ? " conf
                 logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
 
                 if [ $conf = "o" ]; then # si oui on relance la fonction
-                    fonc_add_user_admin
+                    fonc_add_user_admin_windows
                 else
                     # retour au menu
-                    fonc_menu_group
+                    fonc_menu_group_windows
                 fi
 
             else
@@ -57,171 +61,193 @@ fonc_add_user_admin() {
             fi
         # si il n'existe pas
         else
-            echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non : " conf
+            echo ""
+            read -p "► l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : " conf
             if [ $conf = "o" ]; then # si oui on relance la fonction
                 logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                fonc_add_user_admin
+                fonc_add_user_admin_windows
             else
-                fonc_menu_group
+                fonc_menu_group_windows
             fi
 
         fi
         ;;
     2)
-        fonc_menu_group
+        fonc_menu_group_windows
         ;;
     *)
         echo "Erreur de saisie"
         ;;
     esac
 }
-
-fonc_add_user_group() {
-
+fonc_add_user_group_windows() {
+    echo ""
     echo "╭──────────────────────────────────────────────────╮"
     echo "│                   MENU GROUPES                   │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Ajouter un utilisateur à un groupe           │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+    read -p "► Choisissez une option : " choix
 
     case $choix in
+
     1)
-        # choix de l'ulisateur:
-        read -p "Quel utilisateur souhaitez vous ajouter au groupe ? : " useraddgroup
+        # Saisie utilisateur
+        read -p "► Quel utilisateur souhaitez-vous ajouter au groupe ? : " useraddgroup
         logEvent "ENTRÉE_D'UTILISATEUR:$useraddgroup"
-        # l'utilisateur existe ?
-        if
-            command "cat /etc/passwd | grep -w $useraddgroup >/dev/null"
-        # si il existe on demande le groupe auquel ajouter l'utilisateur
-        then
-            echo "Ok pour cet utilisateur, a quel groupe souhaitez vous l'ajouter ?"
-            read namegroup
-            #si le groupe existe
-            if command "cat /etc/group | grep -w $namegroup >/dev/null"; then
-                sudo_command "usermod -aG $namegroup $useraddgroup"
-                # on confirme l'ajout de l'utilisateur au groupe.
-                if cat /etc/group | grep $namegroup | grep $useraddgroup >/dev/null; then
-                    echo " l'utilisateur a bien été ajouté au groupe "
-                    logEvent "UTILISATEUR:$namegroup À_ÉTÉ_AJOUTÉ_AU_GROUPE:$useraddgroup"
-                    echo ""
-                    echo " souhaitez-vous ajouter un autre utilisateur ?"
-                    read -p "tape o pour oui ou autre chose pour non " conf
 
-                    if [ $conf = "o" ]; then # si oui on relance la fonction
-                        fonc_add_user_admin
-                    else
-                        # retour au menu
-                        fonc_menu_group
-                    fi
+        # Vérifier si l'utilisateur Windows existe
+        if powershell_command "Get-LocalUser -Name '$useraddgroup' -ErrorAction SilentlyContinue" >/dev/null; then
+            echo "► L'utilisateur existe."
 
+            # Saisie groupe
+            read -p "► À quel groupe souhaitez-vous l'ajouter ? : " namegroup
+
+            # Vérifier si le groupe Windows existe
+            if powershell_command "Get-LocalGroup -Name '$namegroup' -ErrorAction SilentlyContinue" >/dev/null; then
+                echo "► Le groupe existe, ajout en cours..."
+
+                # Ajout de l'utilisateur
+                powershell_command "Add-LocalGroupMember -Group '$namegroup' -Member '$useraddgroup'"
+
+                echo "► L'utilisateur '$useraddgroup' a été ajouté au groupe '$namegroup'."
+                logEvent "UTILISATEUR:$useraddgroup AJOUTÉ_AU_GROUPE:$namegroup"
+
+                echo ""
+                read -p "► Souhaitez-vous ajouter un autre utilisateur ? (o/n) : " conf
+                if [ "$conf" = "o" ]; then
+                    fonc_add_user_group_windows
                 else
-                    echo "erreur su script"
-                    logEvent "ERREUR_DANS_LE_SCRIPT_À_L'AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
-                    exit 130
+                    fonc_menu_group_windows
                 fi
-            #si le groupe n'existe pas
-            else
-                echo "le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? "
-                read -p "tape o pour oui ou autre chose non" conf
 
-                if [ $conf = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
-                    sudo_command "groupadd $namegroup && usermod -aG $namegroup $useraddgroup"
-                    logEvent "AJOUT_DE_DE_L'UTILISATEUR:$useraddgroup AU_GROUPE:$namegroup"
+            else
+                # Le groupe n'existe pas
+                echo ""
+                read -p "► Le groupe n'existe pas. Voulez-vous le créer puis ajouter l'utilisateur ? (o/n) : " conf
+
+                if [ "$conf" = "o" ]; then
+                    powershell_command "New-LocalGroup -Name '$namegroup'"
+                    powershell_command "Add-LocalGroupMember -Group '$namegroup' -Member '$useraddgroup'"
+
+                    echo "► Groupe '$namegroup' créé et utilisateur ajouté."
+                    logEvent "GROUPE:$namegroup CRÉÉ_UTILISATEUR_AJOUTÉ:$useraddgroup"
+
+                    fonc_menu_group_windows
                 else
-                    fonc_menu_group
+                    fonc_menu_group_windows
                 fi
             fi
 
         else
-            echo "Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+            # Utilisateur introuvable
+            echo ""
+            read -p "► Cet utilisateur n'existe pas. Voulez-vous en choisir un autre ? (o/n) : " conf
 
-            if [ $conf = "o" ]; then # si oui on relance la fonction
+            if [ "$conf" = "o" ]; then
                 logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                fonc_add_user_group
+                fonc_add_user_group_windows
             else
-                fonc_menu_group
-
+                fonc_menu_group_windows
             fi
         fi
         ;;
 
     2)
-        fonc_menu_group
+        fonc_menu_group_windows
         ;;
+
     *)
         echo "Erreur de saisie"
         ;;
     esac
 }
 
-fonc_exit_group() {
-
+fonc_exit_group_windows() {
+    echo ""
     echo "╭──────────────────────────────────────────────────╮"
     echo "│       RETIRER UN UTILISATEUR D'UN GROUPE         │"
     echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Saisir un nom d'utilisateur                  │"
     echo "│  2. Retour au menu précédent                     │"
+    echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
-    read -p "Choisissez une option : " choix
+    echo ""
+    read -p "► Choisissez une option : " choix
 
     case $choix in
 
     1)
-        echo " Quel utilisateur souhaitez-vous sortir du groupe ? : "
-        read userexitgroup
-        # on verifie si l'utilisateur existe
-        if
-            command "cat /etc/passwd | grep -w $userexitgroup"
-            logEvent "ENTRÉE_D'UTILISATEUR:$userexitgroup"
-        # si il existe on demande de quel groupe l'enlever
-        then
-            echo "C'est d'accord pour cet utilisateur "
-            echo "Voici le ou les groupes dans lequel $userexitgroup est présent "
-            command "cat /etc/group | grep "[:,]$userexitgroup""
-            echo "Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
-            read exitgroup
-            #si le groupe selectionné est valide on sort l'utilisateur
-            if command "cat /etc/group | grep $exitgroup && cat /etc/group | grep $userexitgroup"; then
 
-                sudo_command "usermod -rG $exitgroup $userexitgroup"
-                echo " l'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
-                logEvent "UTILISATEUR_'$userexitgroup'_A_ÉTÉ_RETIRÉ_DU_GROUPE_$exitgroup"
-                echo " souhaitez vous choisir un autre utilisateur ? "
-                read -p "tape o pour oui ou autre chose non" choix
+        read -p "► Quel utilisateur souhaitez-vous sortir du groupe ? : " userexitgroup
+        logEvent "ENTRÉE_D'UTILISATEUR:$userexitgroup"
 
-                if [ $choix = "o" ]; then # si oui on relance la fonction
-                    fonc_exit_group
+        # Vérifier l'existence de l'utilisateur
+        if powershell_command "Get-LocalUser -Name '$userexitgroup' -ErrorAction SilentlyContinue" >/dev/null; then
+
+            echo ""
+            echo "► L'utilisateur existe."
+            echo "► Recherche des groupes auxquels il appartient :"
+            echo ""
+
+            # Récupérer les groupes Windows de l'utilisateur
+            groups=$(powershell_command "Get-LocalGroup | ForEach-Object { if (Get-LocalGroupMember -Group \$_.Name -Member '$userexitgroup' -ErrorAction SilentlyContinue) { \$_.Name } }")
+
+            if [ -z "$groups" ]; then
+                echo "► Cet utilisateur n'appartient à aucun groupe."
+                fonc_menu_group_windows
+                return
+            fi
+
+            echo "$groups"
+            echo ""
+            read -p "► Choisissez le groupe duquel retirer l'utilisateur : " exitgroup
+
+            # Vérifier que ce groupe existe et contient l’utilisateur
+            if powershell_command "Get-LocalGroupMember -Group '$exitgroup' -Member '$userexitgroup' -ErrorAction SilentlyContinue" >/dev/null; then
+
+                # Retrait du groupe
+                powershell_command "Remove-LocalGroupMember -Group '$exitgroup' -Member '$userexitgroup'"
+
+                echo ""
+                echo "► L'utilisateur '$userexitgroup' a été retiré du groupe '$exitgroup'."
+                logEvent "UTILISATEUR:$userexitgroup RETIRÉ_DU_GROUPE:$exitgroup"
+
+                echo ""
+                read -p "► Souhaitez-vous retirer un autre utilisateur ? (o/n) : " conf
+
+                if [ "$conf" = "o" ]; then
+                    fonc_exit_group_windows
                 else
-                    fonc_menu_group
+                    fonc_menu_group_windows
                 fi
+
             else
-                echo "il y a eu une erreur pour la sortie du groupe..retour au menu.."
-                logEvent "ERREUR_DANS_LE_SCRIPT_POUR_LA_SORTIE_D'UN_UTILISATEUR_D'UN_GROUPE"
-                fonc_menu_group
+                echo ""
+                echo "► ERREUR : L'utilisateur n'est pas dans ce groupe ou le groupe n'existe pas."
+                logEvent "ERREUR_SORTIE_GROUPE_UTILISATEUR:$userexitgroup GROUPE:$exitgroup"
+                fonc_menu_group_windows
             fi
 
         else
-            #si il n'existe pas
-            echo " l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ?  "
-            read -p "tape o pour oui ou autre chose non" conf
+            echo ""
+            read -p "► Cet utilisateur n'existe pas. Voulez-vous en saisir un autre ? (o/n) : " conf
 
-            if [ $conf = "o" ]; then # si oui on relance la fonction
-                logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                fonc_exit_group
+            if [ "$conf" = "o" ]; then
+                fonc_exit_group_windows
             else
-                fonc_menu_group
+                fonc_menu_group_windows
             fi
-
         fi
         ;;
+
     2)
-        fonc_menu_group
+        fonc_menu_group_windows
         ;;
 
     *)
@@ -241,7 +267,7 @@ fonc_exit_menu() {
 fonc_menu_group_windows() {
     logEvent "MENU_GROUPES"
     while true; do
-
+        echo ""
         echo "╭──────────────────────────────────────────────────╮"
         echo "│                   MENU GROUPES                   │"
         echo "├──────────────────────────────────────────────────┤"
@@ -252,7 +278,8 @@ fonc_menu_group_windows() {
         echo "│  4. Retour au menu précédent                     │"
         echo "│                                                  │"
         echo "╰──────────────────────────────────────────────────╯"
-        echo -n "Votre choix (1-4): "
+        echo ""
+        echo -n "► Votre choix (1-4): "
         echo ""
         read selection
 
@@ -260,15 +287,15 @@ fonc_menu_group_windows() {
 
         1)
             logEvent "MENU_GROUPES:AJOUT_D'_UTILISATEUR_AU_GROUPE_ADMIN"
-            fonc_add_user_admin
+            fonc_add_user_admin_windows
             ;;
         2)
             logEvent "MENU_GROUPES:AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
-            fonc_add_user_group
+            fonc_add_user_group_windows
             ;;
         3)
             logEvent "MENU_GROUPES:SORTIE_D'UN_UTLISATEUR_D'UN_GROUPE"
-            fonc_exit_group
+            fonc_exit_group_windows
             ;;
         4)
 
@@ -276,7 +303,7 @@ fonc_menu_group_windows() {
             ;;
         *)
             echo "Erreur de saisie"
-            fonc_menu_group
+            fonc_menu_group_windows
             ;;
 
         esac

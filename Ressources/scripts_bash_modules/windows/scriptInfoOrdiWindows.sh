@@ -3,7 +3,7 @@
 ##################################### Menu Gestion Disques ####################################
 
 # Menu principal de gestion des disques
-gestion_disques_menu_linux() {
+gestion_disques_menu_windows() {
 
     logEvent "MENU_GESTION_DISQUES"
 
@@ -31,19 +31,19 @@ gestion_disques_menu_linux() {
         1)
             # Appel de la fonction pour compter les disques
             logEvent "SELECTION_NOMBRE_DISQUES"
-            fonction_nombre_disques_linux
+            fonction_nombre_disques_windows
             ;;
 
         2)
             # Appel de la fonction pour lister les partitions
             logEvent "SELECTION_PARTITIONS"
-            fonction_partitions_linux
+            fonction_partitions_windows
             ;;
 
         3)
             # Appel de la fonction pour afficher les lecteurs montés
             logEvent "SELECTION_LECTEURS_MONTES"
-            fonction_lecteurs_montes_linux
+            fonction_lecteurs_montes_windows
             ;;
 
         4)
@@ -66,13 +66,13 @@ gestion_disques_menu_linux() {
 #################################### Fonction Nombre de disques ##########################################
 
 # Compte et affiche le nombre de disques physiques
-fonction_nombre_disques_linux() {
+fonction_nombre_disques_windows() {
 
     logEvent "DEMANDE_NOMBRE_DISQUES"
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    nombreDisques=$(command "lsblk | grep 'disk' | wc -l" | tee /dev/tty)
+    nombreDisques=$(powershell_command "(Get-Disk).Count" | tee /dev/tty)
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
 
 }
@@ -80,17 +80,18 @@ fonction_nombre_disques_linux() {
 #################################### Fonction Partitions ###################################################
 
 # Affiche les partitions avec leurs détails et leur nombre total
-fonction_partitions_linux() {
+fonction_partitions_windows() {
 
     logEvent "DEMANDE_LISTE_PARTITIONS"
     echo " ► Partitions Nom, FS, Taille : "
 
     # Affiche les partitions avec nom, type de système de fichiers et taille
-    partitionsList=$(command " lsblk -o NAME,FSTYPE,SIZE,TYPE | grep 'part' " | tee /dev/tty)
+    partitionsList=$(powershell_command " Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size |
+    Format-Table" | tee-Object /dev/tty)
 
     echo " ► Nombre de partitions : "
     # Compte le nombre total de partitions
-    nombrePartitions=$(command " lsblk -o NAME,TYPE | grep 'part' | wc -l " | tee /dev/tty)
+    nombrePartitions=$(command "  " | tee /dev/tty)
 
     infoFile "$HOSTNAME" "Liste des partitions:" "$partitionsList"
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
@@ -100,7 +101,7 @@ fonction_partitions_linux() {
 #################################### Fonction Lecteurs montés ############################################
 
 # Affiche tous les lecteurs physiques actuellement montés
-fonction_lecteurs_montes_linux() {
+fonction_lecteurs_montes_windows() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
     echo " ► Lecteurs montés disque, USB, CD, etc.: "
@@ -114,7 +115,7 @@ fonction_lecteurs_montes_linux() {
 #################################### Fonction liste utilisateurs locaux #################################
 
 # Liste les utilisateurs locaux (non système)
-fonction_liste_utilisateurs_linux() {
+fonction_liste_utilisateurs_windows() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
     echo "► Liste des utilisateurs locaux :"
@@ -127,7 +128,7 @@ fonction_liste_utilisateurs_linux() {
 #################################### Fonction 5 derniers logins #######################################
 
 # Affiche les 5 dernières connexions utilisateurs
-fonction_5_derniers_logins_linux() {
+fonction_5_derniers_logins_windows() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
     echo "► Les 5 derniers logins :"
@@ -141,7 +142,7 @@ fonction_5_derniers_logins_linux() {
 #################################### Fonction IP, masque, passerelle ####################################
 
 # Affiche les informations réseau (IP, masque et passerelle)
-fonction_infos_reseau_linux() {
+fonction_infos_reseau_windows() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
     echo "► Adresse IP et masque "
@@ -162,7 +163,7 @@ fonction_infos_reseau_linux() {
 #################################### Fonction : Version OS ####################################
 
 # Affiche la version du système d'exploitation
-fonction_version_os_linux() {
+fonction_version_os_windows() {
 
     logEvent "DEMANDE_VERSION_OS"
     echo "► Version de l'OS :"
@@ -176,7 +177,7 @@ fonction_version_os_linux() {
 #################################### Fonction : Mises à jour critiques ####################################
 
 # Liste les mises à jour disponibles
-fonction_mises_a_jour_linux() {
+fonction_mises_a_jour_windows() {
 
     logEvent "DEMANDE_MISES_A_JOUR"
     echo "► Mises à jour critiques manquantes: "
@@ -192,7 +193,7 @@ fonction_mises_a_jour_linux() {
 #################################### Fonction : Marque / Modèle ####################################
 
 # Affiche les informations matérielles marque et modèle
-fonction_marque_modele_linux() {
+fonction_marque_modele_windows() {
 
     logEvent "DEMANDE_MARQUE_MODELE"
     echo "► Marque / Modèle de l'ordinateur :"

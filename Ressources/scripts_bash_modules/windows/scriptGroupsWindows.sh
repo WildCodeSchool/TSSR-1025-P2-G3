@@ -35,10 +35,10 @@ fonc_add_user_admin_windows() {
             logEvent "DÉBUT_AJOUT_UTILISATEUR_ADMIN:$useraddadmin"
 
             # Ajout au groupe Administrateurs (nom système : Administrators)
-            powershell_command "Add-LocalGroupMember -Group 'Administrators' -Member '$useraddadmin'"
+            powershell_command "Add-LocalGroupMember -Group 'Administrateurs' -Member '$useraddadmin'"
 
             # Vérification que l'utilisateur est bien dans le groupe Administrateurs
-            if powershell_command "Get-LocalGroupMember -Group 'Administrators' -Member '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null; then
+            if powershell_command "Get-LocalGroupMember -Group 'Administrateurs' -Member '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null; then
                 echo "► L'utilisateur '$useraddadmin' a bien été ajouté au groupe Administrateurs."
                 logEvent "UTILISATEUR:$useraddadmin AJOUTÉ_AU_GROUPE:Administrators"
 

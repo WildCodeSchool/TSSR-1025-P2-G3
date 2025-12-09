@@ -72,7 +72,7 @@ fonction_nombre_disques_windows() {
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    nombreDisques=$(powershell_command "(Get-Disk).Count" | tee /dev/tty)
+    nombreDisques=$(powershell_command " '(Get-Disk).Count' | Tee-Object -FilePath /dev/tty)"
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
 
 }
@@ -86,14 +86,15 @@ fonction_partitions_windows() {
     echo " ► Partitions Nom, FS, Taille : "
 
     # Affiche les partitions avec nom, type de système de fichiers et taille
-    partitionsList=$(powershell_command " Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size |
-    Format-Table" | tee-Object /dev/tty)
+    partitionsList=$(powershell_command "Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size | Format-Table | Tee-Object -FilePath /dev/tty)"
+
+    infoFile $HOSTNAME "Liste de partitions:" $partitionsList
+
 
     echo " ► Nombre de partitions : "
     # Compte le nombre total de partitions
-    nombrePartitions=$(command "  " | tee /dev/tty)
+    nombrePartitions=$(powershell_command "(Get-Partition | Measure-Object).Count | Tee-Object -FilePath /dev/ttyee /dev/tty)"
 
-    infoFile "$HOSTNAME" "Liste des partitions:" "$partitionsList"
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
 }
@@ -107,7 +108,8 @@ fonction_lecteurs_montes_windows() {
     echo " ► Lecteurs montés disque, USB, CD, etc.: "
 
     # Affiche les lecteurs montés avec leur espace disque
-    lecteursList=$(command " df -h | grep '^/dev/' " | tee /dev/tty)
+  lecteursList=$(powershell_command "Get-PSDrive -PSProvider FileSystem | Format-Table | Tee-Object -FilePath /dev/tty")
+
     infoFile "$HOSTNAME" "Lecteurs montés:" "$lecteursList"
 
 }
@@ -121,7 +123,8 @@ fonction_liste_utilisateurs_windows() {
     echo "► Liste des utilisateurs locaux :"
 
     # Affiche les utilisateurs avec UID >= 1000
-    userList=$(command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd" | tee /dev/tty)
+    userList=$(powershell_command "(Get-Content /etc/passwd | ForEach-Object { \$f = \$_ -split ':' ; if ([int]\$f[2] -ge 1000 -and [int]\$f[2] -lt 60000) { \$f[0] } }) | Tee-Object -FilePath /dev/tty")
+
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 }
 
@@ -134,7 +137,8 @@ fonction_5_derniers_logins_windows() {
     echo "► Les 5 derniers logins :"
 
     # Affiche l'historique des 5 dernières connexions
-    loginsList=$(command "last -n 5" | tee /dev/tty)
+    loginsList=$(powershell_command "last -n 5 | Tee-Object -FilePath /dev/tty")
+
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
 }
@@ -148,12 +152,13 @@ fonction_infos_reseau_windows() {
     echo "► Adresse IP et masque "
 
     # Affiche l'adresse IP et le masque
-    ipMasque=$(command "ip -4 -o addr show | awk '\$2 != \"lo\" {print \"→ \" \$4}'" | tee /dev/tty)
+    ipMasque=$(powershell_command "(Get-NetIPAddress | Where-Object { \$_.AddressFamily -eq 'IPv4' -and \$_.InterfaceAlias -ne 'lo' } | Select-Object IPAddress, PrefixLength) | Tee-Object -FilePath /dev/tty")
+
 
     echo "► Passerelle par défaut "
 
     # Affiche la passerelle par défaut
-    passerelle=$(command "ip route | awk '/default/ {print \"→ \" \$3}'" | tee /dev/tty)
+    passerelle=$(powershell_command "(Get-NetRoute | Where-Object { \$_.DestinationPrefix -eq '0.0.0.0/0' } | Select-Object NextHop) | Tee-Object -FilePath /dev/tty")
 
     infoFile "$HOSTNAME" "Adresse IP et masque:" "$ipMasque"
     infoFile "$HOSTNAME" "Passerelle par défaut:" "$passerelle"
@@ -169,7 +174,8 @@ fonction_version_os_windows() {
     echo "► Version de l'OS :"
 
     # Affiche les informations de version (distribution, release, codename)
-    versionOS=$(command " lsb_release -a " | tee /dev/tty)
+    versionOS=$(powershell_command "(Get-ComputerInfo | Select-Object OsName, OsVersion) | Tee-Object -FilePath /dev/tty")
+
     infoFile "$HOSTNAME" "Version OS:" "$versionOS"
 
 }
@@ -183,7 +189,8 @@ fonction_mises_a_jour_windows() {
     echo "► Mises à jour critiques manquantes: "
 
     # Affiche les paquets qui ont des mises à jour à faire
-    majList=$(command "apt list --upgradable 2>/dev/null" | tee /dev/tty)
+    majList=$(powershell_command "apt list --upgradable 2>/dev/null | Tee-Object -FilePath /dev/tty")
+
     infoFile "$HOSTNAME" "Mises à jour disponibles:" "$majList"
     # sudo_command "unattended-upgrade --dry-run -d"
     echo ""
@@ -200,15 +207,15 @@ fonction_marque_modele_windows() {
 
     # Fabricant
     echo "► Fabricant:"
-    fabricant=$(command "cat /sys/class/dmi/id/sys_vendor" | tee /dev/tty)
+    fabricant=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystem | Select-Object Manufacturer) | Tee-Object -FilePath /dev/tty")
 
     # Nom du modèle
     echo "► Modèle:"
-    modele=$(command "cat /sys/class/dmi/id/product_name" | tee /dev/tty)
+    mmodele=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystem | Select-Object Model) | Tee-Object -FilePath /dev/tty")
 
     # Version
     echo "► Version:"
-    version=$(command "cat /sys/class/dmi/id/product_version" | tee /dev/tty)
+    vversion=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystemProduct | Select-Object Version) | Tee-Object -FilePath /dev/tty")
 
     infoFile "$HOSTNAME" "Fabricant:" "$fabricant"
     infoFile "$HOSTNAME" "Modèle:" "$modele"

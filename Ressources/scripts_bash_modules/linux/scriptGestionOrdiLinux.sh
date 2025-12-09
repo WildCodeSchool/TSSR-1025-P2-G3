@@ -152,13 +152,22 @@ fonction_supprimer_dossier_linux() {
     if [ -d "$delfolder" ]; then
 
         sudo_command "rm -r $delfolder"
+	
+	if [ $? -eq 0 ]; then
 
+<<<<<<< HEAD
         if [ $? -eq 0 ]; then
 
             logEvent "SUPPRESSION_EFFECTUE"
             echo " "
             echo "► Suppression de dossier effectue "
         fi
+=======
+            logEvent "SUPPRESSION_EFFECTUE"
+            echo " "
+            echo "► Suppression de dossier effectue "
+	fi
+>>>>>>> 78cf808a81770bc01454644bbc78c7c6bfbfba8b
     else
         logEvent "DOSSIER_INEXISTANT:$delfolder"
         echo "► Le dossier $delfolder n'existe pas"

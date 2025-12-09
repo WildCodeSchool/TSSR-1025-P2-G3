@@ -418,7 +418,7 @@ function userMainMenu() {
     *)
         logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
         echo -e "► ${RED}Entrée invalide !${NC}"
-        userMainMenu
+        mainMenu
         ;;
 
     esac

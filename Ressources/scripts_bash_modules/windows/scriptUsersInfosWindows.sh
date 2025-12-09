@@ -194,7 +194,7 @@ fonc_opensessions_linux() {
 
             if [ $conf = "o" ]; then # si oui on relance la fonction
 
-                fonc_opensessions_linux
+                fonc_opensessions_windows
 
             else
 
@@ -206,7 +206,7 @@ fonc_opensessions_linux() {
 
             echo "► Erreur de saisie, retour au menu précédent"
             logEvent "ERREUR_DE_SAISIE"
-            fonc_date_lastconnection_linux
+            fonc_date_lastconnection_windows
 
         fi
         ;;

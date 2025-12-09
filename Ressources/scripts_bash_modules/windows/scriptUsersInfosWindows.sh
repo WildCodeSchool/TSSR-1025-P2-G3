@@ -31,8 +31,8 @@ fonc_date_lastconnection_windows() {
         if powershell_command "Get-LocalUser -Name '$userlastconnect' -ErrorAction SilentlyContinue" >/dev/null; then
             echo ""
             echo "► L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
+            lastconnection=$(powershell_command "Get-LocalUser -Name '$userlastconnect' | Select-Object Name, LastLogon" | tee /dev/tty)
 
-            lastconnection=$(powershell_command "Get-ADUser -Identity '$userlastconnect' -Properties LastLogonDate | Select-Object Name, LastLogonDate" | tee /dev/tty)
             infoFile "$userlastconnect" "Dernière connexion" "$lastconnection"
             logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
 
@@ -90,8 +90,8 @@ fonc_date_lastpassmodif_windows() {
         if powershell_command "Get-LocalUser -Name '$userlastpass' -ErrorAction SilentlyContinue" >/dev/null; then
             echo ""
             echo "► L'utilisateur $userlastpass a changé son mot de passe la dernière fois : "
+            lastpasschange=$(powershell_command "Get-LocalUser -Name '$userlastpass' | Select-Object Name, PasswordLastSet" | tee /dev/tty)
 
-            lastpasschange=$(powershell_command "Get-ADUser -Identity '$userlastpass' -Properties PasswordLastSet | Select-Object Name, PasswordLastSet" | tee /dev/tty)
             infoFile "$userlastpass" "Dernier changement de mot de passe" "$lastpasschange"
             logEvent "AFFICHAGE_DERNIER_CHANGEMENT_MDP"
 

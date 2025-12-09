@@ -37,7 +37,7 @@ fonc_date_lastconnection_windows() {
             echo ""
             echo "► L'utilisateur $userlastconnect s'est connecté pour la dernière fois : "
 
-            lastconnection=$(powershell_command Get-ADUser -Identity "$userlastconnect" -Properties LastLogonDate | Select-Object Name, LastLogonDate | tee /dev/tty)
+            lastconnection=$(powershell_command "Get-ADUser -Identity "$userlastconnect" -Properties LastLogonDate | Select-Object Name, LastLogonDate" | tee /dev/tty)
             infoFile "$userlastconnect" "Dernière connexion" "$lastconnection"
             logEvent "AFFICHAGE_DE_LA_DERNIÈRE_CONNECTION_DE_L'UTILISATEUR"
 

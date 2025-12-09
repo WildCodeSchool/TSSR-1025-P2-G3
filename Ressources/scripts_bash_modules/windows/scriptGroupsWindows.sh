@@ -20,66 +20,64 @@ fonc_add_user_admin_windows() {
     case $choix in
 
     1)
-        # choix de l'utilisateur:
         echo ""
-        echo "► Voici la liste des utilisateurs : "
+        echo "► Voici la liste des utilisateurs Windows :"
         powershell_command "Get-LocalUser | Select-Object Name"
         echo ""
-        read -p "► Quel utilisateur souhaitez vous ajouter en admin ? : " useraddadmin
+
+        read -p "► Quel utilisateur souhaitez-vous ajouter en administrateur ? : " useraddadmin
         logEvent "ENTRÉE_D'UTILISATEUR:$useraddadmin"
 
-        # l'utilisateur existe ?
-        if
-            logEvent "_COMMANDE_DE_VÉRIFICATION_EXISTENCE_UTILISATEUR"
-            powershell_command "Get-LocalUser -Name '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null
-        # si il existe on ajoute au groupe sudo
-        then
+        # Vérification existence utilisateur
+        if powershell_command "Get-LocalUser -Name '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null; then
             echo ""
-            logEvent "AJOUT_DE_L'UTILSATEUR:$useraddadmin"
+            echo "► Ajout de l'utilisateur au groupe Administrateurs..."
+            logEvent "DÉBUT_AJOUT_UTILISATEUR_ADMIN:$useraddadmin"
 
-            # On verfie si l'utilisateur a bien été ajouté
+            # Ajout au groupe Administrateurs (nom système : Administrators)
+            powershell_command "Add-LocalGroupMember -Group 'Administrators' -Member '$useraddadmin'"
 
-            if
-                command "cat /etc/group | grep sudo | grep $useraddadmin" >/dev/null
-            then
-                echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
-                read -p "► Souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) : ? " conf
-                logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
+            # Vérification que l'utilisateur est bien dans le groupe Administrateurs
+            if powershell_command "Get-LocalGroupMember -Group 'Administrators' -Member '$useraddadmin' -ErrorAction SilentlyContinue" >/dev/null; then
+                echo "► L'utilisateur '$useraddadmin' a bien été ajouté au groupe Administrateurs."
+                logEvent "UTILISATEUR:$useraddadmin AJOUTÉ_AU_GROUPE:Administrators"
 
-                if [ $conf = "o" ]; then # si oui on relance la fonction
+                echo ""
+                read -p "► Souhaitez-vous ajouter un autre administrateur ? (o/n) : " conf
+
+                if [ "$conf" = "o" ]; then
                     fonc_add_user_admin_windows
                 else
-                    # retour au menu
                     fonc_menu_group_windows
                 fi
-
             else
-                echo "erreur"
-                logEvent "ERREUR_DU_SCRIPT_DANS_AJOUT_UTILISATEUR_GROUPE_SUDO"
+                echo "ERREUR : l'utilisateur n'a pas été ajouté au groupe Administrateurs."
+                logEvent "ERREUR_AJOUT_ADMIN_UTILISATEUR:$useraddadmin"
                 exit 130
-
             fi
-        # si il n'existe pas
+
         else
             echo ""
-            read -p "► l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : " conf
-            if [ $conf = "o" ]; then # si oui on relance la fonction
-                logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
+            read -p "► Cet utilisateur n'existe pas. Voulez-vous en choisir un autre ? (o/n) : " conf
+            if [ "$conf" = "o" ]; then
+                logEvent "UTILISATEUR_INEXISTANT_NOUVELLE_SAISIE"
                 fonc_add_user_admin_windows
             else
                 fonc_menu_group_windows
             fi
-
         fi
         ;;
+
     2)
         fonc_menu_group_windows
         ;;
+
     *)
         echo "Erreur de saisie"
         ;;
     esac
 }
+
 fonc_add_user_group_windows() {
     echo ""
     echo "╭──────────────────────────────────────────────────╮"

@@ -6,20 +6,22 @@
 # CHARGEMENT DES MODULES
 #=====================================================
 
+# GENERAL
+source ../Ressources/scripts_bash_modules/scriptSearchLog.sh
+
 # LINUX
 source ../Ressources/scripts_bash_modules/linux/scriptUsersLinux.sh
 source ../Ressources/scripts_bash_modules/linux/scriptGroupsLinux.sh
 source ../Ressources/scripts_bash_modules/linux/scriptGestionOrdiLinux.sh
 source ../Ressources/scripts_bash_modules/linux/scriptUsersInfosLinux.sh
 source ../Ressources/scripts_bash_modules/linux/scriptInfoOrdiLinux.sh
-source ../Ressources/scripts_bash_modules/scriptSearchLog.sh
 
 # WINDOWS
 source ../Ressources/scripts_bash_modules/windows/scriptUsersWindows.sh
 source ../Ressources/scripts_bash_modules/windows/scriptGroupsWindows.sh
-#source ../Ressources/scripts_module/windows/scriptGestionOrdiWindows.sh
+source ../Ressources/scripts_bash_modules/windows/scriptGestionOrdiWindows.sh
 source ../Ressources/scripts_bash_modules/windows/scriptSearchLogWindows.sh
-#source ../Ressources/scripts_module/windows/scriptUsersInfosWindows.sh
+source ../Ressources/scripts_bash_modules/windows/scriptUsersInfosWindows.sh
 
 #=====================================================
 # VARIABLES DES COULEURS

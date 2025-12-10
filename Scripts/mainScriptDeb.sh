@@ -180,7 +180,7 @@ function chooseExecutionMode() {
     *)
 
         logEvent "MENU_EXECUTION:ENTREE_INVALIDE"
-        echo "► Entrée Invalide !\n Retour au menu"
+        echo -e "► ${RED}Entrée invalide !${NC}"
         echo ""
         chooseExecutionMode
         ;;

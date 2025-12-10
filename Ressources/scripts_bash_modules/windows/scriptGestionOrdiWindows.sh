@@ -177,7 +177,7 @@ fonction_redemarrage_windows() {
         logEvent "REBOOT_ORDINATEUR"
         echo "► l'ordinateur va redémarrer "
 
-        powershell_command "Restart-Computer"
+        powershell_command "Restart-Computer -Force"
         computerMainMenu
 
     else

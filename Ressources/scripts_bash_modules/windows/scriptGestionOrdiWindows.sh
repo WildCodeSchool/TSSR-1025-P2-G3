@@ -76,7 +76,7 @@ fonction_creer_dossier_windows() {
 
     # si le dossier existe pas créé le dossier
     else
-        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory" >/dev/null
+        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null" 
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -107,7 +107,7 @@ fonction_supprimer_dossier_windows() {
     # vérifier si le dossier existe pas si existe supprime
     if powershell_command "Test-Path -Path \"$delfolder\""; then
 
-        powershell_command "Remove-Item -path '$delfolder' -Recurse -Force" >/dev/null
+        powershell_command "Remove-Item -path '$delfolder' -Recurse -Force | Out-Null" 
 
         if [ $? -eq 0 ]; then
 

@@ -50,7 +50,7 @@ gestion_disques_menu_windows() {
             # Retour au menu principal
             logEvent "RETOUR_MENU_PRECEDENT"
             echo "Retour au menu précédent"
-            return
+            informationMainMenu
             ;;
 
         *)

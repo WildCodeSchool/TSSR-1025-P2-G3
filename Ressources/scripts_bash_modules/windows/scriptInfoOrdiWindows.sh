@@ -211,11 +211,11 @@ fonction_marque_modele_windows() {
 
     # Nom du modèle
     echo "► Modèle:"
-    mmodele=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystem | Select-Object Model) | Tee-Object -FilePath /dev/tty")
+    modele=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystem | Select-Object Model) | Tee-Object -FilePath /dev/tty")
 
     # Version
     echo "► Version:"
-    vversion=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystemProduct | Select-Object Version) | Tee-Object -FilePath /dev/tty")
+    version=$(powershell_command "(Get-WmiObject -Class Win32_ComputerSystemProduct | Select-Object Version) | Tee-Object -FilePath /dev/tty")
 
     infoFile "$HOSTNAME" "Fabricant:" "$fabricant"
     infoFile "$HOSTNAME" "Modèle:" "$modele"

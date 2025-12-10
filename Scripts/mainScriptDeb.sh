@@ -105,11 +105,16 @@ export remoteOS=""
 
 function chooseExecutionMode() {
 
-export connexionMode=""
-export remoteUser=""
-export remoteComputer=""
-export portSSH=""
-export remoteOS=""
+
+    #=====================================================
+    # VARIABLES DE CONNEXION
+    #=====================================================
+    export connexionMode=""
+    export remoteUser=""
+    export remoteComputer=""
+    export portSSH=""
+    export remoteOS=""
+
 
     logEvent "MENU_EXECUTION"
 

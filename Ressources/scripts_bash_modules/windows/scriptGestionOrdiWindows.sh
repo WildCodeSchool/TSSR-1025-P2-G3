@@ -193,7 +193,7 @@ fonction_prise_main_windows() {
 
     # apple au variables mainScript.sh (variables de connexion SSH)
     logEvent "DEMANDE_PRISE_DE_MAIN_DISTANTE_SSH"
-    command "ssh -p '$portSSH' '$remoteUser@$remoteComputer' "
+    ssh -p '$portSSH' '$remoteUser@$remoteComputer' 
 
     # Condition si le dernier commande c'est bien exécutée
     if [ $? -eq 0 ]; then

@@ -74,7 +74,10 @@ fonction_nombre_disques_windows() {
     # Liste les disques et compte leur nombre
     nombreDisques=$(powershell_command " '(Get-Disk).Count'" | tee /dev/tty)
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
-
+    
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    gestion_disques_menu_windows
 }
 
 #################################### Fonction Partitions ###################################################
@@ -97,6 +100,9 @@ fonction_partitions_windows() {
     
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    gestion_disques_menu_windows
 }
 
 #################################### Fonction Lecteurs montés ############################################
@@ -111,6 +117,10 @@ fonction_lecteurs_montes_windows() {
   lecteursList=$(powershell_command "Get-PSDrive -PSProvider FileSystem | Format-Table" | tee /dev/tty)
 
     infoFile "$HOSTNAME" "Lecteurs montés:" "$lecteursList"
+    
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    gestion_disques_menu_windows
 
 }
 
@@ -126,6 +136,10 @@ fonction_liste_utilisateurs_windows() {
     userList=$(powershell_command "Get-LocalUser | Where-Object { \$_.Enabled -eq \$true } | Select-Object Name, Enabled, LastLogon | Format-Table" | tee /dev/tty)
 
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
+
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }
 
 #################################### Fonction 5 derniers logins #######################################
@@ -141,6 +155,9 @@ fonction_5_derniers_logins_windows() {
 
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }
 
 #################################### Fonction IP, masque, passerelle ####################################
@@ -163,6 +180,9 @@ fonction_infos_reseau_windows() {
     infoFile "$HOSTNAME" "Adresse IP et masque:" "$ipMasque"
     infoFile "$HOSTNAME" "Passerelle par défaut:" "$passerelle"
 
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }
 
 #################################### Fonction : Version OS ####################################
@@ -178,6 +198,9 @@ fonction_version_os_windows() {
 
     infoFile "$HOSTNAME" "Version OS:" "$versionOS"
 
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }
 
 #################################### Fonction : Mises à jour critiques ####################################
@@ -192,8 +215,10 @@ fonction_mises_a_jour_windows() {
     majList=$(powershell_command "Get-WindowsUpdate -MicrosoftUpdate | Select-Object Title, KB, Size | Format-Table" | tee /dev/tty)
     infoFile "$HOSTNAME" "Mises à jour disponibles:" "$majList"
     # sudo_command "unattended-upgrade --dry-run -d"
+    
     echo ""
-
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }
 
 #################################### Fonction : Marque / Modèle ####################################
@@ -220,4 +245,7 @@ fonction_marque_modele_windows() {
     infoFile "$HOSTNAME" "Modèle:" "$modele"
     infoFile "$HOSTNAME" "Version:" "$version"
 
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    informationMainMenu
 }

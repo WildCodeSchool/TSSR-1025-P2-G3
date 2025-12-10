@@ -105,6 +105,12 @@ export remoteOS=""
 
 function chooseExecutionMode() {
 
+export connexionMode=""
+export remoteUser=""
+export remoteComputer=""
+export portSSH=""
+export remoteOS=""
+
     logEvent "MENU_EXECUTION"
 
     echo ""

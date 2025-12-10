@@ -90,11 +90,11 @@ fonction_partitions_windows() {
 
     infoFile $HOSTNAME "Liste de partitions:" $partitionsList
 
+    nombrePartitions=$(powershell_command "(Get-Partition | Measure-Object).Count | Tee-Object -FilePath /dev/tty")
 
     echo " ► Nombre de partitions : "
     # Compte le nombre total de partitions
-    nombrePartitions=$(powershell_command "(Get-Partition | Measure-Object).Count | Tee-Object -FilePath /dev/ttyee /dev/tty")
-
+    
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
 }
@@ -123,7 +123,7 @@ fonction_liste_utilisateurs_windows() {
     echo "► Liste des utilisateurs locaux :"
 
     # Affiche les utilisateurs avec UID >= 1000
-    userList=$(powershell_command "(Get-Content /etc/passwd | ForEach-Object { \$f = \$_ -split ':' ; if ([int]\$f[2] -ge 1000 -and [int]\$f[2] -lt 60000) { \$f[0] } }) | Tee-Object -FilePath /dev/tty")
+    userList=$(powershell_command "Get-LocalUser | Where-Object { \$_.Enabled -eq \$true } | Select-Object Name, Enabled, LastLogon | Format-Table | Tee-Object -FilePath /dev/tty")
 
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 }
@@ -137,7 +137,7 @@ fonction_5_derniers_logins_windows() {
     echo "► Les 5 derniers logins :"
 
     # Affiche l'historique des 5 dernières connexions
-    loginsList=$(powershell_command "last -n 5 | Tee-Object -FilePath /dev/tty")
+    loginsList=$(powershell_command "Get-EventLog -LogName Security -InstanceId 4624 -Newest 5 | Select-Object TimeGenerated, Message | Format-Table | Tee-Object -FilePath /dev/tty")
 
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
@@ -189,8 +189,7 @@ fonction_mises_a_jour_windows() {
     echo "► Mises à jour critiques manquantes: "
 
     # Affiche les paquets qui ont des mises à jour à faire
-    majList=$(powershell_command "apt list --upgradable 2>/dev/null | Tee-Object -FilePath /dev/tty")
-
+    majList=$(powershell_command "Get-WindowsUpdate -MicrosoftUpdate | Select-Object Title, KB, Size | Format-Table | Tee-Object -FilePath /dev/tty")
     infoFile "$HOSTNAME" "Mises à jour disponibles:" "$majList"
     # sudo_command "unattended-upgrade --dry-run -d"
     echo ""

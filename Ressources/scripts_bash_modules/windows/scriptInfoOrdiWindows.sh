@@ -76,7 +76,7 @@ fonction_nombre_disques_windows() {
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
     
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
 
@@ -101,7 +101,7 @@ fonction_partitions_windows() {
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
 
@@ -119,7 +119,7 @@ fonction_lecteurs_montes_windows() {
     infoFile "$HOSTNAME" "Lecteurs montés:" "$lecteursList"
     
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 
 }
@@ -138,7 +138,7 @@ fonction_liste_utilisateurs_windows() {
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
 
@@ -156,7 +156,7 @@ fonction_5_derniers_logins_windows() {
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
 
@@ -181,7 +181,7 @@ fonction_infos_reseau_windows() {
     infoFile "$HOSTNAME" "Passerelle par défaut:" "$passerelle"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
 
@@ -199,7 +199,7 @@ fonction_version_os_windows() {
     infoFile "$HOSTNAME" "Version OS:" "$versionOS"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
 
@@ -217,7 +217,7 @@ fonction_mises_a_jour_windows() {
     # sudo_command "unattended-upgrade --dry-run -d"
     
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
 
@@ -246,6 +246,6 @@ fonction_marque_modele_windows() {
     infoFile "$HOSTNAME" "Version:" "$version"
 
     echo ""
-    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent."
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }

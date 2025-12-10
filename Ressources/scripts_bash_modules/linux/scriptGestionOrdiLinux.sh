@@ -151,7 +151,7 @@ fonction_supprimer_dossier_linux() {
     # vérifier si le dossier existe pas si existe supprime
     if [ -d "$delfolder" ]; then
 
-        sudo_command "rm -r $delfolder"
+        sudo_command "rm -rf -- \"$delfolder\""
 
         if [ $? -eq 0 ]; then
 

@@ -203,14 +203,14 @@ function detectionRemoteOS() {
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
         remoteOS="Linux"
         export remoteOS
-        echo "► Système d'exploitation détecté : Linux "
+        echo -e "► Système d'exploitation détecté :${BLUE}Linux${NC} "
         logEvent "DETECTION_OS:Linux"
     fi
 
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
         remoteOS="Windows"
         export remoteOS
-        echo "► Système d'exploitation détecté : Windows "
+        echo -e "► Système d'exploitation détecté : ${BLUE}Windows${NC} "
         logEvent "DETECTION_OS:Windows"
     fi
 }

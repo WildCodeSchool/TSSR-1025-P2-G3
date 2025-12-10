@@ -16,9 +16,8 @@ gestion_repertoire_menu_windows() {
         echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Créer un répertoire                          │"
-        echo "│  2. Créer une répertoire (SUDO)                  │"
-        echo "│  3. Supprimer un répertoire                      │"
-        echo "│  4. Retour au menu précédent                     │"
+        echo "│  2. Supprimer un répertoire                      │"
+        echo "│  3. Retour au menu précédent                     │"
         echo "│                                                  │"
         echo "╰──────────────────────────────────────────────────╯"
         echo ""
@@ -90,41 +89,6 @@ fonction_creer_dossier_windows() {
             logEvent "DOSSIER_CRÉÉ:$creation_dossier"
             echo ""
             echo "► Le dossier a été créé $creation_dossier "
-
-        else
-
-            logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
-            echo ""
-            echo "► Erreur : dossier non créé"
-
-        fi
-    fi
-}
-
-################################## Fonction création répertoire SUDO #####################################
-
-fonction_creer_dossier_sudo_windows() {
-
-    logEvent "CRÉATION_DE_DOSSIER"
-
-    read -p "► Entrez le chemin du dossier : " creation_dossier_sudo
-
-    # vérifier si le dossier existe
-    if [ -d "$creation_dossier_sudo" ]; then
-
-        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
-        echo "► Le dossier existe déjà"
-
-    # si le dossier existe pas créé le dossier
-    else
-        powershell_command "New-Item -Path "$creation_dossier_sudo" -ItemType Directory"
-
-        # vérifier si le dossier a bien été créé
-        if [ $? -eq 0 ]; then
-
-            logEvent "DOSSIER_CRÉÉ:$creation_dossier_sudo"
-            echo ""
-            echo "► Le dossier a été créé $creation_dossier_sudo "
 
         else
 

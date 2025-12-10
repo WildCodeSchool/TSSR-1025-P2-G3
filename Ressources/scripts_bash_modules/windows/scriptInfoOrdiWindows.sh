@@ -207,8 +207,6 @@ fonction_version_os_windows() {
 
 # Liste les mises à jour disponibles
 fonction_mises_a_jour_windows() {
-    logEvent "MISE_A_JOUR_POWERSHELL_MODULE"
-    powershell_command "Install-Module -Name PSWindowsUpdate -Force"
     
     logEvent "DEMANDE_MISES_A_JOUR"
     echo "► Mises à jour critiques manquantes: "

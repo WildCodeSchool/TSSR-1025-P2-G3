@@ -72,7 +72,7 @@ fonction_nombre_disques_windows() {
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    nombreDisques=$(powershell_command " '(Get-Disk).Count' | Tee-Object -FilePath /dev/tty)"
+    nombreDisques=$(powershell_command " '(Get-Disk).Count' | Tee-Object -FilePath /dev/tty")
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
 
 }
@@ -86,14 +86,14 @@ fonction_partitions_windows() {
     echo " ► Partitions Nom, FS, Taille : "
 
     # Affiche les partitions avec nom, type de système de fichiers et taille
-    partitionsList=$(powershell_command "Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size | Format-Table | Tee-Object -FilePath /dev/tty)"
+    partitionsList=$(powershell_command "Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size | Format-Table | Tee-Object -FilePath /dev/tty")
 
     infoFile $HOSTNAME "Liste de partitions:" $partitionsList
 
 
     echo " ► Nombre de partitions : "
     # Compte le nombre total de partitions
-    nombrePartitions=$(powershell_command "(Get-Partition | Measure-Object).Count | Tee-Object -FilePath /dev/ttyee /dev/tty)"
+    nombrePartitions=$(powershell_command "(Get-Partition | Measure-Object).Count | Tee-Object -FilePath /dev/ttyee /dev/tty")
 
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 

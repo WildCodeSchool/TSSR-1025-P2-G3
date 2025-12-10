@@ -76,7 +76,7 @@ fonction_creer_dossier_windows() {
 
     # si le dossier existe pas créé le dossier
     else
-        powershell_command "New-Item -Path "$creation_dossier" -ItemType Directory"
+        powershell_command "New-Item -Path \"$creation_dossier\"" -ItemType Directory" >/dev/null
 
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then

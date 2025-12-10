@@ -72,7 +72,7 @@ fonction_nombre_disques_windows() {
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    nombreDisques=$(powershell_command " '(Get-Disk).Count'" | tee /dev/tty)
+    nombreDisques=$(powershell_command "(Get-Disk).Count" | tee /dev/tty)
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
     
     echo ""
@@ -207,14 +207,25 @@ fonction_version_os_windows() {
 
 # Liste les mises à jour disponibles
 fonction_mises_a_jour_windows() {
-
+    logEvent "MISE_A_JOUR_POWERSHELL_MODULE"
+    powershell_command "Install-Module -Name PSWindowsUpdate -Force"
+    
     logEvent "DEMANDE_MISES_A_JOUR"
     echo "► Mises à jour critiques manquantes: "
-
-    # Affiche les paquets qui ont des mises à jour à faire
-    majList=$(powershell_command "Get-WindowsUpdate -MicrosoftUpdate | Select-Object Title, KB, Size | Format-Table" | tee /dev/tty)
-    infoFile "$HOSTNAME" "Mises à jour disponibles:" "$majList"
-    # sudo_command "unattended-upgrade --dry-run -d"
+    
+    majList=$(powershell_command "
+    \$updates = Get-WindowsUpdate -Category 'Security Updates','Critical Updates'
+    if (\$updates) {
+        \$updates | Select-Object KB, Title, MsrcSeverity | Format-Table
+        Write-Output 'MAJ disponibles'
+    } else {
+        Write-Output 'Aucune mise à jour disponible'
+    }
+    " | tee /dev/tty)
+    
+    infoFile "$HOSTNAME" "Mises à jour de sécurité:" "$majList"
+     echo ""
+        
     
     echo ""
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."

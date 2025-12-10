@@ -89,7 +89,7 @@ fonction_partitions_windows() {
     echo " ► Partitions Nom, FS, Taille : "
 
     # Affiche les partitions avec nom, type de système de fichiers et taille
-    partitionsList=$(powershell_command "Get-Partition | Select-Object PartitionNumber, DriveLetter, GptType, Size | Format-Table" | tee /dev/tty)
+    partitionsList=$(powershell_command "Get-Volume | Where-Object DriveLetter | Select-Object DriveLetter, FileSystemType, Size" | tee /dev/tty)
 
     infoFile $HOSTNAME "Liste de partitions:" $partitionsList
 

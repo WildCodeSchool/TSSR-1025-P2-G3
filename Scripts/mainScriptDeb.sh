@@ -203,14 +203,14 @@ function detectionRemoteOS() {
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
         remoteOS="Linux"
         export remoteOS
-        echo "► Système d'exploitation détecté : ${GREEN}Linux ${NC}"
+        echo "► Système d'exploitation détecté : Linux "
         logEvent "DETECTION_OS:Linux"
     fi
 
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
         remoteOS="Windows"
         export remoteOS
-        echo "► Système d'exploitation détecté : ${GREEN}Windows ${NC}"
+        echo "► Système d'exploitation détecté : Windows "
         logEvent "DETECTION_OS:Windows"
     fi
 }
@@ -577,41 +577,97 @@ function informationMainMenu() {
     1)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:LISTE_UTILISATEURS"
-        fonction_liste_utilisateurs_linux
+
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_liste_utilisateurs_linux
+
+        else
+
+            fonction_liste_utilisateurs_windows
+
+        fi
         ;;
 
     2)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:5_DERNIERS_LOGINS"
-        fonction_5_derniers_logins_linux
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_5_derniers_logins_linux
+
+        else
+
+            fonction_5_derniers_logins_windows
+
+        fi
         ;;
     3)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
-        fonction_infos_reseau_linux
+        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_infos_reseau_linux
+
+        else
+
+            fonction_infos_reseau_windows
+
+        fi
         ;;
     4)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
-        gestion_disques_menu_linux
+                if [ "$remoteOS" = "Linux" ]; then
+
+            gestion_disques_menu_linux
+
+        else
+
+            gestion_disques_menu_windows
+
+        fi
         ;;
 
     5)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
-        fonction_version_os_linux
+                        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_version_os_linux
+
+        else
+
+            fonction_version_os_windows
+
+        fi
         ;;
 
     6)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
-        fonction_mises_a_jour_linux
+                        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_mises_a_jour_linux
+
+        else
+
+            fonction_mises_a_jour_windows
+
+        fi
         ;;
 
     7)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
-        fonction_marque_modele_linux
+                        if [ "$remoteOS" = "Linux" ]; then
+
+            fonction_marque_modele_linux
+
+        else
+
+            fonction_marque_modele_windows
+
         ;;
 
     8)

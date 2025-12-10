@@ -69,7 +69,7 @@ fonction_creer_dossier_windows() {
     read -rp "►" creation_dossier
 
     # vérifier si le dossier existe
-    if powershell_command "Test-Path -Path $delfolder"; then
+    if powershell_command "Test-Path -Path \"$delfolder\""; then
 
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"
@@ -105,7 +105,7 @@ fonction_supprimer_dossier_windows() {
     read -rp "► Entrez un chemin: " delfolder
 
     vérifier si le dossier existe pas si existe supprime
-    if powershell_command "Test-Path -Path $delfolder"; then
+    if powershell_command "Test-Path -Path \"$delfolder\""; then
 
         powershell_command "Remove-Item -path '$delfolder' -Recurse -Force"
 

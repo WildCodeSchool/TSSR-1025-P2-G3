@@ -684,7 +684,7 @@ function informationMainMenu() {
     8)
 
         logEvent "MENU_INFORMATIONS_SYSTEME:STATUS_UAC"
-        echo "Statut UAC"
+        fonction_verifier_uac_windows
         ;;
 
     9)

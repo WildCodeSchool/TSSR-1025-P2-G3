@@ -145,22 +145,23 @@ fonction_supprimer_dossier_windows() {
 
     read -rp "► Entrez un chemin: " delfolder
 
+ powershell_command "Remove-Item -path '$delfolder' -Recurse -Force"
     # vérifier si le dossier existe pas si existe supprime
-    if [ -d "$delfolder" ]; then
+    # if [ -d "$delfolder" ]; then
 
-        powershell_command "Remove-Item -path '$delfolder' -Recurse -Force"
+    #     powershell_command "Remove-Item -path '$delfolder' -Recurse -Force"
 
-        if [ $? -eq 0 ]; then
+    #     if [ $? -eq 0 ]; then
 
-            logEvent "SUPPRESSION_EFFECTUE"
-            echo " "
-            echo "► Suppression de dossier effectue "
-        fi
-    else
-        logEvent "DOSSIER_INEXISTANT:$delfolder"
-        echo "► Le dossier $delfolder n'existe pas"
+    #         logEvent "SUPPRESSION_EFFECTUE"
+    #         echo " "
+    #         echo "► Suppression de dossier effectue "
+    #     fi
+    # else
+    #     logEvent "DOSSIER_INEXISTANT:$delfolder"
+    #     echo "► Le dossier $delfolder n'existe pas"
 
-    fi
+    # fi
 }
 
 ###################################### Fonction redémarrage #######################################

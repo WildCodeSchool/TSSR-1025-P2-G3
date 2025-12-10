@@ -35,19 +35,14 @@ gestion_repertoire_menu_windows() {
             fonction_creer_dossier_windows
             ;;
 
-        2)
-            # fonction de supprition de dossier
-            logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
-            fonction_creer_dossier_sudo_windows
-            ;;
 
-        3)
+        2)
             # fonction de supprition de dossier
             logEvent "SÉLECTION_SUPPRESSION_DE_DOSSIER"
             fonction_supprimer_dossier_windows
             ;;
 
-        4)
+        3)
             # fonction gestion ordinateur menue précédent
             logEvent "SÉLECTION_RETOUR_AU_MENU_PRÉCÉDENT"
             echo "Retour au menu précédent"

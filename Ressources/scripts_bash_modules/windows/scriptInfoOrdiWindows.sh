@@ -258,3 +258,26 @@ fonction_marque_modele_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+
+#################################### Fonction : Vérifier UAC ####################################
+
+# Vérifie si le contrôle de compte utilisateur (UAC) est activé
+fonction_verifier_uac_windows() {
+
+    logEvent "DEMANDE_VERIFICATION_UAC"
+    echo "► Statut du contrôle de compte utilisateur (UAC) :"
+
+    uacStatus=$(powershell_command "
+    \$uac = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA
+    if (\$uac.EnableLUA -eq 1) {
+        Write-Output 'UAC est ACTIVÉ (Sécurisé)'
+    } else {
+        Write-Output 'UAC est DÉSACTIVÉ (Non sécurisé)'
+    }
+    " | tee /dev/tty)
+
+    infoFile "$HOSTNAME" "Statut UAC:" "$uacStatus"
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    informationMainMenu
+}

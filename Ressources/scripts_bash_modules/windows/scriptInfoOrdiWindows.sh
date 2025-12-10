@@ -22,7 +22,7 @@ gestion_disques_menu_windows() {
         echo "╰──────────────────────────────────────────╯"
         echo ""
 
-        read -p "# Choisissez une option : " choix
+        read -p "► Choisissez une option : " choix
 
         logEvent " Choisie ${choix^^} "
 
@@ -49,7 +49,7 @@ gestion_disques_menu_windows() {
         4)
             # Retour au menu principal
             logEvent "RETOUR_MENU_PRECEDENT"
-            echo "Retour au menu précédent"
+            echo "► Retour au menu précédent"
             informationMainMenu
             ;;
 
@@ -111,7 +111,7 @@ fonction_partitions_windows() {
 fonction_lecteurs_montes_windows() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
-    echo " ► Lecteurs montés disque, USB, CD, etc.: "
+    echo "► Lecteurs montés disque, USB, CD, etc.: "
 
     # Affiche les lecteurs montés avec leur espace disque
   lecteursList=$(powershell_command "Get-PSDrive -PSProvider FileSystem | Format-Table" | tee /dev/tty)

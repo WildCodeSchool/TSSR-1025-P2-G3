@@ -667,7 +667,7 @@ function informationMainMenu() {
         else
 
             fonction_marque_modele_windows
-
+        fi
         ;;
 
     8)

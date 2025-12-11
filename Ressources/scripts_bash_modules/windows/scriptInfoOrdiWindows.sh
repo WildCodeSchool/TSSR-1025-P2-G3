@@ -266,13 +266,11 @@ fonction_verifier_uac_windows() {
     echo "► Statut du contrôle de compte utilisateur (UAC) :"
     
     uacStatus=$(powershell_command "
-\$result = reg query 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' /v EnableLUA
-if (\$result -match 'EnableLUA.*0x1') {
-    Write-Output 'UAC est ACTIVÉ (Sécurisé)'
-} elseif (\$result -match 'EnableLUA.*0x0') {
-    Write-Output 'UAC est DÉSACTIVÉ (Non sécurisé)'
+\$uac = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System').EnableLUA
+if (\$uac -eq 1) {
+    'UAC est ACTIVÉ (Sécurisé)'
 } else {
-    Write-Output 'Impossible de déterminer le statut UAC'
+    'UAC est DÉSACTIVÉ (Non sécurisé)'
 }
 " | tee /dev/tty)
     

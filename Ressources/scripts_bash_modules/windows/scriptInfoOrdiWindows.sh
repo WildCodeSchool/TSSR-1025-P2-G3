@@ -65,13 +65,11 @@ gestion_disques_menu_windows() {
 
 #################################### Fonction Nombre de disques ##########################################
 
-# Compte et affiche le nombre de disques physiques
 fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
     echo " ► Nombre de disques : "
     
-    # Liste les disques et compte leur nombre (avec affichage)
-    nombreDisques=$(powershell_command "(Get-Disk).Count | Tee-Object -FilePath /dev/tty")
+    nombreDisques=$(powershell_command "(Get-Disk | Measure-Object).Count | Tee-Object -FilePath /dev/tty")
     
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
     

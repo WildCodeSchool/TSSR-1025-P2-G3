@@ -128,10 +128,6 @@ fonc_add_user_group_linux() {
                         fonc_menu_group_linux
                     fi
 
-                else
-                    echo "Erreur du script"
-                    logEvent "ERREUR_DANS_LE_SCRIPT_À_L'AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
-                    fonc_add_user_group_linux
                 fi
             #si le groupe n'existe pas
             else

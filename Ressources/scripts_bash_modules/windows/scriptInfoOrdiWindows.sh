@@ -210,6 +210,13 @@ fonction_mises_a_jour_windows() {
     
     majList=$(powershell_command "Get-WindowsUpdate -Category 'Security Updates','Critical Updates'" | tee /dev/tty)
     
+    updateCount=$(echo "$majList" | grep -c "KB[0-9]")
+
+    if [ "$updateCount" -gt 0 ]; then
+        echo "$HOSTNAME  →  $updateCount mise(s) à jour de sécurité disponible(s)"
+    else
+        echo "$HOSTNAME  →  Aucune mise à jour de sécurité → Système à jour"
+    fi
     infoFile "$HOSTNAME" "Mises à jour de sécurité:" "$majList"
      echo ""
         

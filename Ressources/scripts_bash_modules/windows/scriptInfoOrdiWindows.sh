@@ -72,7 +72,7 @@ fonction_nombre_disques_windows() {
     echo " ► Nombre de disques : "
 
     # Liste les disques et compte leur nombre
-    nombreDisques=$(powershell_command "(Get-Disk).Count" | tee /dev/tty)
+    nombreDisques=$(powershell_command "'(Get-Disk).Count'" | tee /dev/tty)
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
     
     echo ""

@@ -58,7 +58,7 @@ fonc_add_user_admin_linux() {
             else
                 echo "erreur"
                 logEvent "ERREUR_DU_SCRIPT_DANS_AJOUT_UTILISATEUR_GROUPE_SUDO"
-                exit 130
+                fonc_add_user_admin_linux
 
             fi
         # si il n'existe pas
@@ -131,7 +131,7 @@ fonc_add_user_group_linux() {
                 else
                     echo "Erreur du script"
                     logEvent "ERREUR_DANS_LE_SCRIPT_À_L'AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
-                    exit 130
+                    fonc_add_user_group_linux
                 fi
             #si le groupe n'existe pas
             else

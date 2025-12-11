@@ -70,9 +70,9 @@ fonction_nombre_disques_windows() {
     
 
     nombreDisques=$(powershell_command "(Get-Disk).Count"| tee /dev/tty)
-
+    echo "$nombreDisques"
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
-    echo " ► Nombre de disques : '$nombreDisques'"
+    echo " ► Nombre de disques : $nombreDisques"
     echo ""
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows

@@ -41,9 +41,8 @@ fonc_add_user_admin_linux() {
 
             # On verfie si l'utilisateur a bien été ajouté
 
-            if
-                command "cat /etc/group | grep sudo | grep $useraddadmin" >/dev/null
-            then
+            if command "cat /etc/group | grep sudo | grep $useraddadmin" >/dev/null; then
+            
                 echo "l'utilisateur $useraddadmin a bien été ajouté au groupe sudo"
                 read -p "► Souhaitez-vous ajouter un autre utilisateur au groupe sudo (o/n) : ? " conf
                 logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"

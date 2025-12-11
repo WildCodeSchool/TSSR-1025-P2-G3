@@ -69,8 +69,7 @@ fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
     echo " ► Nombre de disques : "
 
-    $disk = Get-Disk
-    nombreDisques=$(powershell_command "$disk.Count" | /dev/tty)
+    nombreDisques=$(powershell_command "(Get-Disk).Count" | /dev/tty)
     
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
     

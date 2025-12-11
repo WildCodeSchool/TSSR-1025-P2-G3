@@ -67,12 +67,12 @@ gestion_disques_menu_windows() {
 
 fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
-    echo " ► Nombre de disques : "
+    
 
-    nombreDisques=$(powershell_command "(Get-Disk | Measure-Object).Count")
+    nombreDisques=$(powershell_command "(Get-Disk).Count"| tee /dev/tty)
 
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
-
+    echo " ► Nombre de disques : "
     echo ""
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows

@@ -210,15 +210,7 @@ fonction_mises_a_jour_windows() {
     logEvent "DEMANDE_MISES_A_JOUR"
     echo "► Mises à jour critiques manquantes: "
     
-    majList=$(powershell_command "
-    \$updates = Get-WindowsUpdate -Category 'Security Updates','Critical Updates'
-    if (\$updates) {
-        \$updates | Select-Object KB, Title, MsrcSeverity | Format-Table
-        Write-Output 'MAJ disponibles'
-    } else {
-        Write-Output 'Aucune mise à jour disponible'
-    }
-    " | tee /dev/tty)
+    majList=$(powershell_command "$updates = Get-WindowsUpdate -Category 'Security Updates','Critical Updates'" | tee /dev/tty)
     
     infoFile "$HOSTNAME" "Mises à jour de sécurité:" "$majList"
      echo ""

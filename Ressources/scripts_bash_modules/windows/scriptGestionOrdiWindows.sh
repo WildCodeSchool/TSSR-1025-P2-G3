@@ -171,34 +171,38 @@ fonction_prise_main_windows() {
 
 ################################### Fonction activation pare-feu ####################################
 fonction_activer_parefeu_windows() {
-
-    logEvent "DEMANDE_ACTIVATION_UFW"
-    echo "► Activation du pare-feu UFW "
-
-    # Demmande si l'utilisateur veut activer le pare-feu UFW
-    read -p "► Voulez-vous activer le pare-feu UFW ? (o/n) " activateFirewall
-
-    # Si la reponse est (o) alors active le pare-feu UFW sinon retourne au menu principal.
+    logEvent "DEMANDE_ACTIVATION_PAREFEU"
+    echo "► Activation du pare-feu Windows"
+    
+    # Afficher statut actuel
+    echo "► Statut actuel :"
+    powershell_command "netsh advfirewall show allprofiles state"
+    
+    echo ""
+    read -p "► Voulez-vous activer le pare-feu Windows ? (o/n) " activateFirewall
+    
     if [ "$activateFirewall" = "o" ]; then
-
-        powershell_command "Set-NetfirewallProfile -Enabled True"
-
-        # vérifier si le pare-feu a bien été activé
+        echo "► Activation en cours..."
+        
+        powershell_command "netsh advfirewall set allprofiles state on"
+        
         if [ $? -eq 0 ]; then
-
-            logEvent "PAREFEU_ACTIVÉ"
-            echo "► Pare-feu activé avec succès."
-            computerMainMenu
+            logEvent "PAREFEU_ACTIVE"
+            echo "► ✓ Pare-feu activé avec succès."
+            
+            echo "► Nouveau statut :"
+            powershell_command "netsh advfirewall show allprofiles state"
         else
-
-            logEvent "ERREUR_ACTIVATION_UFW"
-            echo "► Erreur : impossible d'activer le pare-feu."
-            computerMainMenu
+            logEvent "ERREUR_ACTIVATION"
+            echo "► ✗ Erreur : impossible d'activer le pare-feu."
         fi
-    # si la reponse est (n) retourne au menu Gestion Ordinateur
     else
-        computerMainMenu
+        echo "► Activation annulée."
     fi
+    
+    echo ""
+    read -p "► Appuyez sur ENTRÉE pour revenir au menu..."
+    computerMainMenu
 }
 
 ################################# Fonction exécution script local ###################################

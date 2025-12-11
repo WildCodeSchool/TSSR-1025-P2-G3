@@ -136,7 +136,7 @@ fonc_add_user_group_linux() {
                 if [ "$conf" = "o" ]; then # si oui on crée le groupe et on ajoute l'utilisateur
                     sudo_command "groupadd $namegroup"
                     sudo_command "usermod -aG $namegroup $useraddgroup"
-
+                    echo "► Le groupe $namegroup a été créé en y ajoutant l'utilisateur $useraddgroup"
                     logEvent "AJOUT_DE_DE_L'UTILISATEUR:$useraddgroup AU_GROUPE:$namegroup"
                 else
                     fonc_menu_group_linux

@@ -78,6 +78,7 @@ fonc_add_user_admin_linux() {
         fonc_menu_group_linux
         ;;
     *)
+        fonc_add_user_admin_linux
         echo "Erreur de saisie"
         ;;
     esac
@@ -166,6 +167,7 @@ fonc_add_user_group_linux() {
         ;;
     *)
         echo "Erreur de saisie"
+        fonc_add_user_group_linux
         ;;
     esac
 }
@@ -243,6 +245,7 @@ fonc_exit_group_linux() {
 
     *)
         echo "Erreur de saisie"
+        fonc_exit_group_linux        
         ;;
     esac
 }

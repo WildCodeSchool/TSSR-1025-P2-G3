@@ -151,7 +151,7 @@ function userMainMenu {
 
 function computerMainMenu {
 
-
+    Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮" 
     Write-Host "│               GESTION ORDINATEURS                │"
     Write-Host "├──────────────────────────────────────────────────┤" 
@@ -164,6 +164,7 @@ function computerMainMenu {
     Write-Host "│  6. Retour au menu principal                     │" 
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯" 
+    Write-Host ""
 
     $computerMainMenu = Read-Host "► Choisissez une option " 
 
@@ -200,7 +201,7 @@ function computerMainMenu {
 
 function computerMainMenu {
 
-
+    Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮" 
     Write-Host "│            MENU INFORMATIONS SYSTEME             │" 
     Write-Host "├──────────────────────────────────────────────────┤" 
@@ -216,6 +217,7 @@ function computerMainMenu {
     Write-Host "│  6. Menu Principal                               │" 
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯" 
+    Write-Host ""
 
     $computerMainMenu = Read-Host "► Choisissez une option " 
 

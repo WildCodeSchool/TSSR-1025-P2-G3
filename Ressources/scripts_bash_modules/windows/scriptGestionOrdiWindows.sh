@@ -91,7 +91,7 @@ fonction_creer_dossier_windows() {
             echo ""
             echo "► Erreur : dossier non créé"
 
-        fi
+        fi 
     fi
 }
 

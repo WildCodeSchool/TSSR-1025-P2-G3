@@ -66,7 +66,7 @@ fonction_creer_dossier_windows() {
     logEvent "CRÉATION_DE_DOSSIER"
     read -p "►" creation_dossier
     # vérifier si le dossier existe
-    if powershell_command "Test-Path -Path '$creation_dossier'"; then
+    if powershell_command "Test-Path -Path \"$creation_dossier\""; then
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"
     # si le dossier existe pas créé le dossier

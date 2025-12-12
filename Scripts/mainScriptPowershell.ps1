@@ -1,11 +1,27 @@
 # Script PowerShell principal du Projet 2
 
+# Liste des fonctions :
+# 1. 
+# 2. 
+# 3. 
+# 4. 
+
+
 
 #=====================================================
 # CHARGEMENT DES MODULES
 #=====================================================
+# GENERAL
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\00_scriptSearchLog.ps1" -Force
 
+# WINDOWS
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\01_scriptUsersWindows.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\02_scriptGroupsWindows.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\03_scriptGestionOrdiWindows.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\04_scriptInfoOrdiWindows.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05_scriptUsersInfosWindows.ps1" -Force
 
+# LINUX
 
 
 #=====================================================
@@ -55,7 +71,9 @@
 # MENU PRINCIPAL
 #=====================================================
 function mainMenu {
-
+        
+    logEvent "MENU_PRINCIPAL"
+        
     while ($true) {
 
         Write-Host "╭──────────────────────────────────────────────────╮" 
@@ -78,25 +96,34 @@ function mainMenu {
             1 {
                 userMainMenu
             }
+
             2 {
                 computerMainMenu
             }
+
             3 {
                 informationMainMenu
-            }    
+            }   
+
             4 {
                 informationUserMainMenu
-            }    
+            }  
+
             5 {
                 logsMainMenu
-            }    
+            }   
+
             6 {
                 chooseExecutionMode
-            }    
+            }   
+
             7 {
-                Write-Host "test"
-            }    
+                ##########################  FONCTION A FAIRE ICI ##########################
+                Write-Host "TEMPORAIRE :Fermeture du script"
+            }  
+            
             default {
+                logEvent "MENU_PRINCIPAL:ENTREE_INVALIDE"
                 Write-Host "► Entrée invalide !"
             }
         }
@@ -108,10 +135,9 @@ function mainMenu {
 #=====================================================
 # MENU GESTION UTILISATEUR
 #=====================================================
-
 function userMainMenu {
 
-
+    logEvent "MENU_GESTION_UTILISATEUR"
 
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
@@ -129,16 +155,24 @@ function userMainMenu {
 
     switch ($userMainMenu) {
         1 {
-            Write-Host "test"
+            logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
+            userMenu_windows
         }
+
         2 {
-            Write-Host "test"
+            logEvent "MENU_GESTION_UTILISATEUR:GROUPES"
+            gestion_menu_group_windows
         }
+
         3 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_GESTION_UTILISATEUR:MENU_PRINCIPAL"
+            mainMenu
+        } 
+
         default {
+            logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
+
         }
     }
 }
@@ -148,7 +182,6 @@ function userMainMenu {
 #=====================================================
 # MENU GESTION ORDINATEURS
 #=====================================================
-
 function computerMainMenu {
 
     Write-Host ""
@@ -170,24 +203,37 @@ function computerMainMenu {
 
     switch ($computerMainMenu) {
         1 {
-            Write-Host "test"
+            logEvent "MENU_GESTION_ORDINATEURS:GESTION_REPERTOIRE"
+            gestion_repertoire_menu_windows
         }
+
         2 {
-            Write-Host "test"
+            logEvent "MENU_GESTION_ORDINATEURS:REDEMARRAGE"
+            redemarrage_windows
         }
+
         3 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
+            prise_main_windows
+        } 
+
         4 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
+            activer_parefeu_windows
+        } 
+
         5 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
+            exec_script_windows
+        } 
+
         6 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_GESTION_ORDINATEURS:MENU_PRINCIPAL"
+            mainMenu
+        }  
+
         default {
+            logEvent "MENU_GESTION_ORDINATEURS:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
         }
     }
@@ -198,8 +244,9 @@ function computerMainMenu {
 #=====================================================
 # MENU INFORMATIONS SYSTEME
 #=====================================================
+function informationMainMenu {
 
-function computerMainMenu {
+    logEvent "MENU_INFOMATIONS_SYSTEME"
 
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮" 
@@ -219,42 +266,71 @@ function computerMainMenu {
     Write-Host "╰──────────────────────────────────────────────────╯" 
     Write-Host ""
 
-    $computerMainMenu = Read-Host "► Choisissez une option " 
+    $informationMainMenu = Read-Host "► Choisissez une option " 
 
-    switch ($computerMainMenu) {
+    switch ($informationMainMenu) {
+
         1 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_SYSTEME:LISTE_UTILISATEURS"
+            liste_utilisateurs_windows
         }
+
         2 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_SYSTEME:5_DERNIERS_LOGINS"
+            5_derniers_logins_windows
         }
+
         3 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
+            infos_reseau_windows
+        } 
+
         4 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
+            gestion_disques_menu_windows
+        } 
+
         5 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
+            version_os_windows
+        } 
+
         6 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
+            mises_a_jour_windows
+        }  
+
+        7 {
+            logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
+            marque_modele_windows
+        }  
+
+        8 {
+            logEvent "MENU_INFORMATIONS_SYSTEME:STATUS_UAC"
+            status_uac_windows
+        }  
+
+        9 {
+            logEvent "MENU_INFORMATIONS_SYSTEME:MENU_PRINCIPAL"
+            mainMenu
+        }  
+
         default {
+            logEvent "MENU_INFORMATIONS_SYSTEME:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
+            informationMainMenu
         }
     }
 }
 
 
 
-
 #=====================================================
 # MENU INFORMATIONS UTILISATEUR
 #=====================================================
-
 function informationUserMainMenu {
 
+    logEvent "MENU_INFORMATIONS_UTILISATEUR"
 
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
@@ -273,31 +349,37 @@ function informationUserMainMenu {
 
     switch ($informationUserMenu) {
         1 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_CONNEXION"
+            date_lastconnection_windows
         }
         2 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
+            date_lastpassmodif_windows
         }
         3 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
+            opensessions_windows
         }    
         4 {
-            Write-Host "test"
+            logEvent "MENU_INFORMATIONS_UTILISATEUR:MENU_PRINCIPAL"
+            mainMenu
         }  
         default {
+            logEvent "MENU_INFORMATIONS_UTILISATEUR:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
         }
     }
 }
 
 
+
 #=====================================================
 # MENU JOURNALISATION
 #=====================================================
-
 function logsMainMenu {
 
-
+    logEvent "MENU_JOURNALISATION"
+    
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│             MENU JOURNALISATION                  │"
@@ -317,28 +399,43 @@ function logsMainMenu {
 
     switch ($informationUserMenu) {
         1 {
-            Write-Host "test"
+            logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_UTILISATEUR"
+            searchUser
         }
+
         2 {
-            Write-Host "test"
+            logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_UTILISATEUR_SSH"
+            searchUserSsh
         }
+
         3 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS_LOCAL"
+            searchComputerLocal
+        }  
+
         4 {
-            Write-Host "test"
+            logEvent "MENU_JOURNALISATION:RECHERCHE_LOGS_ORDINATEURS_DISTANT_SSH"
+            searchComputerSsh
         }  
+
         5 {
-            Write-Host "test"
-        }    
+            logEvent "MENU_JOURNALISATION:AFFICHAGE_FICHIER_JOURNALISATION"
+            ##########################  FONCTION A FAIRE ICI ##########################
+        }   
+
         6 {
-            Write-Host "test"
+            logEvent "MENU_JOURNALISATION:RETOUR_MENU_PRINCIPAL"
+            mainMenu
         }  
+
         default {
+            logEvent "MENU_JOURNALISATION:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
+            logsMainMenu
         }
     }
 }
+
 
 
 #=====================================================

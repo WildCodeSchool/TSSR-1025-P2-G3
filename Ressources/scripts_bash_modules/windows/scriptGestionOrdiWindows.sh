@@ -102,7 +102,7 @@ fonction_supprimer_dossier_windows() {
     logEvent "SUPPRESSION_DE_DOSSIER"
     echo "► Suppression de dossier"
 
-    read -rp "► Entrez un chemin: " delfolder
+    read -rp "► " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
     if powershell_command "Test-Path -Path \"$delfolder\""; then

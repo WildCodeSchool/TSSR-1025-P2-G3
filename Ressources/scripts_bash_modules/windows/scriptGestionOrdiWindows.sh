@@ -69,7 +69,7 @@ fonction_creer_dossier_windows() {
     read -rp "►" creation_dossier
 
     # vérifier si le dossier existe
-    if powershell_command "Test-Path -Path \"$delfolder\""; then
+    if powershell_command "Test-Path -Path \"$creation_dossier\""; then
 
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"

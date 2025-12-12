@@ -120,9 +120,10 @@ function menuSearchlog {
         }  
 
         default {
-            logEvent "OPTION_INVALIDE"
+            logEvent "MENU_FILTRAGE_RECHERCHE:OPTION_INVALIDE"
             Write-Host "► Entrée invalide !"
 
         }
     }
+
 }

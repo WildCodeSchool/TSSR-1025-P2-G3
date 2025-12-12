@@ -67,10 +67,7 @@ fonction_creer_dossier_windows() {
     read -p "►" creation_dossier
     # vérifier si le dossier existe
     if powershell_command "Test-Path -Path \"$creation_dossier\""; then
-        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
-        echo "► Le dossier existe déjà"
-    # si le dossier existe pas créé le dossier
-    else
+
         powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null"
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
@@ -82,6 +79,11 @@ fonction_creer_dossier_windows() {
             echo ""
             echo "► Erreur : dossier non créé"
         fi
+
+    # si le dossier existe pas créé le dossier
+    else
+        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
+        echo "► Le dossier existe déjà"
     fi
 }
 #################################### Fonction supprimer dossier #####################################

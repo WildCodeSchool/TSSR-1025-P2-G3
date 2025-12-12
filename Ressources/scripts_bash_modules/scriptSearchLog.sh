@@ -68,11 +68,10 @@ function searchUserSsh() {
 
 function searchComputerLocal() {
 
-    logEvent "RECHERCHE_LOGS_ORDINATEUR_SCRIPT"
+    logEvent "RECHERCHE_LOGS_ORDINATEUR_LOCAL"
 
     resultats=$(awk -F'_' -v user="local" '$4 ~ user' /var/log/log_evt.log)
 
-    logEvent "RECHERCHE_LOGS_ORDINATEUR_LOCAL"
 
     if [ -n "$resultats" ]; then
 

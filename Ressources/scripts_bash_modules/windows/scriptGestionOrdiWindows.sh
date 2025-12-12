@@ -65,18 +65,15 @@ gestion_repertoire_menu_windows() {
 fonction_creer_dossier_windows() {
     logEvent "CRÉATION_DE_DOSSIER"
     read -rp "Entrez le chemin du dossier : " creation_dossier
-    
-    echo "DEBUG: Variable création_dossier = [$creation_dossier]"
-    
+        
     # Vérifier si le dossier existe
     echo "DEBUG: Test d'existence..."
-    if powershell_command "Test-Path -Path \"$creation_dossier\""; then
+    if powershell_command "Test-Path -LiteralPath '$creation_dossier' -PathType Container"; then
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
         echo "► Le dossier existe déjà"
     else
         echo "DEBUG: Tentative de création..."
-        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null"
-        result=$?
+        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory -Force | Out-Null"
         echo "DEBUG: Code retour = $result"
         
         if [ $result -eq 0 ]; then

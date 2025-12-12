@@ -63,7 +63,7 @@ function searchUserSsh() {
 }
 
 #=====================================================
-# FONCTION RECHERCHE UTILISATEURS
+# FONCTION RECHERCHE ORDINATEURS
 #=====================================================
 
 function searchComputerLocal() {

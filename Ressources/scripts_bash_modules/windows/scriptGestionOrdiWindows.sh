@@ -63,38 +63,29 @@ gestion_repertoire_menu_windows() {
 ################################## Fonction création répertoire #####################################
 
 fonction_creer_dossier_windows() {
-
     logEvent "CRÉATION_DE_DOSSIER"
-
-    read -rp "►" creation_dossier
-
+    read -p "►" creation_dossier
     # vérifier si le dossier existe
-    if powershell_command "Test-Path -Path \"$delfolder\""; then
+    if powershell_command "Test-Path -Path \"$creation_dossier\" | Out-Null"; then
 
-        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
-        echo "► Le dossier existe déjà"
-
-    # si le dossier existe pas créé le dossier
-    else
-        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null" 
-
+        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null"
         # vérifier si le dossier a bien été créé
         if [ $? -eq 0 ]; then
-
             logEvent "DOSSIER_CRÉÉ:$creation_dossier"
             echo ""
             echo "► Le dossier a été créé $creation_dossier "
-
         else
-
             logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
             echo ""
             echo "► Erreur : dossier non créé"
-
         fi
+
+    # si le dossier existe pas créé le dossier
+    else
+        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
+        echo "► Le dossier existe déjà"
     fi
 }
-
 #################################### Fonction supprimer dossier #####################################
 
 fonction_supprimer_dossier_windows() {
@@ -102,10 +93,10 @@ fonction_supprimer_dossier_windows() {
     logEvent "SUPPRESSION_DE_DOSSIER"
     echo "► Suppression de dossier"
 
-    read -rp "► Entrez un chemin: " delfolder
+    read -rp "► " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
-    if powershell_command "Test-Path -Path \"$delfolder\""; then
+    if powershell_command "Test-Path -Path \"$delfolder\" | Out-Null"; then
 
         powershell_command "Remove-Item -path '$delfolder' -Recurse -Force | Out-Null" 
 

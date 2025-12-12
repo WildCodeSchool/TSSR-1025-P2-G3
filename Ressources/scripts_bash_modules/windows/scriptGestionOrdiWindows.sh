@@ -96,7 +96,7 @@ fonction_supprimer_dossier_windows() {
     read -rp "► " delfolder
 
     # vérifier si le dossier existe pas si existe supprime
-    if powershell_command "Test-Path -Path \"$delfolder\""; then
+    if powershell_command "Test-Path -Path \"$delfolder\" | Out-Null"; then
 
         powershell_command "Remove-Item -path '$delfolder' -Recurse -Force | Out-Null" 
 

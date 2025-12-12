@@ -41,20 +41,18 @@ Ce projet consiste à développer deux scripts d'administration système permett
 
 | Membre      | Rôle           | Missions principales |
 |-------------|----------------|----------------------|
-| Safi        | Technicien     | • Script Bash Gestion Ordinateurs |
-| Christian   | Scrum Master   | • Script Bash Gestion des des Menu et SSH |
-| Jérôme      | Product Owner  | • Sacript Bash Information Ordinateur |
-| Pierre Jean | Technicien     | • Script Bash Information Utilisateur |
+| Safi        | Technicien     | • Script Bash Gestion Ordinateurs Script d'information Ordinateurs  |
+| Christian   | Scrum Master   | • Script Bash Gestion des Menu et Journalisation et Script Principal |
+| Pierre Jean | Technicien     | • Script Bash Information Utilisateur Mise en place du SSH avec authentification par clé sur Proxmo |
 
 
 ### Sprint 3
 
 | Membre      | Rôle | Missions |
 |-------------|------|----------|
-| Safi        |  |  |
-| Christian   |  |  |
-| Jérôme      |  |  |
-| Pierre Jean |  |  |
+| Safi        | Product Owner  | Adaptation des scripts Bash Gestion Ordinateurs Script d'information Ordinateurs à PowerShell Test des script  sur Proxmox |
+| Christian   | Technicien  | Adaptation des scripts Bash Gestion des Menu et Journalisation et Script Principal à PowerShell Test des script  sur Proxmox |
+| Pierre Jean | Scrum Master | Adaptation des scripts Bash Gestion des groupes et User info à PowerShell Test des script  sur Proxmox |
 
 ### Sprint 4
 
@@ -62,7 +60,6 @@ Ce projet consiste à développer deux scripts d'administration système permett
 |-------------|------|----------|
 | Safi        |  |  |
 | Christian   |  |  |
-| Jérôme      |  |  |
 | Pierre Jean |  |  |
 
 

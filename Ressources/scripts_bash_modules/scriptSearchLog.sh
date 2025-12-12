@@ -128,7 +128,7 @@ function menuSearchlog() {
     echo "│  1. Afficher les 20 derniers logs                │"
     echo "│  2. Afficher page par page                       │"
     echo "│  3. Afficher tous les résultats                  │"
-    echo "│  4. Quitter                                      │"
+    echo "│  4. Retour au menu précédent                     │"
     echo "│                                                  │"
     echo "╰──────────────────────────────────────────────────╯"
     echo ""
@@ -151,6 +151,9 @@ function menuSearchlog() {
         logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
         echo "$resultats"
         ;;
-
+    4)
+        logEvent "MENU_FILTRAGE_RECHERCHE:MENU_PRECEDENT"
+        logsMainMenu
+        ;;
     esac
 }

@@ -63,26 +63,26 @@ gestion_repertoire_menu_windows() {
 ################################## Fonction création répertoire #####################################
 
 fonction_creer_dossier_windows() {
-    logEvent "CRÉATION_DE_DOSSIER"
-    read -p "►" creation_dossier
-    # vérifier si le dossier existe
-    if powershell_command "Test-Path -Path '$creation_dossier'"; then
-        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
-        echo "► Le dossier existe déjà"
-    # si le dossier existe pas créé le dossier
-    else
-        powershell_command "New-Item -Path "$creation_dossier" -ItemType Directory | Out-Null"
-        # vérifier si le dossier a bien été créé
-        if [ $? -eq 0 ]; then
-            logEvent "DOSSIER_CRÉÉ:$creation_dossier"
-            echo ""
-            echo "► Le dossier a été créé $creation_dossier "
-        else
-            logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
-            echo ""
-            echo "► Erreur : dossier non créé"
-        fi
-    fi
+    logEvent "CRÉATION_DE_DOSSIER"
+    read -p "►" creation_dossier
+    # vérifier si le dossier existe
+    if powershell_command "Test-Path -Path '$creation_dossier'"; then
+        logEvent "LE_DOSSIER_EXISTE_DÉJÀ"
+        echo "► Le dossier existe déjà"
+    # si le dossier existe pas créé le dossier
+    else
+        powershell_command "New-Item -Path \"$creation_dossier\" -ItemType Directory | Out-Null"
+        # vérifier si le dossier a bien été créé
+        if [ $? -eq 0 ]; then
+            logEvent "DOSSIER_CRÉÉ:$creation_dossier"
+            echo ""
+            echo "► Le dossier a été créé $creation_dossier "
+        else
+            logEvent "ERREUR_DOSSIER_NON_CRÉÉ"
+            echo ""
+            echo "► Erreur : dossier non créé"
+        fi
+    fi
 }
 #################################### Fonction supprimer dossier #####################################
 

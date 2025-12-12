@@ -67,7 +67,7 @@ fonction_creer_dossier_windows() {
     read -p "► " creation_dossier
 
     # On regarde ce que renvoie vraiment PowerShell (True/False en texte)
-    resultat_test=$(powershell_command "Test-Path -LiteralPath '$creation_dossier' -PathType Container")
+    resultat_test=$(powershell_command "Test-Path -LiteralPath \"$creation_dossier\" -PathType Container")
 
     if [ "$resultat_test" = "True" ]; then
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ"

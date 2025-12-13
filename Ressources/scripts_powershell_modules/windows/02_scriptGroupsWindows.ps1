@@ -89,7 +89,50 @@ function add_user_admin_group_windows {
         1 {
             logEvent "MENU_AJOUT_GROUPE_ADMIN:SAISIE_UTILISATEUR:"
             
-            ##########################  FONCTION A FAIRE ICI ##########################
+            Write-Host ""
+            Write-Host "► Voici la liste des utilisateurs : "
+            $users = Get-LocalUser | Where-Object { $_.Enabled -eq $true }
+            $users.Name
+            Write-Host ""
+
+            $useraddadmin = Read-Host "► Quel utilisateur souhaitez vous ajouter en admin ? "
+            logEvent "ENTRÉE_D'UTILISATEUR:$useraddadmin"
+
+            if ($users.Name -contains $useraddadmin) {
+                Write-Host ""
+                logEvent "AJOUT_DE_L'UTILSATEUR:$useraddadmin"
+                
+                try {
+                    Add-LocalGroupMember -Group "Administrateurs" -Member $useraddadmin -ErrorAction Stop
+                    
+                    if (Get-LocalGroupMember -Group "Administrateurs" | Where-Object { $_.Name -like "*\$useraddadmin" }) {
+                        Write-Host "L'utilisateur $useraddadmin a bien été ajouté au groupe Administrateurs"
+                        logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
+                        
+                        $conf = Read-Host "► Souhaitez-vous ajouter un autre utilisateur au groupe Admin (o/n) ? "
+                        if ($conf -eq "o") {
+                            add_user_admin_group_windows
+                        } else {
+                            gestion_menu_group_windows
+                        }
+                    } else {
+                        throw "Verification failed"
+                    }
+                } catch {
+                    Write-Host "erreur (Assurez-vous que le groupe 'Administrateurs' existe ou essayez 'Administrators')"
+                    logEvent "ERREUR_DU_SCRIPT_DANS_AJOUT_UTILISATEUR_GROUPE_ADMIN"
+                    add_user_admin_group_windows
+                }
+            } else {
+                Write-Host ""
+                $conf = Read-Host "► l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                if ($conf -eq "o") {
+                    logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
+                    add_user_admin_group_windows
+                } else {
+                    gestion_menu_group_windows
+                }
+            }
         }
 
         2 {
@@ -133,7 +176,53 @@ function add_user_group_windows {
         1 {
             logEvent "MENU_AJOUT_GROUPE:SAISIE_UTILISATEUR:"
             
-            ##########################  FONCTION A FAIRE ICI ##########################
+            $useraddgroup = Read-Host "► Quel utilisateur souhaitez vous ajouter au groupe ? "
+            logEvent "ENTRÉE_D'UTILISATEUR:$useraddgroup"
+
+            $u = Get-LocalUser -Name $useraddgroup -ErrorAction SilentlyContinue
+
+            if ($u) {
+                Write-Host "► Ok pour cet utilisateur, a quel groupe souhaitez vous l'ajouter ?"
+                $namegroup = Read-Host
+
+                $g = Get-LocalGroup -Name $namegroup -ErrorAction SilentlyContinue
+
+                if ($g) {
+                    Add-LocalGroupMember -Group $namegroup -Member $useraddgroup
+                    if (Get-LocalGroupMember -Group $namegroup | Where-Object { $_.Name -like "*\$useraddgroup" }) {
+                        Write-Host "► L'utilisateur a bien été ajouté au groupe $namegroup "
+                        logEvent "UTILISATEUR:$namegroup À_ÉTÉ_AJOUTÉ_AU_GROUPE:$useraddgroup"
+
+                        Write-Host ""
+                        $conf = Read-Host "souhaitez-vous ajouter un autre utilisateur ? (o/n) : "
+                        if ($conf -eq "o") {
+                            add_user_group_windows
+                        } else {
+                            gestion_menu_group_windows
+                        }
+                    }
+                } else {
+                    Write-Host ""
+                    $conf = Read-Host "► Le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? (o/n) : "
+                    if ($conf -eq "o") {
+                        New-LocalGroup -Name $namegroup
+                        Add-LocalGroupMember -Group $namegroup -Member $useraddgroup
+                        Write-Host "► Le groupe $namegroup a été créé en y ajoutant l'utilisateur $useraddgroup"
+                        logEvent "AJOUT_DE_DE_L'UTILISATEUR:$useraddgroup AU_GROUPE:$namegroup"
+                    } else {
+                        gestion_menu_group_windows
+                    }
+                }
+            } else {
+                Write-Host ""
+                $conf = Read-Host "► Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                if ($conf -eq "o") {
+                    logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
+                    add_user_group_windows
+                } else {
+                    gestion_menu_group_windows
+                }
+            }
         }
 
         2 {
@@ -177,7 +266,57 @@ function del_user_group_windows {
         1 {
             logEvent "MENU_SUPPRESSION_GROUPE:SAISIE_UTILISATEUR:"
             
-            ##########################  FONCTION A FAIRE ICI ##########################
+            $userexitgroup = Read-Host "► Quel utilisateur souhaitez-vous sortir du groupe ? "
+            $u = Get-LocalUser -Name $userexitgroup -ErrorAction SilentlyContinue
+            
+            if ($u) {
+                logEvent "ENTRÉE_D'UTILISATEUR:$userexitgroup"
+                Write-Host ""
+                Write-Host "► C'est d'accord pour cet utilisateur "
+                Write-Host "► Voici le ou les groupes dans lequel $userexitgroup est présent "
+                Write-Host ""
+
+                $memberships = Get-LocalUser -Name $userexitgroup | Get-LocalGroupMembership
+                $cleanNames = $memberships | ForEach-Object { $_.Name.Split('\')[-1] }
+                $cleanNames
+
+                Write-Host ""
+                $exitgroup = Read-Host "► Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
+
+                if ($cleanNames -contains $exitgroup) {
+                    try {
+                        Remove-LocalGroupMember -Group $exitgroup -Member $userexitgroup -ErrorAction Stop
+                        Write-Host ""
+                        Write-Host "► L'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
+                        logEvent "UTILISATEUR_'$userexitgroup'_A_ÉTÉ_RETIRÉ_DU_GROUPE_$exitgroup"
+
+                        Write-Host ""
+                        $choix = Read-Host "► Souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                        if ($choix -eq "o") {
+                            del_user_group_windows
+                        } else {
+                            gestion_menu_group_windows
+                        }
+                    } catch {
+                        Write-Host "Il y a eu une erreur pour la sortie du groupe..retour au menu.."
+                        logEvent "ERREUR_DANS_LE_SCRIPT_POUR_LA_SORTIE_D'UN_UTILISATEUR_D'UN_GROUPE"
+                        gestion_menu_group_windows
+                    }
+                } else {
+                    Write-Host "Groupe invalide ou utilisateur non membre."
+                    logEvent "ERREUR_DANS_LE_SCRIPT_POUR_LA_SORTIE_D'UN_UTILISATEUR_D'UN_GROUPE"
+                    gestion_menu_group_windows
+                }
+            } else {
+                Write-Host ""
+                $conf = Read-Host "► L'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                if ($conf -eq "o") {
+                    logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
+                    del_user_group_windows
+                } else {
+                    gestion_menu_group_windows
+                }
+            }
         }
 
         2 {

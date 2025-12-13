@@ -209,6 +209,9 @@ function detectionRemoteOS() {
 
     if [ "$connexionMode" = "local" ]; then
         remoteOS="Linux"
+        export remoteOS
+        echo -e "► Système d'exploitation détecté :${BLUE}Linux${NC} "
+        logEvent "DETECTION_OS:Linux"
     fi
 
     if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then

@@ -44,7 +44,7 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05
 #=====================================================
 # JOURNALISATION
 #=====================================================
-$LogFile = "C:\Users\Virtualbox\Documents\log_event.log"
+$LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
 function logInit {
     param (
@@ -722,3 +722,4 @@ function logsMainMenu {
 
 executionMode
 mainMenu
+

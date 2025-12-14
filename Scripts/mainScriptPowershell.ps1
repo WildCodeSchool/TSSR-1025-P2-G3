@@ -6,7 +6,13 @@
 # 3. 
 # 4. 
 
-
+# Force le lancement en administrateur
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process -FilePath "powershell.exe" `
+        -ArgumentList "-File", $PSCommandPath `
+        -Verb RunAs
+    exit
+}
 
 #=====================================================
 # CHARGEMENT DES MODULES
@@ -534,4 +540,5 @@ function logsMainMenu {
 # EXECUTION DU SCRIPT
 #=====================================================
 mainMenu
+
 

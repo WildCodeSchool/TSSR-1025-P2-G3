@@ -76,6 +76,7 @@ function mainMenu {
         
     while ($true) {
 
+        Write-Host ""
         Write-Host "╭──────────────────────────────────────────────────╮" 
         Write-Host "│                  MENU PRINCIPAL                  │" 
         Write-Host "├──────────────────────────────────────────────────┤" 
@@ -89,6 +90,7 @@ function mainMenu {
         Write-Host "│  7. Quitter                                      │" 
         Write-Host "│                                                  │"
         Write-Host "╰──────────────────────────────────────────────────╯" 
+        Write-Host ""
 
         $userChoiceMainMenu = Read-Host "► Choisissez une option " 
 
@@ -114,11 +116,11 @@ function mainMenu {
             }   
 
             6 {
-                chooseExecutionMode
+                executionMode
             }   
 
             7 {
-                ##########################  FONCTION A FAIRE ICI ##########################
+                stopScript
                 Write-Host "TEMPORAIRE :Fermeture du script"
             }  
             
@@ -156,12 +158,22 @@ function userMainMenu {
     switch ($userMainMenu) {
         1 {
             logEvent "MENU_GESTION_UTILISATEUR:UTILISATEURS"
-            userMenu_windows
+
+            if ($remoteOS -eq "Windows") {
+                userMenu_windows
+            } else {
+                userMenu_linux
+            }
         }
 
         2 {
             logEvent "MENU_GESTION_UTILISATEUR:GROUPES"
-            gestion_menu_group_windows
+
+            if ($remoteOS -eq "Windows") {
+                gestion_menu_group_windows
+            } else {
+                gestion_menu_group_linux
+            }          
         }
 
         3 {
@@ -172,7 +184,6 @@ function userMainMenu {
         default {
             logEvent "MENU_GESTION_UTILISATEUR:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
-
         }
     }
 }
@@ -204,27 +215,49 @@ function computerMainMenu {
     switch ($computerMainMenu) {
         1 {
             logEvent "MENU_GESTION_ORDINATEURS:GESTION_REPERTOIRE"
-            gestion_repertoire_menu_windows
+
+            if ($remoteOS -eq "Windows") {
+                gestion_repertoire_menu_windows
+            } else {
+                gestion_repertoire_menu_linux
+            }
         }
 
         2 {
             logEvent "MENU_GESTION_ORDINATEURS:REDEMARRAGE"
-            redemarrage_windows
+
+            if ($remoteOS -eq "Windows") { 
+                redemarrage_windows
+            } else {
+                redemarrage_linux
+            }
         }
 
         3 {
             logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
-            prise_main_windows
+            if ($remoteOS -eq "Windows") { 
+                prise_main_distance_windows
+            } else {
+                prise_main_distance_linux
+            }
         } 
 
         4 {
             logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
-            activer_parefeu_windows
+            if ($remoteOS -eq "Windows") { 
+                activation_parefeu_windows
+            } else {
+                activation_parefeu_linux
+            }
         } 
 
         5 {
             logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
-            exec_script_windows
+            if ($remoteOS -eq "Windows") { 
+                exec_script_windows
+            } else {
+                exec_script_linux
+            }
         } 
 
         6 {
@@ -272,42 +305,82 @@ function informationMainMenu {
 
         1 {
             logEvent "MENU_INFORMATIONS_SYSTEME:LISTE_UTILISATEURS"
-            liste_utilisateurs_windows
+
+            if ($remoteOS -eq "Windows") {
+                liste_utilisateurs_windows
+            } else {
+                liste_utilisateurs_linux
+            }
         }
 
         2 {
             logEvent "MENU_INFORMATIONS_SYSTEME:5_DERNIERS_LOGINS"
-            5_derniers_logins_windows
+
+            if ($remoteOS -eq "Windows") {
+                cinq_derniers_logins_windows
+            } else {
+                cinq_derniers_logins_linux
+            }
         }
 
         3 {
             logEvent "MENU_INFORMATIONS_SYSTEME:AFFICHE_IP_MASQUE_PASSERELLE"
-            infos_reseau_windows
+
+            if ($remoteOS -eq "Windows") {
+                infos_reseau_windows
+            } else {
+                infos_reseau_linux
+            }
         } 
 
         4 {
             logEvent "MENU_INFORMATIONS_SYSTEME:INFORMATIONS_DISQUES_DUR"
-            gestion_disques_menu_windows
+
+            if ($remoteOS -eq "Windows") {
+                gestion_disques_menu_windows
+            } else {
+                gestion_disques_menu_linux
+            }
         } 
 
         5 {
             logEvent "MENU_INFORMATIONS_SYSTEME:VERSION_OS"
-            version_os_windows
+
+            if ($remoteOS -eq "Windows") {
+                version_os_windows
+            } else {
+                version_os_linux
+            }
         } 
 
         6 {
             logEvent "MENU_INFORMATIONS_SYSTEME:MISES_A_JOUR_MANQUANTES"
-            mises_a_jour_windows
+
+            if ($remoteOS -eq "Windows") {
+                mises_a_jour_windows
+            } else {
+                mises_a_jour_linux
+            }
         }  
 
         7 {
             logEvent "MENU_INFORMATIONS_SYSTEME:MARQUE_MODELE_ORDINATEUR"
-            marque_modele_windows
+
+            if ($remoteOS -eq "Windows") {
+                marque_modele_windows
+            } else {
+                marque_modele_linux
+            }
         }  
 
         8 {
             logEvent "MENU_INFORMATIONS_SYSTEME:STATUS_UAC"
-            status_uac_windows
+
+            if ($remoteOS -eq "Windows") {
+                status_uac_windows
+            } else {
+                status_uac_linux
+            }
         }  
 
         9 {
@@ -350,20 +423,39 @@ function informationUserMainMenu {
     switch ($informationUserMenu) {
         1 {
             logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_CONNEXION"
-            date_lastconnection_windows
+
+            if ($remoteOS -eq "Windows") {
+                date_lastconnection_windows
+            } else {
+                date_lastconnection_linux
+            }
         }
+
         2 {
             logEvent "MENU_INFORMATIONS_UTILISATEUR:DATE_DERNIERE_MODIFICATION_MOT_DE_PASSE"
-            date_lastpassmodif_windows
+
+            if ($remoteOS -eq "Windows") {
+                date_lastpassmodif_windows
+            } else {
+                date_lastpassmodif_linux
+            }
         }
+
         3 {
             logEvent "MENU_INFORMATIONS_UTILISATEUR:LISTE_SESSIONS_OUVERTES"
-            opensessions_windows
-        }    
+
+            if ($remoteOS -eq "Windows") {
+                list_opensessions_windows
+            } else {
+                list_opensessions_linux
+            }
+        } 
+
         4 {
             logEvent "MENU_INFORMATIONS_UTILISATEUR:MENU_PRINCIPAL"
             mainMenu
-        }  
+        } 
+
         default {
             logEvent "MENU_INFORMATIONS_UTILISATEUR:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
@@ -420,7 +512,7 @@ function logsMainMenu {
 
         5 {
             logEvent "MENU_JOURNALISATION:AFFICHAGE_FICHIER_JOURNALISATION"
-            ##########################  FONCTION A FAIRE ICI ##########################
+            Get-Content -Path $LogFile
         }   
 
         6 {
@@ -442,3 +534,4 @@ function logsMainMenu {
 # EXECUTION DU SCRIPT
 #=====================================================
 mainMenu
+

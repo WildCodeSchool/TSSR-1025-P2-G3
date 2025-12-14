@@ -1,4 +1,4 @@
-﻿# Script PowerShell principal du Projet 2
+# Script PowerShell principal du Projet 2
 
 # Liste des fonctions :
 # 1. 
@@ -28,7 +28,11 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\04
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05_scriptUsersInfosWindows.ps1" -Force
 
 # LINUX
-
+# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\01_scriptUsersLinux.ps1" -Force
+# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\02_scriptGroupsLinux.ps1" -Force
+# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\03_scriptGestionOrdiLinux.ps1" -Force
+# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\04_scriptInfoOrdiLinux.ps1" -Force
+# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_scriptUsersInfosLinux.ps1" -Force
 
 #=====================================================
 # VARIABLES DES COULEURS
@@ -40,31 +44,206 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05
 #=====================================================
 # JOURNALISATION
 #=====================================================
+$LogFile = "C:\Users\Virtualbox\Documents\log_event.log"
 
+function logInit {
+    param (
+        [Parameter(Mandatory)]
+        [string]$LogFile
+    )
+
+    if (-not (Test-Path -Path $LogFile)) {
+
+
+        New-Item -Path $LogFile -ItemType File -Force | Out-Null
+
+        $acl = Get-Acl -Path $LogFile
+        $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+            "Everyone", "FullControl", "Allow"
+        )
+        $acl.SetAccessRule($accessRule)
+        Set-Acl -Path $LogFile -AclObject $acl
+    }
+
+}
+
+function logEvent {
+    param(
+        [Parameter(Mandatory)]
+        [string]$event
+    )
+
+    $date = Get-Date -Format "yyyy-MM-dd"
+    $heure = Get-Date -Format "HH:mm:ss"
+    $utilisateur = $($env:USERNAME)
+
+    $context = if ($connexionMode -eq "ssh") {
+        "ssh:$RemoteUser@$RemoteComputer" 
+    } else {
+        "local" 
+    }
+
+    $Entry = "${Date}_${Heure}_${Utilisateur}_${Context}_$event"
+
+    Add-Content -Path $LogFile -Value $Entry
+}
+
+function startScript {
+    logEvent "START_SCRIPT"
+}
+
+function stopScript {
+    logEvent "STOP_SCRIPT"
+    Write-Host "► Fermeture du script..."
+    exit
+}
 
 
 
 #=====================================================
 # MENU EXECUTION LOCAL OU SSH
 #=====================================================
+function executionMode {
 
+    #=====================================================
+    # VARIABLES DE CONNEXION
+    #=====================================================
+    $script:connexionMode = ""
+    $script:remoteUser = ""
+    $script:remoteComputer = ""
+    $script:portSSH = ""
+    $script:remoteOS = ""
+
+    logEvent "MENU_EXECUTION"
+
+    Write-Host ""
+    Write-Host "╭────────────────────────────────────────────────╮"
+    Write-Host "│           MENU EXECUTION LOCAL OU SSH          │"
+    Write-Host "├────────────────────────────────────────────────┤"
+    Write-Host "│                                                │"
+    Write-Host "│  1. Exécution locale                           │"
+    Write-Host "│  2. Exécution distante (SSH)                   │"
+    Write-Host "│  3. Quitter                                    │"
+    Write-Host "│                                                │"
+    Write-Host "╰────────────────────────────────────────────────╯"
+    Write-Host ""
+
+    $executionmode = Read-Host "► Voulez-vous exécuter le script en Local ou à distance ? "
+
+    switch ($executionmode) {
+
+        1 {
+            logEvent "EXECUTION_LOCAL"
+            $connexionMode = "local"
+            $script:connexionMode
+            Write-Host "► Exécution du script sur la machine hôte."
+            Write-Host
+        }
+
+        2 {
+            logEvent "EXECUTION_DISTANTE_SSH"
+            $connexionMode = "ssh"
+            $script:connexionMode
+
+            $script:remoteComputer = Read-Host "► Entrez une Adresse IP ou Hostname"
+            logEvent "ADRESSE_IP_OU_HOSTNAME:$remoteComputer"
+
+            $script:remoteUser = Read-Host "► Entrez un Nom d'utilisateur"
+            logEvent "NOM_UTILISATEUR:$remoteUser"
+
+            $script:portSSH = Read-Host "► Entrez un Port"
+            logEvent "PORT:$portSSH"
+            Write-Host
+            Write-Host "► Connexion en cours : $remoteUser@$remoteComputer"
+
+            if ((ssh -p $portSSH "$remoteUser@$remoteComputer" "echo Connexion réussie" ) -match "Connexion réussie") {
+                Write-Host "► Connexion SSH réussie !"
+                logEvent "CONNEXION_SSH_REUSSIE"
+            } else {
+                Write-Host "► Échec de la connexion SSH. Veuillez vérifier les informations et réessayer."
+                logEvent "ECHEC_CONNEXION_SSH"
+                executionMode
+            }
+        }
+
+        3 {
+            stopScript
+        }
+        
+        default {
+            logEvent "MENU_EXECUTION:ENTREE_INVALIDE"
+            Write-Host "► Entrée invalide !"
+        }
+    }
+    detectionRemoteOS
+}
 
 
 
 #=====================================================
 # DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
+function detectionRemoteOS {
 
+    if ($connexionMode -eq "ssh") {
+        $osInfo = ssh -p $portSSH "$remoteUser@$remoteComputer" "uname -a" 2>$null
 
+        if ($osInfo -match "Linux") {
+            $script:remoteOS = "Linux"
+            logEvent "DETECTION_OS:LINUX"
+            Write-Host "► Système d'exploitation distant détecté : Linux"
+        } else {
+            $script:remoteOS = "Windows"
+            logEvent "DETECTION_OS:WINDOWS"
+            Write-Host "► Système d'exploitation distant détecté : Windows"
+        }
+        
+    } else {
+        $script:remoteOS = "Windows"
+        logEvent "DETECTION_OS:WINDOWS_LOCAL"
+    }
+}
 
 
 
 #=====================================================
 # FONCTIONS DES COMMANDES
 #=====================================================
+function command {
+    param (
+        [string]$cmd
+    )
 
+    if ($connexionMode -eq "local") {
+        return Invoke-Expression $cmd
+    } elseif ($connexionMode -eq "ssh") {
+        return ssh -p $portSSH "$remoteUser@$remoteComputer" $cmd
+    }
+}
 
+function bash_command {
+    param (
+        [string]$cmd
+    )
 
+    if ($connexionMode -eq "local") {
+        return Invoke-Expression $cmd
+    } elseif ($connexionMode -eq "ssh") {
+        return ssh -p $portSSH "$remoteUser@$remoteComputer" "bash -c '$cmd'"
+    }
+}
+
+function bash_sudo_command {
+    param (
+        [string]$cmd
+    )
+
+    if ($connexionMode -eq "local") {
+        return Invoke-Expression $cmd
+    } elseif ($connexionMode -eq "ssh") {
+        return ssh -t -p $portSSH "$remoteUser@$remoteComputer" "sudo bash -c '$cmd'"
+    }
+}
 
 #=====================================================
 # FICHIERS STOCKAGE INFORMATIONS
@@ -539,6 +718,7 @@ function logsMainMenu {
 #=====================================================
 # EXECUTION DU SCRIPT
 #=====================================================
+
+
+executionMode
 mainMenu
-
-

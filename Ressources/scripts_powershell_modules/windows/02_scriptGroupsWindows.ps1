@@ -286,7 +286,7 @@ function del_user_group_windows {
                 Write-Host "► Voici le ou les groupes dans lequel $userexitgroup est présent "
                 Write-Host ""
 
-                $memberships = command_ssh "Get-LocalUser -Name $userexitgroup | Get-LocalGroupMembership"
+                $memberships = command_ssh "Get-LocalUser -Name $userexitgroup | Get-LocalGroupMember "
                 $cleanNames = $memberships | ForEach-Object { $_.Name.Split('\')[-1] }
                 $cleanNames
 

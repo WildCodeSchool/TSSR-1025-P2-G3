@@ -10,9 +10,7 @@
 
 # Force le lancement en administrateur
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process -FilePath "powershell.exe" `
-        -ArgumentList "-File", $PSCommandPath `
-        -Verb RunAs
+    Start-Process -FilePath "powershell.exe" -ArgumentList "-File", $PSCommandPath -Verb RunAs
     exit
 }
 
@@ -271,10 +269,33 @@ function bash_sudo_command {
     ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
 }
 
+
+
 #=====================================================
 # FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
-
+function infoFile {
+    param(
+        [string]$cible,
+        [string]$description,
+        [string]$informations
+    )
+    
+    $date = Get-Date -Format "yyyyMMdd"
+    $dossierInfo = "info"
+    $fichierInfo = "$dossierInfo\info_${cible}_${date}.txt"
+    
+    if (!(Test-Path $dossierInfo)) {
+        New-Item -ItemType Directory -Path $dossierInfo | Out-Null
+    }
+    
+    if (!(Test-Path $fichierInfo)) {
+        New-Item -ItemType File -Path $fichierInfo | Out-Null
+    }
+    
+    $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Add-Content -Path $fichierInfo -Value "[$time] $description : $informations"
+}
 
 
 
@@ -745,7 +766,8 @@ function logsMainMenu {
 # EXECUTION DU SCRIPT
 #=====================================================
 
-
+logInit
+startScript
 executionMode
 mainMenu
 

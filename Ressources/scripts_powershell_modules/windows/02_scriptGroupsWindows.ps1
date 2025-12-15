@@ -274,77 +274,66 @@ function del_user_group_windows {
 
     switch ($delGroup) {
         1 {
-            logEvent "MENU_SUPPRESSION_GROUPE:SAISIE_UTILISATEUR:"
+            logEvent "MENU_SUPPRESSION_GROUPE:SAISIE_UTILISATEUR"
             
             $userexitgroup = Read-Host "► Quel utilisateur souhaitez-vous sortir du groupe ? "
-            $u = command_ssh "Get-LocalUser -Name $userexitgroup -ErrorAction SilentlyContinue"
             
-            if ($u) {
-                logEvent "ENTRÉE_D'UTILISATEUR:$userexitgroup"
+            # Vérification l'utilisateur
+            $userExists = command_ssh "if (Get-LocalUser -Name '$userexitgroup' -ErrorAction SilentlyContinue) { 'true' } else { 'false' }"
+            
+            if ($userExists -eq "true") {
+                logEvent "UTILISATEUR_TROUVÉ:$userexitgroup"
                 Write-Host ""
-                Write-Host "► C'est d'accord pour cet utilisateur "
-                Write-Host "► Voici le ou les groupes dans lequel $userexitgroup est présent "
-                Write-Host ""
-
-                $memberships = command_ssh "Get-LocalUser -Name $userexitgroup | Get-LocalGroupMember "
-                $cleanNames = $memberships | ForEach-Object { $_.Name.Split('\')[-1] }
+                Write-Host "► Groupes de l'utilisateur $userexitgroup :"
                 
-                if ($cleanNames) {
-                    Write-Host "► Groupes : $($cleanNames -join ', ')"
-                }
-                else {
-                    Write-Host "► Cet utilisateur n'appartient à aucun groupe modifiable."
-                }
-
-                Write-Host ""
-                $exitgroup = Read-Host "► Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
-
-                if ($cleanNames -contains $exitgroup) {
-                    try {
-                        command_ssh "Remove-LocalGroupMember -Group $exitgroup -Member $userexitgroup -ErrorAction Stop"
-                        Write-Host ""
-                        Write-Host "► L'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup"
-                        logEvent "UTILISATEUR_RETIRÉ_DU_GROUPE"
+                # Récupération des groupes
+                $userGroups = command_ssh "(Get-LocalGroup | Where-Object { (Get-LocalGroupMember -Group `$_.Name -ErrorAction SilentlyContinue).Name -match '$userexitgroup' }).Name"
+                
+                if ($userGroups) {
+                    # Affichage des groupes
+                    $userGroups | ForEach-Object { Write-Host "  - $_" }
+                    Write-Host ""
+                    
+                    $exitgroup = Read-Host "► De quel groupe retirer $userexitgroup ? "
+                    
+                    # Retrait direct avec gestion d'erreur
+                    $result = command_ssh "try { Remove-LocalGroupMember -Group '$exitgroup' -Member '$userexitgroup' -ErrorAction Stop; 'OK' } catch { 'ERREUR' }"
+                    
+                    if ($result -eq "OK") {
+                        Write-Host "► $userexitgroup a été retiré du groupe $exitgroup"
+                        logEvent "RETRAIT_RÉUSSI:${userexitgroup}:${exitgroup}"
                     }
-                    catch {
-                        Write-Host "► Erreur lors du retrait du groupe."
-                        logEvent "ERREUR_RETRAIT_GROUPE"
+                    else {
+                        Write-Host "► Échec du retrait (groupe inexistant ou utilisateur non membre)"
+                        logEvent "RETRAIT_ÉCHOUÉ:${userexitgroup}:${exitgroup}"
                     }
                 }
                 else {
-                    Write-Host "► Groupe invalide ou non listé."
+                    Write-Host "► Cet utilisateur n'appartient à aucun groupe."
                 }
-
+                
+                # Question de continuation
                 Write-Host ""
-                if ((Read-Host "► Souhaitez vous choisir un autre utilisateur ? (o/n)") -eq "o") {
-                    del_user_group_windows
-                }
-                else {
-                    gestion_menu_group_windows
-                }
+                $retry = Read-Host "► Autre opération ? (o/n)"
+                if ($retry -eq "o") { del_user_group_windows } else { gestion_menu_group_windows }
             }
             else {
-                Write-Host ""
-                $conf = Read-Host "► L'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
-                if ($conf -eq "o") {
-                    logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
-                    del_user_group_windows
-                }
-                else {
-                    gestion_menu_group_windows
-                }
+                Write-Host "► Utilisateur introuvable."
+                logEvent "UTILISATEUR_INTROUVABLE:$userexitgroup"
+                
+                $retry = Read-Host "► Réessayer ? (o/n)"
+                if ($retry -eq "o") { del_user_group_windows } else { gestion_menu_group_windows }
             }
         }
 
         2 {
-            logEvent "MENU_SUPPRESSION_GROUPE:RETOUR_MENU_PRECEDENT"
+            logEvent "RETOUR_MENU_GROUPE"
             gestion_menu_group_windows
         }
 
         default {
-            logEvent "MENU_SUPPRESSION_GROUPE:OPTION_INVALIDE"
-            Write-Host "► Entrée invalide !"
+            Write-Host "► Option invalide !"
+            del_user_group_windows
         }
     }
-
 }

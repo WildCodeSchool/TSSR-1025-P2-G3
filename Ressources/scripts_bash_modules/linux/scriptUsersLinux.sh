@@ -120,7 +120,7 @@ function addUserMenuLinux() {
                     logEvent "AJOUT_UTILISATEUR:CREATION:$addUserCommand"
 
                     # Commande création de l'utilisateur.
-                    sudo_command "useradd ${addUserCommand}"
+                    sudo_command "useradd -m ${addUserCommand}"
 
                     logEvent "AJOUT_UTILISATEUR:VERIFICATION_CREATION:$addUserCommand"
 

@@ -286,9 +286,15 @@ function del_user_group_windows {
                 Write-Host "► Voici le ou les groupes dans lequel $userexitgroup est présent "
                 Write-Host ""
 
-                $memberships = command_ssh "Get-LocalUser -Name $userexitgroup | Get-LocalGroupMembership"
+                $memberships = command_ssh "Get-LocalGroupMembership -Member $userexitgroup"
                 $cleanNames = $memberships | ForEach-Object { $_.Name.Split('\')[-1] }
-                $cleanNames
+                
+                if ($cleanNames) {
+                    Write-Host "► Groupes : $($cleanNames -join ', ')"
+                }
+                else {
+                    Write-Host "► Cet utilisateur n'appartient à aucun groupe modifiable."
+                }
 
                 Write-Host ""
                 $exitgroup = Read-Host "► Quel groupe choisissez vous pour la sortie de $userexitgroup ? "
@@ -297,27 +303,23 @@ function del_user_group_windows {
                     try {
                         command_ssh "Remove-LocalGroupMember -Group $exitgroup -Member $userexitgroup -ErrorAction Stop"
                         Write-Host ""
-                        Write-Host "► L'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup "
-                        logEvent "UTILISATEUR_'$userexitgroup'_A_ÉTÉ_RETIRÉ_DU_GROUPE_$exitgroup"
-
-                        Write-Host ""
-                        $choix = Read-Host "► Souhaitez vous choisir un autre utilisateur ? (o/n) : "
-                        if ($choix -eq "o") {
-                            del_user_group_windows
-                        }
-                        else {
-                            gestion_menu_group_windows
-                        }
+                        Write-Host "► L'utilisateur $userexitgroup a bien été retiré du groupe $exitgroup"
+                        logEvent "UTILISATEUR_RETIRÉ_DU_GROUPE"
                     }
                     catch {
-                        Write-Host "Il y a eu une erreur pour la sortie du groupe..retour au menu.."
-                        logEvent "ERREUR_DANS_LE_SCRIPT_POUR_LA_SORTIE_D'UN_UTILISATEUR_D'UN_GROUPE"
-                        gestion_menu_group_windows
+                        Write-Host "► Erreur lors du retrait du groupe."
+                        logEvent "ERREUR_RETRAIT_GROUPE"
                     }
                 }
                 else {
-                    Write-Host "Groupe invalide ou utilisateur non membre."
-                    logEvent "ERREUR_DANS_LE_SCRIPT_POUR_LA_SORTIE_D'UN_UTILISATEUR_D'UN_GROUPE"
+                    Write-Host "► Groupe invalide ou non listé."
+                }
+
+                Write-Host ""
+                if ((Read-Host "► Souhaitez vous choisir un autre utilisateur ? (o/n)") -eq "o") {
+                    del_user_group_windows
+                }
+                else {
                     gestion_menu_group_windows
                 }
             }

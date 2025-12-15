@@ -139,7 +139,7 @@ function executionMode {
 
         1 {
             logEvent "EXECUTION_LOCAL"
-            $script:connexionMode
+            $script:connexionMode = "local"
             Write-Host "► Exécution du script sur la machine hôte."
             Write-Host
         }
@@ -783,5 +783,6 @@ function logsMainMenu {
 
 executionMode
 mainMenu
+
 
 

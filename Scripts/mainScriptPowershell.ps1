@@ -1,4 +1,4 @@
-﻿# Script PowerShell principal du Projet 2
+# Script PowerShell principal du Projet 2
 
 # Liste des fonctions :
 # 1. 
@@ -56,7 +56,6 @@ function logInit {
 
     if (-not (Test-Path -Path $LogFile)) {
 
-
         New-Item -Path $LogFile -ItemType File -Force | Out-Null
 
         $acl = Get-Acl -Path $LogFile
@@ -99,7 +98,11 @@ function stopScript {
     exit
 }
 
-
+$script:connexionMode = ""
+$script:remoteUser = ""
+$script:remoteComputer = ""
+$script:portSSH = ""
+$script:remoteOS = ""
 
 #=====================================================
 # MENU EXECUTION LOCAL OU SSH
@@ -143,8 +146,7 @@ function executionMode {
 
         2 {
             logEvent "EXECUTION_DISTANTE_SSH"
-            $connexionMode = "ssh"
-            $script:connexionMode
+            $script:connexionMode = "ssh"
 
             $script:remoteComputer = Read-Host "► Entrez une Adresse IP ou Hostname"
             logEvent "ADRESSE_IP_OU_HOSTNAME:$remoteComputer"
@@ -154,17 +156,23 @@ function executionMode {
 
             $script:portSSH = Read-Host "► Entrez un Port"
             logEvent "PORT:$portSSH"
-            Write-Host
-            Write-Host "► Connexion en cours : $remoteUser@$remoteComputer"
 
-            if ((ssh -p $portSSH "$remoteUser@$remoteComputer" "echo Connexion réussie" ) -match "Connexion réussie") {
-                Write-Host "► Connexion SSH réussie !"
-                logEvent "CONNEXION_SSH_REUSSIE"
+            Write-Host " Connexion en cours à $remoteUser@$remoteComputer :$portSSH ..."
+            Write-Host ""
+            
+            logEvent "SSH_CONNEXION:$remoteUser@$remoteComputer :$portSSH"
+            
+            ssh -p $portSSH "$remoteUser@$remoteComputer" "exit" 2>$null
+
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "► Connexion SSH réussie à $remoteUser@$remoteComputer :$portSSH."
+                logEvent "SSH_CONNEXION_REUSSIE:$remoteUser@$remoteComputer :$portSSH"
             } else {
-                Write-Host "► Échec de la connexion SSH. Veuillez vérifier les informations et réessayer."
-                logEvent "ECHEC_CONNEXION_SSH"
+                Write-Host "► Impossible de se connecter à $remoteUser@$remoteComputer :$portSSH."
+                logEvent "SSH_CONNEXION_ECHEC:$remoteUser@$remoteComputer :$portSSH"
                 executionMode
             }
+
         }
 
         3 {
@@ -172,10 +180,13 @@ function executionMode {
         }
         
         default {
+
             logEvent "MENU_EXECUTION:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
+
         }
     }
+
     detectionRemoteOS
 }
 
@@ -186,16 +197,16 @@ function executionMode {
 #=====================================================
 function detectionRemoteOS {
 
-    if ($connexionMode -eq "ssh") {
+    if ($script:connexionMode -eq "ssh") {
 
-        $osInfo = ssh -p $portSSH "$remoteUser@$remoteComputer" "uname -a" 2>$null
-
+        $osInfo = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "uname -a" 2>$null
+        
         if ($osInfo -match "Linux") {
 
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
-            Write-Host "► Système d'exploitation distant détecté : Linux"
 
+            Write-Host "► Système d'exploitation distant détecté : Linux"
         } else {
 
             $script:remoteOS = "Windows"
@@ -203,11 +214,14 @@ function detectionRemoteOS {
             Write-Host "► Système d'exploitation distant détecté : Windows"
 
         }
-        
+
+        Write-Host ""
     } else {
 
         $script:remoteOS = "Windows"
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
+        Write-Host "► Système d'exploitation distant détecté : Windows"
+        Write-Host ""
 
     }
 }
@@ -217,15 +231,24 @@ function detectionRemoteOS {
 #=====================================================
 # FONCTIONS DES COMMANDES
 #=====================================================
-function command {
+function command_ssh {
     param (
         [string]$cmd
     )
 
-    if ($connexionMode -eq "local") {
-        return Invoke-Expression $cmd
-    } elseif ($connexionMode -eq "ssh") {
-        return ssh -p $portSSH "$remoteUser@$remoteComputer" $cmd
+    if ($script:connexionMode -eq "local") {
+
+        Invoke-Expression $cmd
+
+    } elseif ($script:connexionMode -eq "ssh") {
+
+        ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" $cmd 2>&1
+
+    } else {
+
+        Write-Host "ERREUR : Mode de connexion inconnu ($script:connexionMode)" -ForegroundColor Red
+        return
+
     }
 }
 
@@ -237,7 +260,7 @@ function bash_command {
     if ($connexionMode -eq "local") {
         return Invoke-Expression $cmd
     } elseif ($connexionMode -eq "ssh") {
-        return ssh -p $portSSH "$remoteUser@$remoteComputer" "bash -c '$cmd'"
+        return ssh -p $portSSH -o BatchMode=yes "$remoteUser@$remoteComputer" "bash -lc '$cmd'" 2>&1
     }
 }
 
@@ -249,7 +272,7 @@ function bash_sudo_command {
     if ($connexionMode -eq "local") {
         return Invoke-Expression $cmd
     } elseif ($connexionMode -eq "ssh") {
-        return ssh -t -p $portSSH "$remoteUser@$remoteComputer" "sudo bash -c '$cmd'"
+        return ssh -t -p $portSSH "$remoteUser@$remoteComputer" "sudo bash -lc '$cmd'" 2>&1
     }
 }
 

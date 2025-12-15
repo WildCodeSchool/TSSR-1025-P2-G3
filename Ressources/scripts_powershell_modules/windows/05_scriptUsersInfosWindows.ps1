@@ -51,14 +51,18 @@ function date_lastconnection_windows {
                 if ($userExists -eq "true") {
                     Write-Host ""
                     Write-Host "► Dernière connexion de l'utilisateur ${userlastconnect} : "
+                    Write-Host ""
                     
-                    # Récupération de la dernière connexion via le journal d'événements
-                    $lastLogon = command_ssh "Get-LocalUser -Name '$userlastconnect' | Select-Object Name, LastLogon"
+                    # Récupération de la dernière connexion via net user (plus fiable)
+                    $lastLogon = command_ssh "net user '$userlastconnect' | Select-String 'Derni|Last logon'"
+                    
                     if ($lastLogon) {
-                        $lastLogon
+                        Write-Host $lastLogon
                     }
                     else {
-                        Write-Host "► Information non disponible (l'utilisateur ne s'est peut-être jamais connecté)"
+                        # Essai alternatif avec Get-WmiObject
+                        $lastLogonWmi = command_ssh "try { `$user = Get-WmiObject -Class Win32_UserAccount -Filter `"Name='$userlastconnect'`"; `$userSID = `$user.SID; `$profile = Get-WmiObject -Class Win32_UserProfile -Filter `"SID='`$userSID'`"; if (`$profile.LastUseTime) { [System.Management.ManagementDateTimeConverter]::ToDateTime(`$profile.LastUseTime).ToString('dd/MM/yyyy HH:mm:ss') } else { 'Jamais connecté' } } catch { 'Information non disponible' }"
+                        Write-Host $lastLogonWmi
                     }
                     Write-Host ""
                     logEvent "DERNIERE_CONNEXION_AFFICHEE:${userlastconnect}"
@@ -139,7 +143,24 @@ function date_lastpassmodif_windows {
                 if ($userExists -eq "true") {
                     Write-Host ""
                     Write-Host "► Dernière modification du mot de passe de ${userlastpass} : "
-                    command_ssh "Get-LocalUser -Name '$userlastpass' | Select-Object Name, PasswordLastSet"
+                    Write-Host ""
+                    
+                    # Récupération via net user (plus fiable pour l'affichage)
+                    $passLastSet = command_ssh "net user '$userlastpass' | Select-String 'Mot de passe modifi|Password last set'"
+                    
+                    if ($passLastSet) {
+                        Write-Host $passLastSet
+                    }
+                    else {
+                        # Méthode alternative avec Get-LocalUser formaté en texte
+                        $passLastSetAlt = command_ssh "(Get-LocalUser -Name '$userlastpass').PasswordLastSet.ToString('dd/MM/yyyy HH:mm:ss')"
+                        if ($passLastSetAlt) {
+                            Write-Host "Date : $passLastSetAlt"
+                        }
+                        else {
+                            Write-Host "► Information non disponible"
+                        }
+                    }
                     Write-Host ""
                     logEvent "DATE_MODIFICATION_MDP_AFFICHEE:${userlastpass}"
 
@@ -177,7 +198,7 @@ function date_lastpassmodif_windows {
 #==============================================================
 # 3 - LISTE DES SESSIONS OUVERTES
 #==============================================================
-function opensessions_windows {
+function list_opensessions_windows {
 
     logEvent "MENU_SESSION_OUVERTE"
 
@@ -187,8 +208,7 @@ function opensessions_windows {
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
-    Write-Host "│  2. Afficher toutes les sessions actives         │"
-    Write-Host "│  3. Retour au menu précédent                     │"
+    Write-Host "│  2. Retour au menu précédent                     │"
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯"
     Write-Host ""
@@ -246,34 +266,10 @@ function opensessions_windows {
                     logEvent "REESSAYER:${continueChoice}"
                 }
             }
-            opensessions_windows
+            list_opensessions_windows
         }
 
         2 {
-            logEvent "MENU_SESSION_OUVERTE:AFFICHER_TOUTES_SESSIONS"
-            
-            Write-Host ""
-            Write-Host "► Liste de toutes les sessions actives sur la machine : "
-            Write-Host ""
-            
-            # Affichage de toutes les sessions utilisateur
-            $allSessions = command_ssh "query user 2>&1"
-            
-            if ($allSessions -match "Aucun utilisateur" -or $allSessions -match "No User exists") {
-                Write-Host "► Aucune session active trouvée sur cette machine"
-                logEvent "AUCUNE_SESSION_ACTIVE"
-            }
-            else {
-                $allSessions
-                logEvent "TOUTES_SESSIONS_AFFICHEES"
-            }
-            Write-Host ""
-            
-            $retry = Read-Host "► Appuyez sur Entrée pour continuer..."
-            opensessions_windows
-        }
-
-        3 {
             logEvent "MENU_SESSION_OUVERTE:RETOUR_MENU_PRECEDENT"
             informationUserMainMenu
         }
@@ -281,7 +277,8 @@ function opensessions_windows {
         default {
             logEvent "MENU_SESSION_OUVERTE:OPTION_INVALIDE"
             Write-Host "► Entrée invalide !"
-            opensessions_windows
+            list_opensessions_windows
         }
     }
 }
+

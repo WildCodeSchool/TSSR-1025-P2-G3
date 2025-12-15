@@ -33,8 +33,8 @@ function date_lastconnection_windows {
 
             1 {
                 logEvent "MENU_DERNIERE_CONNEXION:SAISIE_NOM_UTILISATEUR:"
-
-                ##########################  FONCTION A FAIRE ICI ##########################
+                date_lastpassmodif_windows
+        
             }
 
             2 {
@@ -76,9 +76,23 @@ function date_lastpassmodif_windows {
     switch ($dateLastPassModif) {
 
         1 {
-            logEvent "MENU_DATE_LAST_MODIFICATION_PASSWORD:SAISIE_NOM_UTILISATEUR:"
 
-            ##########################  FONCTION A FAIRE ICI ##########################
+            logEvent "MENU_DATE_LAST_MODIFICATION_PASSWORD:SAISIE_NOM_UTILISATEUR:"
+            Write-Host ""
+            Write-Host "► Voici la liste des utilisateurs : "
+            $users = command_ssh "Get-LocalUser | Where-Object { "$_.Enabled" -eq "$true" } -ErrorAction SilentlyContinue "
+            $users.Name
+            Write-Host ""
+
+            $userlastpass = Read-Host "► Quel utilisateur choisissez-vous ? "
+            logEvent  "ENTRÉE_D'UTILISATEUR:$userlastpass"
+            if ($users.Name -contains $userlastpass) {
+            Write-Host ""
+            Write-Host "► L'utilisateur $userlastpass a changé son mot de passe la dernière fois : "
+            command_ssh  "Get-LocalUser -Name '$userlastpass' | Select-Object Name, PasswordLastSet -ErrorAction Stop"
+            Write-Host ""
+            
+            }
         }
 
         2 {

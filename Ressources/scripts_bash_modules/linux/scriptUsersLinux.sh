@@ -234,7 +234,7 @@ function deleteUserMenuLinux() {
                     logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION_UTILISATEUR:$delUserCommand"
 
                     # Commande pour supprimer l'utilisateur entrée.
-                    sudo_command "userdel ${delUserCommand}"
+                    sudo_command "userdel -f -r ${delUserCommand}"
 
                     logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_UTILISATEUR_SUPPRESSION:$delUserCommand"
 

@@ -1,4 +1,4 @@
-﻿# Script Gestion Utilisateurs Windows en Powershell
+# Script Gestion Utilisateurs Windows en Powershell
 
 
 # Liste des fonctions :
@@ -55,7 +55,7 @@ function userMenu_windows {
                 logEvent "MENU_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
     
                 Write-Host "► Liste des utilisateurs : "
-                Get-LocalUser | Select-Object -ExpandProperty Name
+                command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name | Sort-Object"
                 Write-Host ""
 
                 logEvent "MENU_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
@@ -116,7 +116,7 @@ function addUserMenu_Windows {
                 logEvent "AJOUT_UTILISATEUR:VERIFICATION_UTILISATEUR_EXISTE:$addUserCommand"
 
                 # Vérification si l'utilisateur existe déjà
-                $userExists = Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue
+                $userExists = command_ssh "Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue"
 
                 if (-not $userExists) {
 
@@ -128,12 +128,12 @@ function addUserMenu_Windows {
                     if ($ConfirmUser -eq "o") {
 
                         logEvent "AJOUT_UTILISATEUR:CREATION:$addUserCommand"
-                        New-LocalUser -Name $addUserCommand -NoPassword
+                        command_ssh "New-LocalUser -Name $addUserCommand -NoPassword"
 
                         logEvent "AJOUT_UTILISATEUR:VERIFICATION_CREATION:$addUserCommand"
 
                         # Vérification si l'utilisateur a été créé
-                        $userCreated = Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue
+                        $userExists = command_ssh "Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue"
 
                         if ($userCreated) {
 
@@ -149,7 +149,7 @@ function addUserMenu_Windows {
 
                             Write-Host "► L'utilisateur $addUserCommand n'a pas été créé. "
                             logEvent "AJOUT_UTILISATEUR:CREATION_ECHOUEE:$addUserCommand"
-                                
+                            addUserMenu_Windows
                         }
                     } else {
 
@@ -226,7 +226,7 @@ function deleteUserMenu_windows {
                 logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_UTILISATEUR_EXISTE:$delUserCommand"
 
                 # Vérification si l'utilisateur existe
-                $userExists = Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue
+                $userExists = command_ssh "Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue"
 
                 if ($userExists) {
 
@@ -237,12 +237,12 @@ function deleteUserMenu_windows {
                     if ($confirmDelUser -eq "o") {
 
                         logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION:$delUserCommand"
-                        Remove-LocalUser -Name $delUserCommand
+                        command_ssh "Remove-LocalUser -Name $delUserCommand"
 
                         logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_SUPPRESSION:$delUserCommand"
 
                         # Vérification si l'utilisateur a été supprimé
-                        $userDeleted = Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue
+                        $userDeleted = command_ssh "Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue"
 
                         if (-not $userDeleted) {
 
@@ -277,7 +277,7 @@ function deleteUserMenu_windows {
             logEvent "MENU_SUPPRIMER_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
 
             Write-Host "► Liste des utilisateurs : "
-            Get-LocalUser | Select-Object -ExpandProperty Name
+            command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
             Write-Host ""
 
             logEvent "SUPPRIMER_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
@@ -338,7 +338,7 @@ function changePasswordUserMenu_windows {
                 logEvent "CHANGER_MOT_DE_PASSE:VERIFICATION_UTILISATEUR_EXISTE:$changePasswordUserCommand"
 
                 # Vérification si l'utilisateur existe
-                $userExists = Get-LocalUser -Name $changePasswordUserCommand -ErrorAction SilentlyContinue
+                $userExists = command_ssh "Get-LocalUser -Name $changePasswordUserCommand -ErrorAction SilentlyContinue"
 
                 if ($userExists) {
 
@@ -346,7 +346,7 @@ function changePasswordUserMenu_windows {
                     Write-Host ""
                     logEvent "CHANGER_MOT_DE_PASSE:NOUVEAU_MOT_DE_PASSE_ENTRE:$changePasswordUserCommand"
 
-                    Set-LocalUser -Name $changePasswordUserCommand -Password $newPassword
+                    command_ssh "Set-LocalUser -Name $changePasswordUserCommand -Password $newPassword"
                     logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_EFFECTUE:$changePasswordUserCommand"
 
                     Write-Host "► Le mot de passe de l'utilisateur $changePasswordUserCommand a été changé."
@@ -374,7 +374,7 @@ function changePasswordUserMenu_windows {
             logEvent "MENU_CHANGER_MOT_DE_PASSE:AFFICHER_LISTE_UTILISATEURS"
 
             Write-Host "► Liste des utilisateurs : "
-            Get-LocalUser | Select-Object -ExpandProperty Name
+            command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
             Write-Host ""
 
             logEvent "SUPPRIMER_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"

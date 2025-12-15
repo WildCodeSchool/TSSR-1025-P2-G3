@@ -6,6 +6,8 @@
 # 3. 
 # 4. 
 
+
+
 # Force le lancement en administrateur
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Start-Process -FilePath "powershell.exe" `
@@ -64,7 +66,6 @@ function logInit {
         $acl.SetAccessRule($accessRule)
         Set-Acl -Path $LogFile -AclObject $acl
     }
-
 }
 
 function logEvent {
@@ -186,21 +187,28 @@ function executionMode {
 function detectionRemoteOS {
 
     if ($connexionMode -eq "ssh") {
+
         $osInfo = ssh -p $portSSH "$remoteUser@$remoteComputer" "uname -a" 2>$null
 
         if ($osInfo -match "Linux") {
+
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
             Write-Host "► Système d'exploitation distant détecté : Linux"
+
         } else {
+
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
             Write-Host "► Système d'exploitation distant détecté : Windows"
+
         }
         
     } else {
+
         $script:remoteOS = "Windows"
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
+
     }
 }
 

@@ -109,11 +109,11 @@ function partitions_windows {
     Write-Host "`n► PARTITIONS`n"
     
     # Récupération de tous les volumes
-    $partitions = ssh_command "Get-Volume"
+    $partitions = command_ssh "Get-Volume"
     Write-Host $partitions
     
     # Comptage du nombre de partitions
-    $nombre = ssh_command "Get-Partition | Measure-Object | Select -ExpandProperty Count"
+    $nombre = command_ssh "Get-Partition | Measure-Object | Select -ExpandProperty Count"
     Write-Host "`n► Nombre total de partitions : $nombre"
     
     # Enregistrement dans le fichier d'info
@@ -139,7 +139,7 @@ function lecteurs_montes_windows {
     Write-Host "`n► LECTEURS MONTÉS`n"
     
     # Récupération et affichage des lecteurs montés
-    $lecteurs = ssh_command "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
+    $lecteurs = command_ssh "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
     Write-Host $lecteurs
     
     infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
@@ -163,11 +163,11 @@ function liste_utilisateurs_windows {
     Write-Host "► LISTE DES UTILISATEURS LOCAUX"
     Write-Host ""
     
-    $userList = ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
+    $userList = command_ssh "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
     
     Write-Host $userList
     
-    $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
+    $nombreUtilisateurs = (command_ssh "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
     infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
@@ -192,7 +192,7 @@ function 5_derniers_logins_windows {
     
     try {
         # Récupération simple des 5 derniers logins
-        $logins = ssh_command "Get-EventLog Security -Newest 5 -InstanceId 4624"
+        $logins = command_ssh "Get-EventLog Security -Newest 5 -InstanceId 4624"
         Write-Host $logins
         
         infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
@@ -220,12 +220,12 @@ function infos_reseau_windows {
     
     # Affichage des adresses IP
     Write-Host "► Adresses IP :`n"
-    $ip = ssh_command "Get-NetIPAddress -AddressFamily IPv4"
+    $ip = command_ssh "Get-NetIPAddress -AddressFamily IPv4"
     Write-Host $ip
     
     # Affichage de la passerelle
     Write-Host "`n► Passerelle :`n"
-    $gw = ssh_command "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
+    $gw = command_ssh "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
     Write-Host $gw
     
     infoFile $env:COMPUTERNAME "IP:" $ip
@@ -250,7 +250,7 @@ function version_os_windows {
     Write-Host "► VERSION DU SYSTÈME"
     Write-Host ""
 
-    $versionOS = ssh_command "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
+    $versionOS = command_ssh "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
     
     Write-Host $versionOS
     
@@ -281,15 +281,15 @@ function mises_a_jour_windows {
         Write-Host "► Recherche des mises à jour..."
         Write-Host ""
         
-        ssh_command "Import-Module PSWindowsUpdate"
+        command_ssh "Import-Module PSWindowsUpdate"
         
-        $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
+        $majList = command_ssh "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
         
         if ($majList) {
 
             Write-Host $majList
             
-            $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
+            $updateCount = (command_ssh "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
             Write-Host ""
             Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
         }
@@ -324,18 +324,18 @@ function marque_modele_windows {
     Write-Host ""
     
 
-    $fabricant = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer"
+    $fabricant = command_ssh "(Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer"
     Write-Host "► Fabricant : $fabricant"
 
-    $modele = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Model"
+    $modele = command_ssh "(Get-CimInstance -ClassName Win32_ComputerSystem).Model"
     Write-Host "► Modèle    : $modele"
     
 
-    $version = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version"
+    $version = command_ssh "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version"
     Write-Host "► Version   : $version"
     
 
-    $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
+    $serial = command_ssh "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
     Write-Host "► N° série  : $serial"
     
 
@@ -365,7 +365,7 @@ function verifier_uac_windows {
     Write-Host "► STATUT UAC (Contrôle de Compte Utilisateur)"
     Write-Host ""
     
-    $uacValue = ssh_command "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
+    $uacValue = command_ssh "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
     
     if ($uacValue -eq 1) {
         Write-Host "► UAC est ACTIVÉ (Sécurisé)" -ForegroundColor Green
@@ -389,6 +389,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

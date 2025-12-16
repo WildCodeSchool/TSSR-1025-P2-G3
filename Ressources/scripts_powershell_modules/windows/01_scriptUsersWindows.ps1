@@ -1,397 +1,200 @@
-# Script Gestion Utilisateurs Windows en Powershell
+# Script de recherche dans le fichier de journalisation
 
 
 # Liste des fonctions :
-# 1. Menu Utilisateurs
-# 2. Ajouter utilisateur
-# 3. Supprimer utilisateur
-# 4. Changer mot de passe utilisateur
+# 1. Recherche utilisateurs
+# 2. Recherche utilisateurs SSH
+# 3. Recherche Ordinateur Local
+# 4. Recherche Ordinateur SSH
+# 5. Menu Filtrage Recherche
 
 
 #==============================================================
-# 1 - MENU UTILISATEURS
+#region 1 - RECHERCHE UTILISATEURS
 #==============================================================
-function userMenu_windows {
+function searchUser {
 
-    logEvent "MENU_UTILISATEUR"
+    logEvent "RECHERCHE_LOGS_UTILISATEUR_SCRIPT"
+
+    $userScriptSearch = Read-Host "► Entrez un nom d'utilisateur à rechercher "
+
+    logEvent "RECHERCHE_LOGS_UTILISATEUR_SCRIPT:$userScriptSearch"
+
+    $resultats = Get-Content $LogFile | Where-Object {
+        $parts = $_ -split "_" 
+        $parts.Count -ge 3 -and $parts[2] -match $userScriptSearch
+    }
+
+    if ($resultats) {
+
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur une touche pour continuer..."
+    } else {
+        logEvent "UTILISATEUR_INEXISTANT:$userScriptSearch"
+        Write-Host "► L'utilisateur $userScriptSearch n'existe pas dans la journalisation"
+
+    }
+
+    logsMainMenu
+}
+#endregion
+
+
+#==============================================================
+#region 2 - RECHERCHE UTILISATEURS SSH
+#==============================================================
+function searchUserSsh {
     
-    while ($true) {
-
-        Write-Host ""
-        Write-Host "╭────────────────────────────────────────────────╮"
-        Write-Host "│                MENU UTILISATEUR                │"
-        Write-Host "├────────────────────────────────────────────────┤"
-        Write-Host "│                                                │"
-        Write-Host "│  1. Ajouter un utilisateur                     │"
-        Write-Host "│  2. Supprimer un utilisateur                   │"
-        Write-Host "│  3. Changer le mot de passe d'un Utilisateur   │"
-        Write-Host "│  4. Afficher les Utilisateurs                  │"
-        Write-Host "│  5. Retour au menu précédent                   │"
-        Write-Host "│                                                │"
-        Write-Host "╰────────────────────────────────────────────────╯"
-        Write-Host ""
-        
-        $menuUser = Read-Host "► Choisissez une option "
-        Write-Host ""
-
-        switch ($menuUser) {
-
-            1 {
-                logEvent "MENU_UTILISATEUR:AJOUTER_UN_UTILISATEUR"
-                addUserMenu_Windows
-            }
-
-            2 {
-                logEvent "MENU_UTILISATEUR:SUPPRIMER_UN_UTILISATEUR"
-                deleteUserMenu_windows
-            }
-
-            3 {
-                logEvent "MENU_UTILISATEUR:CHANGER_MOT_DE_PASSE_UTILISATEUR"
-                changePasswordUserMenu_windows
-            }    
-
-            4 {
-                logEvent "MENU_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
+    logEvent "RECHERCHE_LOGS_UTILISATEUR_SSH"
     
-                Write-Host "► Liste des utilisateurs : "
-                command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name | Sort-Object"
-                Write-Host ""
-
-                logEvent "MENU_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
-            }  
-
-            5 {
-                logEvent "MENU_UTILISATEUR:RETOUR_MENU_PRECEDENT"
-                Write-Host "► Retour au menu précédent"
-                userMainMenu
-            }    
-
-            default {
-                logEvent "MENU_UTILISATEUR:OPTION_INVALIDE"
-                Write-Host "► Entrée invalide !"
-
-            }
-        }
+    $userScriptSearchSSH = Read-Host "► Entrez un nom d'utilisateur distant à rechercher"
+    
+    logEvent "RECHERCHE_LOGS_UTILISATEUR_SSH:$userScriptSearchSSH"
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match $userScriptSearchSSH
     }
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    } else {
+        logEvent "UTILISATEUR_SSH_INEXISTANT:$userScriptSearchSSH"
+        Write-Host ""
+        Write-Host "► L'utilisateur $userScriptSearchSSH n'existe pas dans la journalisation"
+        
+    }
+    
+    logsMainMenu
+    
 }
-
+#endregion
 
 
 #==============================================================
-# 2 - AJOUTER UTILISATEURS
+#region 3 - RECHERCHE ORDINATEURS LOCAL
 #==============================================================
-function addUserMenu_Windows {
+function searchComputerLocal {
+    
+    logEvent "RECHERCHE_LOGS_ORDINATEUR_LOCAL"
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match "local"
+    }
+    
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    }
+    
+    logsMainMenu
+    
+}
+#endregion
 
-    logEvent "MENU_AJOUT_UTILISATEUR"
 
+#==============================================================
+#region 4 - RECHERCHE ORDINATEURS SSH
+#==============================================================
+function searchComputerSsh {
+    
+    logEvent "RECHERCHE_LOGS_ORDINATEUR_SSH"
+    
+    $computerScriptSearchSSH = Read-Host "► Entrez un nom d'ordinateur distant à rechercher"
+    
+    logEvent "RECHERCHE_LOGS_ORDINATEUR_SSH:$computerScriptSearchSSH"
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match $computerScriptSearchSSH
+    }
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    } else {
+        
+        logEvent "ORDINATEUR_INEXISTANT:$userScriptSearch"
+        Write-Host "► L'ordinateur $computerScriptSearchSSH n'existe pas dans la journalisation"
+        
+    }
+    
+    logsMainMenu
+    
+}
+#endregion
+
+
+#==============================================================
+#region 5 - FONCTION FILTRAGE DE RECHERCHE
+#==============================================================
+function menuSearchlog {
+    
+    logEvent "MENU_FILTRAGE_RECHERCHE"
+    
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
-    Write-Host "│               AJOUTER UTILISATEUR                │"
+    Write-Host "│             MENU FILTRAGE RECHERCHE              │"
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
-    Write-Host "│  1. Saisir un nom d'utilisateur                  │"
-    Write-Host "│  2. Retour au menu précédent                     │"
+    Write-Host "│  1. Afficher les 20 derniers logs                │"
+    Write-Host "│  2. Afficher page par page                       │"
+    Write-Host "│  3. Afficher tous les résultats                  │"
+    Write-Host "│  4. Retour au menu précédent                     │"
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯"
     Write-Host ""
-
-    $addUserMenu = Read-Host "► Choisissez une option "
-    Write-Host ""
-
-
-    switch ($addUserMenu) {
+    
+    $menuSearch = Read-Host "► Choisissez une option"
+    
+    switch ($menuSearch) {
         
         1 {
-            logEvent "MENU_AJOUT_UTILISATEUR:SAISIR_NOM_UTILISATEUR"
-            $UserCreationChoice = "o"
 
-            while ($UserCreationChoice -eq "o") {
+            logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_20_DERNIERS_RESULTATS"
+            $resultats | Select-Object -Last 20
 
-                $addUserCommand = Read-Host "► Entrez un nom d'utilisateur"
-                Write-Host ""
-
-                logEvent "AJOUT_UTILISATEUR:ENTREE_UTILISATEUR:$addUserCommand"
-
-                logEvent "AJOUT_UTILISATEUR:VERIFICATION_UTILISATEUR_EXISTE:$addUserCommand"
-
-                # Vérification si l'utilisateur existe déjà
-                $userExists = command_ssh "Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue"
-
-                if (-not $userExists) {
-
-                    $ConfirmUser = Read-Host "► Voulez-vous créer l'utilisateur '$addUserCommand' ? (o/n)"
-                    Write-Host ""
-
-                    logEvent "AJOUT_UTILISATEUR:CONFIRMATION:$ConfirmUser : $addUserCommand"
-
-                    if ($ConfirmUser -eq "o") {
-
-                        logEvent "AJOUT_UTILISATEUR:CREATION:$addUserCommand"
-                        command_ssh "New-LocalUser -Name $addUserCommand -NoPassword"
-
-                        logEvent "AJOUT_UTILISATEUR:VERIFICATION_CREATION:$addUserCommand"
-
-                        # Vérification si l'utilisateur a été créé
-                        $userExists = command_ssh "Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue"
-
-                        if ($userExists) {
-
-                            Write-Host "► L'utilisateur $addUserCommand a été créé."
-                            Write-Host ""
-                            logEvent "AJOUT_UTILISATEUR:CREATION_REUSSIE:$addUserCommand"
-
-                            $UserCreationChoice = Read-Host "► Voulez-vous créer un autre utilisateur ? (o/n) "
-                            Write-Host ""
-                            logEvent "AJOUT_UTILISATEUR:CONTINUER_AJOUT_UTILISATEUR:$userCreationChoice"
-
-                        } else {
-
-                            Write-Host "► L'utilisateur $addUserCommand n'a pas été créé. "
-                            logEvent "AJOUT_UTILISATEUR:CREATION_ECHOUEE:$addUserCommand"
-                            addUserMenu_Windows
-                        }
-                    } else {
-
-                        Write-Host "► Retour au menu précédent."
-                        logEvent "AJOUT_UTILISATEUR:ANNULATION:$addUserCommand"
-                    }
-
-                } else {
-
-                    Write-Host "► L'utilisateur $addUserCommand existe déjà."
-                    Write-Host ""
-                    logEvent "AJOUT_UTILISATEUR:UTILISATEUR_EXISTE_DEJA:$addUserCommand"
-
-                    $UserCreationChoice = Read-Host "► Voulez-vous réessayer ? (o/n) "
-                    Write-Host ""
-                    logEvent "AJOUT_UTILISATEUR:REESSAYER_AJOUT_UTILISATEUR:$UserCreationChoice"    
-
-                }
-            }
         }
-
-        2 {
-
-            logEvent "MENU_AJOUT_UTILISATEUR:RETOUR_AU_MENU_PRECEDENT"
-            userMenu_windows
-        }
-
-        default {
-
-            logEvent "MENU_AJOUT_UTILISATEUR:ENTREE_INVALIDE"
-            Write-Host "► Entrée invalide !"
-        }
-    }
-}
-
-
-
-
-#==============================================================
-# 3 - SUPPRIMER UTILISATEURS
-#==============================================================
-function deleteUserMenu_windows {
-
-    logEvent "MENU_SUPPRIMER_UTILISATEUR"
-
-    Write-Host ""
-    Write-Host "╭──────────────────────────────────────────────────╮"
-    Write-Host "│              SUPPRIMER UTILISATEUR               │"
-    Write-Host "├──────────────────────────────────────────────────┤"
-    Write-Host "│                                                  │"
-    Write-Host "│  1. Saisir un nom d'utilisateur                  │"
-    Write-Host "│  2. Afficher la liste des utilisateurs           │"
-    Write-Host "│  3. Retour au menu précédent                     │"
-    Write-Host "│                                                  │"
-    Write-Host "╰──────────────────────────────────────────────────╯"
-    Write-Host ""
-
-    $delUserMenu = Read-Host "► Choisissez une option "
-    Write-Host ""
-
-    switch ($delUserMenu) {
         
-        1 {
-            logEvent "MENU_SUPPRIMER_UTILISATEUR:SAISIR_NOM_UTILISATEUR"
-
-            $delAnotherUser = "o" 
-
-            while ($delAnotherUser -eq "o") {   
-
-                $delUserCommand = Read-Host "► Entrez un nom d'utilisateur à supprimer"
-                Write-Host ""
-                logEvent "SUPPRIMER_UTILISATEUR:ENTREE_UTILISATEUR:$delUserCommand"
-
-                logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_UTILISATEUR_EXISTE:$delUserCommand"
-
-                # Vérification si l'utilisateur existe
-                $userExists = command_ssh "Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue"
-
-                if ($userExists) {
-
-                    $confirmDelUser = Read-Host "► Voulez-vous supprimer l'utilisateur '$delUserCommand' ? (o/n)"
-                    Write-Host ""
-                    logEvent "SUPPRIMER_UTILISATEUR:CONFIRMATION:$confirmDelUser : $delUserCommand"
-
-                    if ($confirmDelUser -eq "o") {
-
-                        logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION:$delUserCommand"
-                        command_ssh "Remove-LocalUser -Name $delUserCommand"
-
-                        logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_SUPPRESSION:$delUserCommand"
-
-                        # Vérification si l'utilisateur a été supprimé
-                        $userDeleted = command_ssh "Get-LocalUser -Name $delUserCommand -ErrorAction SilentlyContinue"
-
-                        if (-not $userDeleted) {
-
-                            Write-Host "► L'utilisateur $delUserCommand a été supprimé."
-                            Write-Host ""
-                            logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION_REUSSIE:$delUserCommand"
-
-                        } else {
-
-                            Write-Host "► L'utilisateur $delUserCommand n'a pas été supprimé."
-                            logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION_ECHOUEE:$delUserCommand"
-                        }
-
-                    } else {
-
-                        Write-Host "► Retour au menu précédent."
-                        logEvent "SUPPRIMER_UTILISATEUR:ANNULATION:$delUserCommand"
-                    }
-
-                } else {
-
-                    Write-Host "► L'utilisateur $delUserCommand n'existe pas."
-                    Write-Host ""
-                    logEvent "SUPPRIMER_UTILISATEUR:UTILISATEUR_INEXISTANT:$delUserCommand"
-                }
-                $delAnotherUser = Read-Host "► Voulez-vous supprimer un autre utilisateur ? (o/n)"
-                Write-Host ""
-            }
-        }
-
         2 {
-            logEvent "MENU_SUPPRIMER_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
 
-            Write-Host "► Liste des utilisateurs : "
-            command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
-            Write-Host ""
+            logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_PAGE_PAR_PAGE"
+            $resultats | Out-Host -Paging
 
-            logEvent "SUPPRIMER_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
-
-            deleteUserMenu_windows
         }
-
+        
         3 {
-            logEvent "MENU_SUPPRIMER_UTILISATEUR:RETOUR_MENU_PRECEDENT"
-            userMenu_windows
+
+            logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
+            $resultats
+
         }
-
-        default {
-            logEvent "MENU_SUPPRIMER_UTILISATEUR:ENTREE_INVALIDE"
-            Write-Host "► Entrée invalide !"
-            Write-Host ""
-        }
-    }
-}
-
-
-
-#==============================================================
-# 4 - CHANGER MOT DE PASSE UTILISATEUR
-#==============================================================
-function changePasswordUserMenu_windows {
-
-    logEvent "MENU_CHANGER_MOT_DE_PASSE"
-
-    Write-Host ""
-    Write-Host "╭──────────────────────────────────────────────────╮"
-    Write-Host "│         CHANGER MOT DE PASSE UTILISATEUR         │"
-    Write-Host "├──────────────────────────────────────────────────┤"
-    Write-Host "│                                                  │"
-    Write-Host "│  1. Saisir un nom d'utilisateur                  │"
-    Write-Host "│  2. Afficher la liste des utilisateurs           │"
-    Write-Host "│  3. Retour au menu précédent                     │"
-    Write-Host "│                                                  │"
-    Write-Host "╰──────────────────────────────────────────────────╯"
-    Write-Host ""
-
-    $changePasswordMenu = Read-Host "► Choisissez une option "
-    Write-Host ""
-
-    switch ($changePasswordMenu) {
         
-        1 {
-            logEvent "MENU_CHANGER_MOT_DE_PASSE:SAISIR_NOM_UTILISATEUR"
+        4 {
 
-            $changeAnotherPassword = "o"
+            logEvent "MENU_FILTRAGE_RECHERCHE:MENU_PRECEDENT"
+            logsMainMenu
 
-            while ($changeAnotherPassword -eq "o") {
-
-                $changePasswordUserCommand = Read-Host "► Entrez un nom d'utilisateur pour changer le mot de passe"
-                Write-Host ""
-                logEvent "CHANGER_MOT_DE_PASSE:ENTREE_UTILISATEUR:$changePasswordUserCommand"
-
-                logEvent "CHANGER_MOT_DE_PASSE:VERIFICATION_UTILISATEUR_EXISTE:$changePasswordUserCommand"
-
-                # Vérification si l'utilisateur existe
-                $userExists = command_ssh "Get-LocalUser -Name $changePasswordUserCommand -ErrorAction SilentlyContinue"
-
-                if ($userExists) {
-
-                    $newPassword = Read-Host "► Entrez le nouveau mot de passe" -AsSecureString
-                    Write-Host ""
-                    logEvent "CHANGER_MOT_DE_PASSE:NOUVEAU_MOT_DE_PASSE_ENTRE:$changePasswordUserCommand"
-
-                    command_ssh "Set-LocalUser -Name $changePasswordUserCommand -Password $newPassword"
-                    logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_EFFECTUE:$changePasswordUserCommand"
-
-                    Write-Host "► Le mot de passe de l'utilisateur $changePasswordUserCommand a été changé."
-                    Write-Host ""
-                    logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_REUSSI:$changePasswordUserCommand"
-
-                    $changeAnotherPassword = Read-Host "► Voulez-vous changer le mot de passe d'un autre utilisateur ? (o/n) "
-                    Write-Host ""
-                    logEvent "CHANGER_MOT_DE_PASSE:CONTINUER_CHANGEMENT_MOT_DE_PASSE:$changeAnotherPassword"
-
-                } else {
-
-                    Write-Host "► L'utilisateur $changePasswordUserCommand n'existe pas."
-                    logEvent "CHANGER_MOT_DE_PASSE:UTILISATEUR_INEXISTANT:$changePasswordUserCommand"
-
-                    # Demander si l'utilisateur veut réessayer
-                    $changeAnotherPassword = Read-Host "► Voulez-vous réessayer ? (o/n) "
-                    Write-Host ""
-                    logEvent "CHANGER_MOT_DE_PASSE:REESSAYER_CHANGEMENT_MOT_DE_PASSE:$changeAnotherPassword"  
-                }
-            }
-        }
-
-        2 {
-            logEvent "MENU_CHANGER_MOT_DE_PASSE:AFFICHER_LISTE_UTILISATEURS"
-
-            Write-Host "► Liste des utilisateurs : "
-            command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
-            Write-Host ""
-
-            logEvent "SUPPRIMER_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
-
-            changePasswordUserMenu_windows
-        }
-
-        3 {
-            logEvent "MENU_CHANGER_MOT_DE_PASSE:RETOUR_MENU_PRECEDENT"
-            userMenu_windows
         }
 
         default {
-            logEvent "MENU_CHANGER_MOT_DE_PASSE:ENTREE_INVALIDE"
-            Write-Host "► Entrée invalide !"
-            Write-Host ""
+            logEvent "MENU_FILTRAGE_RECHERCHE:ENTREE_INVALIDE"
+            Write-Host "► Option invalide."
+            menuSearchlog
         }
     }
 }
-
+#endregion

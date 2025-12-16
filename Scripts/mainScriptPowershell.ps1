@@ -1,22 +1,42 @@
 # Script PowerShell principal du Projet 2
 
-# Liste des fonctions :
-# 1. 
-# 2. 
-# 3. 
-# 4. 
+
+# Sommaire :
+# 0. Lancement en administrateur
+# 1. Chargement des modules
+# 2. Journalisation
+# 3. Menu exécution locale ou SSH  
+# 4. Détection du système d'exploitation
+# 5. Fonctions des commandes
+# 6. Fichiers de stockage des informations
+# 7. Menu principal
+# 8. Menu gestion des utilisateurs
+# 9. Menu gestion des ordinateurs
+# 10. Menu informations système
+# 11. Menu informations utilisateur
+# 12. Menu journalisation
+# 13. Exécution du script
 
 
 
-# Force le lancement en administrateur
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process -FilePath "powershell.exe" -ArgumentList "-File", $PSCommandPath -Verb RunAs
-    exit
+#=====================================================
+#region 0 - LANCEMENT EN ADMINISTRATEUR
+#=====================================================
+function lancementAdministrateur {
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Start-Process -FilePath "powershell.exe" `
+            -ArgumentList "-File", $PSCommandPath `
+            -Verb RunAs
+        exit
+    }
 }
+#endregion
+
 
 #=====================================================
-# CHARGEMENT DES MODULES
+#region 1 - CHARGEMENT DES MODULES
 #=====================================================
+
 # GENERAL
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\00_scriptSearchLog.ps1" -Force
 
@@ -30,19 +50,15 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05
 # LINUX
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\01_scriptUsersLinux.ps1" -Force
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\02_scriptGroupsLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\03_scriptGestionOrdiLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\04_scriptInfoOrdiLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_scriptUsersInfosLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\03_scriptGestionOrdiLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\04_scriptInfoOrdiLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_scriptUsersInfosLinux.ps1" -Force
 
-#=====================================================
-# VARIABLES DES COULEURS
-#=====================================================
-
-
+#endregion
 
 
 #=====================================================
-# JOURNALISATION
+#region 2 - JOURNALISATION
 #=====================================================
 $LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
@@ -62,7 +78,7 @@ function logInit {
         )
         $acl.SetAccessRule($accessRule)
         Set-Acl -Path $LogFile -AclObject $acl
-    }
+    } 
 }
 
 function logEvent {
@@ -77,8 +93,7 @@ function logEvent {
 
     $context = if ($connexionMode -eq "ssh") {
         "ssh:$RemoteUser@$RemoteComputer" 
-    }
-    else {
+    } else {
         "local" 
     }
 
@@ -96,15 +111,11 @@ function stopScript {
     Write-Host "► Fermeture du script..."
     exit
 }
+#endregion
 
-$script:connexionMode = ""
-$script:remoteUser = ""
-$script:remoteComputer = ""
-$script:portSSH = ""
-$script:remoteOS = ""
 
 #=====================================================
-# MENU EXECUTION LOCAL OU SSH
+#region 3 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
 function executionMode {
 
@@ -132,6 +143,7 @@ function executionMode {
     Write-Host ""
 
     $executionmode = Read-Host "► Voulez-vous exécuter le script en Local ou à distance ? "
+    Write-Host ""
 
     switch ($executionmode) {
 
@@ -139,7 +151,7 @@ function executionMode {
             logEvent "EXECUTION_LOCAL"
             $script:connexionMode = "local"
             Write-Host "► Exécution du script sur la machine hôte."
-            Write-Host
+            Write-Host ""
         }
 
         2 {
@@ -165,8 +177,7 @@ function executionMode {
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "► Connexion SSH réussie à $remoteUser@$remoteComputer :$portSSH."
                 logEvent "SSH_CONNEXION_REUSSIE:$remoteUser@$remoteComputer :$portSSH"
-            }
-            else {
+            } else {
                 Write-Host "► Impossible de se connecter à $remoteUser@$remoteComputer :$portSSH."
                 logEvent "SSH_CONNEXION_ECHEC:$remoteUser@$remoteComputer :$portSSH"
                 executionMode
@@ -182,17 +193,18 @@ function executionMode {
 
             logEvent "MENU_EXECUTION:ENTREE_INVALIDE"
             Write-Host "► Entrée invalide !"
+            executionMode
 
         }
     }
 
     detectionRemoteOS
 }
-
+#endregion
 
 
 #=====================================================
-# DETECTION DU SYSTEME D'EXPLOITATION
+#region 4 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
 
@@ -206,18 +218,17 @@ function detectionRemoteOS {
             logEvent "DETECTION_OS:LINUX"
 
             Write-Host "► Système d'exploitation distant détecté : Linux"
-        }
-        else {
+            Write-Host ""
+        } else {
 
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
             Write-Host "► Système d'exploitation distant détecté : Windows"
+            Write-Host ""
 
         }
 
-        Write-Host ""
-    }
-    else {
+    } else {
 
         $script:remoteOS = "Windows"
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
@@ -226,11 +237,11 @@ function detectionRemoteOS {
 
     }
 }
-
+#endregion
 
 
 #=====================================================
-# FONCTIONS DES COMMANDES
+#region 5 - FONCTIONS DES COMMANDES
 #=====================================================
 function command_ssh {
     param (
@@ -242,8 +253,7 @@ function command_ssh {
 
         Invoke-Expression $cmd
 
-    }
-    elseif ($script:connexionMode -eq "ssh") {
+    } elseif ($script:connexionMode -eq "ssh") {
 
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
         $encodedCmd = [Convert]::ToBase64String($bytes)
@@ -252,8 +262,7 @@ function command_ssh {
 
         ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" $remoteCmd 2>&1
 
-    }
-    else {
+    } else {
         
         Write-Host "ERREUR : Mode de connexion inconnu ($script:connexionMode)" -ForegroundColor Red
         return
@@ -274,11 +283,11 @@ function bash_sudo_command {
     )
     ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
 }
-
+#endregion
 
 
 #=====================================================
-# FICHIERS STOCKAGE INFORMATIONS
+#region 6 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
 function infoFile {
     param(
@@ -288,8 +297,8 @@ function infoFile {
     )
     
     $date = Get-Date -Format "yyyyMMdd"
-    $dossierInfo = "info"
-    $fichierInfo = "$dossierInfo\info_${cible}_${date}.txt"
+    $dossierInfo = Join-Path $PSScriptRoot "info"
+    $fichierInfo = Join-Path $dossierInfo "info_${cible}_${date}.txt"
     
     if (!(Test-Path $dossierInfo)) {
         New-Item -ItemType Directory -Path $dossierInfo | Out-Null
@@ -302,11 +311,11 @@ function infoFile {
     $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Add-Content -Path $fichierInfo -Value "[$time] $description : $informations"
 }
-
+#endregion
 
 
 #=====================================================
-# MENU PRINCIPAL
+#region 7 - MENU PRINCIPAL
 #=====================================================
 function mainMenu {
         
@@ -369,11 +378,11 @@ function mainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# MENU GESTION UTILISATEUR
+#region 8 - MENU GESTION UTILISATEUR
 #=====================================================
 function userMainMenu {
 
@@ -399,8 +408,7 @@ function userMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 userMenu_windows
-            }
-            else {
+            } else {
                 userMenu_linux
             }
         }
@@ -410,8 +418,7 @@ function userMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_menu_group_windows
-            }
-            else {
+            } else {
                 gestion_menu_group_linux
             }          
         }
@@ -427,11 +434,11 @@ function userMainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# MENU GESTION ORDINATEURS
+#region 9 - MENU GESTION ORDINATEURS
 #=====================================================
 function computerMainMenu {
 
@@ -442,7 +449,7 @@ function computerMainMenu {
     Write-Host "│                                                  │"
     Write-Host "│  1. Gestion Répertoire                           │" 
     Write-Host "│  2. Redémarrage                                  │" 
-    Write-Host "│  3. Prise en main à distance (CLI)               │" 
+    Write-Host "│  3. Prise de main à distance (CLI)               │" 
     Write-Host "│  4. Activation du pare-feu                       │" 
     Write-Host "│  5. Exécution de script sur machine distante     │" 
     Write-Host "│  6. Retour au menu principal                     │" 
@@ -458,8 +465,7 @@ function computerMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_repertoire_menu_windows
-            }
-            else {
+            } else {
                 gestion_repertoire_menu_linux
             }
         }
@@ -469,8 +475,7 @@ function computerMainMenu {
 
             if ($remoteOS -eq "Windows") { 
                 redemarrage_windows
-            }
-            else {
+            } else {
                 redemarrage_linux
             }
         }
@@ -479,8 +484,7 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
             if ($remoteOS -eq "Windows") { 
                 prise_main_distance_windows
-            }
-            else {
+            } else {
                 prise_main_distance_linux
             }
         } 
@@ -489,8 +493,7 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
             if ($remoteOS -eq "Windows") { 
                 activation_parefeu_windows
-            }
-            else {
+            } else {
                 activation_parefeu_linux
             }
         } 
@@ -499,8 +502,7 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
             if ($remoteOS -eq "Windows") { 
                 exec_script_windows
-            }
-            else {
+            } else {
                 exec_script_linux
             }
         } 
@@ -516,11 +518,11 @@ function computerMainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# MENU INFORMATIONS SYSTEME
+#region 10 - MENU INFORMATIONS SYSTEME
 #=====================================================
 function informationMainMenu {
 
@@ -553,8 +555,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 liste_utilisateurs_windows
-            }
-            else {
+            } else {
                 liste_utilisateurs_linux
             }
         }
@@ -564,8 +565,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 cinq_derniers_logins_windows
-            }
-            else {
+            } else {
                 cinq_derniers_logins_linux
             }
         }
@@ -575,8 +575,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 infos_reseau_windows
-            }
-            else {
+            } else {
                 infos_reseau_linux
             }
         } 
@@ -586,8 +585,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_disques_menu_windows
-            }
-            else {
+            } else {
                 gestion_disques_menu_linux
             }
         } 
@@ -597,8 +595,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 version_os_windows
-            }
-            else {
+            } else {
                 version_os_linux
             }
         } 
@@ -608,8 +605,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 mises_a_jour_windows
-            }
-            else {
+            } else {
                 mises_a_jour_linux
             }
         }  
@@ -619,8 +615,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 marque_modele_windows
-            }
-            else {
+            } else {
                 marque_modele_linux
             }
         }  
@@ -630,8 +625,7 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 status_uac_windows
-            }
-            else {
+            } else {
                 status_uac_linux
             }
         }  
@@ -648,11 +642,11 @@ function informationMainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# MENU INFORMATIONS UTILISATEUR
+#region 11 - MENU INFORMATIONS UTILISATEUR
 #=====================================================
 function informationUserMainMenu {
 
@@ -679,8 +673,7 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 date_lastconnection_windows
-            }
-            else {
+            } else {
                 date_lastconnection_linux
             }
         }
@@ -690,8 +683,7 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 date_lastpassmodif_windows
-            }
-            else {
+            } else {
                 date_lastpassmodif_linux
             }
         }
@@ -701,8 +693,7 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 list_opensessions_windows
-            }
-            else {
+            } else {
                 list_opensessions_linux
             }
         } 
@@ -718,11 +709,11 @@ function informationUserMainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# MENU JOURNALISATION
+#region 12 - MENU JOURNALISATION
 #=====================================================
 function logsMainMenu {
 
@@ -769,6 +760,7 @@ function logsMainMenu {
         5 {
             logEvent "MENU_JOURNALISATION:AFFICHAGE_FICHIER_JOURNALISATION"
             Get-Content -Path $LogFile
+            logsMainMenu
         }   
 
         6 {
@@ -783,16 +775,19 @@ function logsMainMenu {
         }
     }
 }
-
+#endregion
 
 
 #=====================================================
-# EXECUTION DU SCRIPT
+#region 13 - EXECUTION DU SCRIPT
 #=====================================================
 
-logInit
+lancementAdministrateur
+logInit -LogFile $LogFile
 startScript
 executionMode
 mainMenu
+
+#endregion
 
 

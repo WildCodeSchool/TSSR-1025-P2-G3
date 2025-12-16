@@ -82,8 +82,12 @@ function nombre_disques_windows {
     
     Write-Host "`n► NOMBRE DE DISQUES`n"
     
-    # La commande retourne directement le nombre
-    $nombreDisques = command_ssh "(Get-Disk).Count"
+    $output = command_ssh "Get-Disk"
+    
+    # Filtre les lignes vides et les séparateurs (----)
+    $nombreDisques = ($output -split "`n" | Where-Object { 
+        $_ -match '^\d+\s+' 
+    }).Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     
@@ -99,26 +103,19 @@ function nombre_disques_windows {
 #==============================================================
 
 function partitions_windows {
-    
     logEvent "DEMANDE_LISTE_PARTITIONS"
     Write-Host "`n► PARTITIONS`n"
     
-    # Récupération de tous les volumes
-    $partitions = command_ssh "Get-Volume"
+    $partitions = command_ssh "Get-Volume | FT -Auto"
     Write-Host $partitions
     
-    # Comptage du nombre de partitions
-    $nombre = command_ssh "Get-Partition | Measure-Object | Select -ExpandProperty Count"
-    Write-Host "`n► Nombre total de partitions : $nombre"
+    $nombre = command_ssh "(Get-Partition).Count"
+    Write-Host "`n► Nombre : $nombre"
     
-    # Enregistrement dans le fichier d'info
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Partitions:" $partitions
-        infoFile $env:COMPUTERNAME "Nombre:" $nombre
-    }
+    infoFile $env:COMPUTERNAME "Partitions:" $partitions
+    infoFile $env:COMPUTERNAME "Nombre:" $nombre
     
-    Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Read-Host "`n► ENTRÉE"
     informationMainMenu
 }
 #endregion
@@ -380,6 +377,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

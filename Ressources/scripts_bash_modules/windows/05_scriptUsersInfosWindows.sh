@@ -70,7 +70,6 @@ fonc_date_lastconnection_windows() {
         ;;
     esac
 }
-#endregion
 
 
 #==============================================================
@@ -131,7 +130,7 @@ fonc_date_lastpassmodif_windows() {
         ;;
     esac
 }
-#endregion
+
 
 
 #==============================================================
@@ -193,4 +192,4 @@ fonc_opensessions_windows() {
         ;;
     esac
 }
-#endregion
+

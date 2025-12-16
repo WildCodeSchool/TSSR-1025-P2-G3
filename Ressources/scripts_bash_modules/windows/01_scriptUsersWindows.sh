@@ -12,7 +12,7 @@
 
 
 #==============================================================
-#region 01 - MENU UTILISATEURS
+# 01 - MENU UTILISATEURS
 #==============================================================
 function userMenuWindows() {
     logEvent "MENU_UTILISATEUR"
@@ -79,11 +79,10 @@ function userMenuWindows() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - AJOUTER UTILISATEURS
+# 02 - AJOUTER UTILISATEURS
 #==============================================================
 function addUserMenuWindows() {
 
@@ -189,11 +188,10 @@ function addUserMenuWindows() {
     esac
 
 }
-#endregion
 
 
 #==============================================================
-#region 03 - SUPPRIMER UTILISATEURS
+# 03 - SUPPRIMER UTILISATEURS
 #==============================================================
 function deleteUserMenuWindows() {
 
@@ -309,11 +307,10 @@ function deleteUserMenuWindows() {
 
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 04 - CHANGER MOT DE PASSE UTILISATEUR
+# 04 - CHANGER MOT DE PASSE UTILISATEUR
 #==============================================================
 function changePasswordUserMenuWindows() {
 
@@ -422,4 +419,4 @@ function changePasswordUserMenuWindows() {
     esac
 
 }
-#endregion
+

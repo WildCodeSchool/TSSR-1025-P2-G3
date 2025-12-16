@@ -4,10 +4,28 @@
 # Auteur : Christian
 
 
-#=====================================================
-# CHARGEMENT DES MODULES
-#=====================================================
+# Sommaire :
+# 01 - Chargement des modules
+# 02 - Variables des couleurs
+# 03 - Journalisation
+# 04 - Variables de connexion
+# 05 - Menu exécution local ou SSH
+# 06 - Détection du système d'exploitation
+# 07 - Fonction des commandes
+# 08 - Fichiers stockage informations
+# 09 - Menu principal
+# 10 - Menu gestion utilisateur
+# 11 - Menu gestion ordinateurs
+# 12 - Menu informations système
+# 13 - Menu informations utilisateur
+# 14 - Menu journalisation
+# 15 - Execution du script
 
+
+
+#=====================================================
+#region 01 - CHARGEMENT DES MODULES
+#=====================================================
 # GENERAL
 source ../Ressources/scripts_bash_modules/scriptSearchLog.sh
 
@@ -24,9 +42,11 @@ source ../Ressources/scripts_bash_modules/windows/scriptGroupsWindows.sh
 source ../Ressources/scripts_bash_modules/windows/scriptGestionOrdiWindows.sh
 source ../Ressources/scripts_bash_modules/windows/scriptUsersInfosWindows.sh
 source ../Ressources/scripts_bash_modules/windows/scriptInfoOrdiWindows.sh
+#endregion
+
 
 #=====================================================
-# VARIABLES DES COULEURS
+#region 02 - VARIABLES DES COULEURS
 #=====================================================
 
 export RED='\033[0;31m'
@@ -34,12 +54,12 @@ export GREEN='\033[0;32m'
 export YELLOW='\033[1;33m'
 export BLUE='\033[0;34m'
 export NC='\033[0m'
+#endregion
+
 
 #=====================================================
-# JOURNALISATION
+#region 03 - JOURNALISATION
 #=====================================================
-
-#### TEMPORAIRE ####
 
 # Chemin du fichier log
 log_file="/var/log/log_evt.log"
@@ -50,7 +70,7 @@ function logInit() {
     if [ ! -f "$log_file" ]; then
 
         sudo touch "$log_file"
-        sudo chmod 777 "$log_file"
+        sudo chmod 770 "$log_file"
 
     fi
 }
@@ -90,21 +110,24 @@ function stopScript() {
     exit 0
 
 }
+#endregion
+
 
 #=====================================================
-# VARIABLES DE CONNEXION
+#region 04 - VARIABLES DE CONNEXION
 #=====================================================
-
 export connexionMode=""
 export remoteUser=""
 export remoteComputer=""
 export portSSH=""
 export remoteOS=""
+#endregion
+
+
 
 #=====================================================
-# MENU EXECUTION LOCAL OU SSH
+#region 05 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
-
 function chooseExecutionMode() {
 
 
@@ -202,11 +225,12 @@ function chooseExecutionMode() {
 
     detectionRemoteOS
 }
+#endregion
+
 
 #=====================================================
-# DETECTION DU SYSTEME D'EXPLOITATION
+#region 06 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
-
 function detectionRemoteOS() {
 
     if [ "$connexionMode" = "local" ]; then
@@ -230,11 +254,12 @@ function detectionRemoteOS() {
         logEvent "DETECTION_OS:Windows"
     fi
 }
+#endregion
+
 
 #=====================================================
-# FONCTION DES COMMANDES
+#region 07 - FONCTION DES COMMANDES
 #=====================================================
-
 # Fonction pour les commandes sans SUDO
 function command() {
 
@@ -269,11 +294,12 @@ function powershell_command() {
     ssh -p "$portSSH" "$remoteUser@$remoteComputer" "powershell.exe -Command \"$cmd\""
 
 }
+#endregion
+
 
 #=====================================================
-# FICHIERS STOCKAGE INFORMATIONS
+#region 08 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
-
 function infoFile() {
     local cible="$1"
     local description="$2"
@@ -294,11 +320,12 @@ function infoFile() {
     local time=$(date +"%Y-%m-%d %H:%M:%S")
     echo "[$time] $description : $informations" >>"$fichierInfo"
 }
+#endregion
+
 
 #=====================================================
-# MENU PRINCPAL
+#region 09 - MENU PRINCPAL
 #=====================================================
-
 function mainMenu() {
 
     logEvent "MENU_PRINCIPAL"
@@ -371,11 +398,12 @@ function mainMenu() {
     done
 
 }
+#endregion
+
 
 #=====================================================
-# MENU GESTION UTILISATEUR
+#region 10 - MENU GESTION UTILISATEUR
 #=====================================================
-
 function userMainMenu() {
 
     logEvent "MENU_GESTION_UTILISATEUR"
@@ -442,11 +470,12 @@ function userMainMenu() {
     esac
 
 }
+#endregion
+
 
 #=====================================================
-# MENU GESTION ORDINATEURS
+#region 11 - MENU GESTION ORDINATEURS
 #=====================================================
-
 function computerMainMenu() {
 
     logEvent "MENU_GESTION_ORDINATEUR"
@@ -559,11 +588,12 @@ function computerMainMenu() {
 
     esac
 }
+#endregion
+
 
 #=====================================================
-# MENU INFORMATIONS SYSTEME
+#region 12 - MENU INFORMATIONS SYSTEME
 #=====================================================
-
 function informationMainMenu() {
 
     logEvent "MENU_INFOMATIONS_SYSTEME"
@@ -707,11 +737,12 @@ function informationMainMenu() {
 
     esac
 }
+#endregion
+
 
 #=====================================================
-# MENU INFORMATIONS UTILISATEUR
+#region 13 - MENU INFORMATIONS UTILISATEUR
 #=====================================================
-
 function informationUserMainMenu() {
 
     logEvent "MENU_INFORMATIONS_UTILISATEUR"
@@ -790,11 +821,12 @@ function informationUserMainMenu() {
 
     esac
 }
+#endregion
+
 
 #=====================================================
-# MENU JOURNALISATION
+#region 14 - MENU JOURNALISATION
 #=====================================================
-
 function logsMainMenu() {
 
     logEvent "MENU_JOURNALISATION"
@@ -863,12 +895,14 @@ function logsMainMenu() {
     esac
 
 }
+#endregion
+
 
 #=====================================================
-# EXECUTION DU SCRIPT
+#region 15 - EXECUTION DU SCRIPT
 #=====================================================
-
 logInit
 startScript
 chooseExecutionMode
 mainMenu
+#endregion

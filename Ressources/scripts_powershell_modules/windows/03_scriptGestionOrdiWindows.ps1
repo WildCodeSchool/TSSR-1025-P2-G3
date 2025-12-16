@@ -64,6 +64,7 @@ function gestion_repertoire_menu_windows {
 }
 #endregion
 
+
 #==============================================================
 #region 02 - CREATION DE REPERTOIRE
 #==============================================================
@@ -96,6 +97,7 @@ function creer_dossier_windows {
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
+
 
 #==============================================================
 #region 03 - CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
@@ -131,6 +133,7 @@ function creer_dossier_admin_windows {
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
+
 
 #==============================================================
 #region 04 - SUPPRESSION DE REPERTOIRE
@@ -175,6 +178,7 @@ function supprimer_dossier_windows {
 }
 #endregion
 
+
 #==============================================================
 #region 05 - REDEMARRAGE
 #==============================================================
@@ -210,6 +214,7 @@ function redemarrage_windows {
 }
 #endregion
 
+
 #==============================================================
 #region 06 - PRISE EN MAIN A DISTANCE
 #==============================================================
@@ -240,6 +245,7 @@ function prise_main_windows {
     
 }
 #endregion
+
 
 #==============================================================
 #region 07 - ACTIVATION PARE-FEU
@@ -282,6 +288,7 @@ function activation_parefeu_windows {
 
 }
 #endregion
+
 
 #==============================================================
 #region 08 - EXECUTION DE SCRIPT LOCAL
@@ -341,3 +348,4 @@ function exec_script_windows {
 
 }
 #endregion
+

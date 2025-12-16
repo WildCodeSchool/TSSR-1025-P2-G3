@@ -262,6 +262,22 @@ function command_ssh {
     } 
 }
 
+function command_ssh {
+
+    param ([string]$cmd)
+    
+    if ($script:connexionMode -eq "local") {
+    
+        Invoke-Expression $cmd
+        
+    } else {
+    
+        $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmd))
+        ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "powershell.exe -NoProfile -EncodedCommand $encodedCmd" 2>&1
+        
+    }
+}
+
 function bash_command {
     param (
         [string]$cmd
@@ -782,6 +798,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

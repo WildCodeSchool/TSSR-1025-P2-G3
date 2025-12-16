@@ -163,13 +163,10 @@ function liste_utilisateurs_windows {
     Write-Host "► LISTE DES UTILISATEURS LOCAUX"
     Write-Host ""
     
-    # Je récupère tous les utilisateurs locaux activés
     $userList = ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
     
-    # J'affiche le tableau
     Write-Host $userList
     
-    # Je compte les utilisateurs
     $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
@@ -231,11 +228,9 @@ function infos_reseau_windows {
     $gw = ssh_command "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
     Write-Host $gw
     
-    # Enregistrement
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "IP:" $ip
-        infoFile $env:COMPUTERNAME "Passerelle:" $gw
-    }
+    infoFile $env:COMPUTERNAME "IP:" $ip
+    infoFile $env:COMPUTERNAME "Passerelle:" $gw
+
     
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
@@ -254,11 +249,9 @@ function version_os_windows {
     Write-Host ""
     Write-Host "► VERSION DU SYSTÈME"
     Write-Host ""
-    
-    # Je récupère les infos du système
+
     $versionOS = ssh_command "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
     
-    # J'affiche les informations
     Write-Host $versionOS
     
     infoFile $env:COMPUTERNAME "Version OS:" $versionOS
@@ -288,14 +281,12 @@ function mises_a_jour_windows {
         Write-Host "► Recherche des mises à jour..."
         Write-Host ""
         
-        # J'importe le module
         ssh_command "Import-Module PSWindowsUpdate"
         
-        # Je récupère les mises à jour de sécurité et critiques
         $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
         
         if ($majList) {
-            # J'affiche les mises à jour disponibles
+
             Write-Host $majList
             
             $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
@@ -332,19 +323,18 @@ function marque_modele_windows {
     Write-Host "► MARQUE / MODÈLE"
     Write-Host ""
     
-    # Je récupère le fabricant
+
     $fabricant = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer"
     Write-Host "► Fabricant : $fabricant"
-    
-    # Je récupère le modèle
+
     $modele = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Model"
     Write-Host "► Modèle    : $modele"
     
-    # Je récupère la version
+
     $version = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version"
     Write-Host "► Version   : $version"
     
-    # Je récupère le numéro de série
+
     $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
     Write-Host "► N° série  : $serial"
     
@@ -375,7 +365,6 @@ function verifier_uac_windows {
     Write-Host "► STATUT UAC (Contrôle de Compte Utilisateur)"
     Write-Host ""
     
-    # Je lis la valeur UAC dans le registre (1=activé, 0=désactivé)
     $uacValue = ssh_command "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
     
     if ($uacValue -eq 1) {
@@ -400,6 +389,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

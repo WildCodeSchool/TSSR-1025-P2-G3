@@ -11,7 +11,7 @@
 
 
 #==============================================================
-#region 01 - DATE DERNIERE CONNEXION
+# 01 - DATE DERNIERE CONNEXION
 #==============================================================
 fonc_date_lastconnection_windows() {
 
@@ -74,7 +74,7 @@ fonc_date_lastconnection_windows() {
 
 
 #==============================================================
-#region 02 - DATE DERNIERE MODIFICATION MOT DE PASSE
+# 02 - DATE DERNIERE MODIFICATION MOT DE PASSE
 #==============================================================
 fonc_date_lastpassmodif_windows() {
 
@@ -135,7 +135,7 @@ fonc_date_lastpassmodif_windows() {
 
 
 #==============================================================
-#region 03 - LISTE DES SESSIONS OUVERTES
+# 03 - LISTE DES SESSIONS OUVERTES
 #==============================================================
 fonc_opensessions_windows() {
 

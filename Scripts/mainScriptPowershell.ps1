@@ -2,16 +2,16 @@
 
 
 # Sommaire :
-# 0. Lancement en administrateur
-# 1. Chargement des modules
-# 2. Journalisation
-# 3. Menu exécution locale ou SSH  
-# 4. Détection du système d'exploitation
-# 5. Fonctions des commandes
-# 6. Fichiers de stockage des informations
-# 7. Menu principal
-# 8. Menu gestion des utilisateurs
-# 9. Menu gestion des ordinateurs
+# 00. Lancement en administrateur
+# 01. Chargement des modules
+# 02. Journalisation
+# 03. Menu exécution locale ou SSH  
+# 04. Détection du système d'exploitation
+# 05. Fonctions des commandes
+# 06. Fichiers de stockage des informations
+# 07. Menu principal
+# 08. Menu gestion des utilisateurs
+# 09. Menu gestion des ordinateurs
 # 10. Menu informations système
 # 11. Menu informations utilisateur
 # 12. Menu journalisation
@@ -20,7 +20,7 @@
 
 
 #=====================================================
-#region 0 - LANCEMENT EN ADMINISTRATEUR
+#region 00 - LANCEMENT EN ADMINISTRATEUR
 #=====================================================
 function lancementAdministrateur {
     if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -34,7 +34,7 @@ function lancementAdministrateur {
 
 
 #=====================================================
-#region 1 - CHARGEMENT DES MODULES
+#region 01 - CHARGEMENT DES MODULES
 #=====================================================
 
 # GENERAL
@@ -58,7 +58,7 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_s
 
 
 #=====================================================
-#region 2 - JOURNALISATION
+#region 02 - JOURNALISATION
 #=====================================================
 $LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
@@ -115,7 +115,7 @@ function stopScript {
 
 
 #=====================================================
-#region 3 - MENU EXECUTION LOCAL OU SSH
+#region 03 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
 function executionMode {
 
@@ -204,7 +204,7 @@ function executionMode {
 
 
 #=====================================================
-#region 4 - DETECTION DU SYSTEME D'EXPLOITATION
+#region 04 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
 
@@ -241,7 +241,7 @@ function detectionRemoteOS {
 
 
 #=====================================================
-#region 5 - FONCTIONS DES COMMANDES
+#region 05 - FONCTIONS DES COMMANDES
 #=====================================================
 function command_ssh {
     param (
@@ -287,7 +287,7 @@ function bash_sudo_command {
 
 
 #=====================================================
-#region 6 - FICHIERS STOCKAGE INFORMATIONS
+#region 06 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
 function infoFile {
     param(
@@ -315,7 +315,7 @@ function infoFile {
 
 
 #=====================================================
-#region 7 - MENU PRINCIPAL
+#region 07 - MENU PRINCIPAL
 #=====================================================
 function mainMenu {
         
@@ -382,7 +382,7 @@ function mainMenu {
 
 
 #=====================================================
-#region 8 - MENU GESTION UTILISATEUR
+#region 08 - MENU GESTION UTILISATEUR
 #=====================================================
 function userMainMenu {
 
@@ -438,7 +438,7 @@ function userMainMenu {
 
 
 #=====================================================
-#region 9 - MENU GESTION ORDINATEURS
+#region 09 - MENU GESTION ORDINATEURS
 #=====================================================
 function computerMainMenu {
 
@@ -789,5 +789,6 @@ executionMode
 mainMenu
 
 #endregion
+
 
 

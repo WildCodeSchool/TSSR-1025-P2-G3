@@ -3,22 +3,22 @@
 # Script Gestion Ordinateur Linux
 # Auteur : Safi
 
-﻿# Sommaire :
-# 01. Menu Gestion Répertoire
-# 02. Création de répertoire
-# 03. Création de répertoire Linux (SUDO)
-# 04. Suppression de répertoire
-# 05. Redémmarage
-# 06. Prise en main à distance (CLI)
-# 07. Activation du pare-feu
-# 08. Exécution de scripts sur une machine distante
+
+# Sommaire :
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Création de répertoire Linux (SUDO)
+# 04 - Suppression de répertoire
+# 05 - Redémmarage
+# 06 - Prise en main à distance (CLI)
+# 07 - Activation du pare-feu
+# 08 - Exécution de scripts sur une machine distante
 
 
 
 #==============================================================
-#region 01 - MENU GESTION REPERTOIRE
+# 01 - MENU GESTION REPERTOIRE
 #==============================================================
-# fonction de gestion de répertoires
 gestion_repertoire_menu_linux() {
 
     logEvent "MENU_GESTION_RÉPERTOIRE"
@@ -81,11 +81,10 @@ gestion_repertoire_menu_linux() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - CREATION DE REPERTOIRE
+# 02 - CREATION DE REPERTOIRE
 #==============================================================
 fonction_creer_dossier_linux() {
 
@@ -121,11 +120,10 @@ fonction_creer_dossier_linux() {
         fi
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 03 - CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
+# 03 - CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
 #==============================================================
 fonction_creer_dossier_sudo_linux() {
 
@@ -159,11 +157,10 @@ fonction_creer_dossier_sudo_linux() {
         fi
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 04 - SUPPRESSION DE REPERTOIRE
+# 04 - SUPPRESSION DE REPERTOIRE
 #==============================================================
 fonction_supprimer_dossier_linux() {
 
@@ -189,11 +186,10 @@ fonction_supprimer_dossier_linux() {
         fi
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 05 - REDEMARRAGE
+# 05 - REDEMARRAGE
 #==============================================================
 #fonction de redemarage poste distante
 fonction_redemarrage_linux() {
@@ -215,11 +211,10 @@ fonction_redemarrage_linux() {
     fi
 
 }
-#endregion
 
 
 #==============================================================
-#region 06 - PRISE EN MAIN A DISTANCE (CLI)
+# 06 - PRISE EN MAIN A DISTANCE (CLI)
 #==============================================================
 fonction_prise_main_linux() {
 
@@ -241,11 +236,10 @@ fonction_prise_main_linux() {
 
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 07 - ACTIVATION PARE-FEU
+# 07 - ACTIVATION PARE-FEU
 #==============================================================
 fonction_activer_parefeu_linux() {
 
@@ -277,11 +271,10 @@ fonction_activer_parefeu_linux() {
         computerMainMenu
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 08 - EXECUTION DE SCRIPT LOCAL
+# 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 fonction_exec_script_linux() {
 
@@ -306,4 +299,3 @@ fonction_exec_script_linux() {
     sudo_command "bash $scriptlocal"
 
 }
-#endregion

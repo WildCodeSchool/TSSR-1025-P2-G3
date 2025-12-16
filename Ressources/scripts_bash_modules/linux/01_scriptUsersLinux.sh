@@ -4,14 +4,14 @@
 # Auteur : Christian
 
 # Sommaire :
-# 01. Menu Utilisateurs
-# 02. Ajouter utilisateur
-# 03. Supprimer utilisateur
-# 04. Changer mot de passe utilisateur
+# 01 - Menu Utilisateurs
+# 02 - Ajouter utilisateur
+# 03 - Supprimer utilisateur
+# 04 - Changer mot de passe utilisateur
 
 
 #==============================================================
-#region 01 - MENU UTILISATEURS
+# 01 - MENU UTILISATEURS
 #==============================================================
 function userMenuLinux() {
 
@@ -79,11 +79,10 @@ function userMenuLinux() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - AJOUTER UTILISATEURS
+# 02 - AJOUTER UTILISATEURS
 #==============================================================
 function addUserMenuLinux() {
 
@@ -189,11 +188,10 @@ function addUserMenuLinux() {
     esac
 
 }
-#endregion
 
 
 #==============================================================
-#region 03 - SUPPRIMER UTILISATEURS
+# 03 - SUPPRIMER UTILISATEURS
 #==============================================================
 function deleteUserMenuLinux() {
 
@@ -307,11 +305,10 @@ function deleteUserMenuLinux() {
 
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 04 - CHANGER MOT DE PASSE UTILISATEUR
+# 04 - CHANGER MOT DE PASSE UTILISATEUR
 #==============================================================
 function changePasswordUserMenuLinux() {
 
@@ -417,4 +414,3 @@ function changePasswordUserMenuLinux() {
     esac
 
 }
-#endregion

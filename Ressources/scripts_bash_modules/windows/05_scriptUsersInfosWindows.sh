@@ -3,6 +3,16 @@
 # Script pour récupérer des informations sur un utilisateur
 # Auteur : Pierre-Jean
 
+
+# Sommaire:
+# 01 - Date dernière connexion
+# 02 - Date dernière modification mot de passe
+# 03 - Liste des sessions ouvertes
+
+
+#==============================================================
+# 01 - DATE DERNIERE CONNEXION
+#==============================================================
 fonc_date_lastconnection_windows() {
 
     echo ""
@@ -61,8 +71,10 @@ fonc_date_lastconnection_windows() {
     esac
 }
 
-########################################################################################
 
+#==============================================================
+# 02 - DATE DERNIERE MODIFICATION MOT DE PASSE
+#==============================================================
 fonc_date_lastpassmodif_windows() {
 
     echo ""
@@ -119,8 +131,11 @@ fonc_date_lastpassmodif_windows() {
     esac
 }
 
-########################################################################################
 
+
+#==============================================================
+# 03 - LISTE DES SESSIONS OUVERTES
+#==============================================================
 fonc_opensessions_windows() {
 
     echo ""
@@ -177,3 +192,4 @@ fonc_opensessions_windows() {
         ;;
     esac
 }
+

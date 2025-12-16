@@ -1,6 +1,5 @@
-# Script Informations Système Windows en Powershell
+# Script Informations Système Linux en Powershell
 # Auteur : Safi
-
 
 # Sommaire :
 # 01 - MENU GESTION DISQUE
@@ -16,11 +15,10 @@
 # 11 - VÉRIFIER UAC
 
 
-
 #==============================================================
 #region 01 - MENU GESTION DISQUES
 #==============================================================
-function gestion_disques_menu_windows {
+function gestion_disques_menu_linux {
     
     logEvent "MENU_GESTION_DISQUES"
     
@@ -43,18 +41,18 @@ function gestion_disques_menu_windows {
         switch ($choix) {
             '1' { 
                 logEvent "SELECTION_NOMBRE_DISQUES"
-                # Appel de la fonction nombre_disques_windows
-                nombre_disques_windows 
+                # Appel de la fonction nombre_disques_linux
+                nombre_disques_linux 
             }
             '2' { 
                 logEvent "SELECTION_PARTITIONS"
-                # Appel de la fonction partitions_windows
-                partitions_windows 
+                # Appel de la fonction partitions_linux
+                partitions_linux 
             }
             '3' { 
                 logEvent "SELECTION_LECTEURS_MONTES"
-                # Appel de la fonction lecteurs_montes_windows
-                lecteurs_montes_windows 
+                # Appel de la fonction lecteurs_montes_linux
+                lecteurs_montes_linux 
             }
             '4' { 
                 logEvent "RETOUR_MENU_PRECEDENT"
@@ -76,7 +74,7 @@ function gestion_disques_menu_windows {
 #==============================================================
 #region 02 - NOMBRE DE DISQUES
 #==============================================================
-function nombre_disques_windows {
+function nombre_disques_linux {
     
     logEvent "DEMANDE_NOMBRE_DISQUES"
     
@@ -85,21 +83,21 @@ function nombre_disques_windows {
     Write-Host ""
     
     # Je récupère tous les disques physiques
-    $disks = ssh_command "Get-Disk"
+    $disks = bash_command "lsblk -d -n -o NAME,SIZE,TYPE | grep disk"
     # Je compte le nombre de disques
-    $nombreDisques = (ssh_command "Get-Disk | Measure-Object").Count
+    $nombreDisques = bash_command "lsblk -d -n -o NAME,TYPE | grep disk | wc -l"
     
     Write-Host "► Nombre de disques : $nombreDisques"
     Write-Host ""
     
     # J'affiche les détails de chaque disque
-    ssh_command "Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize"
+    bash_command "lsblk -d -o NAME,SIZE,TYPE,MODEL | grep disk"
     
     # J'enregistre dans le fichier d'infos si la fonction existe
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-        }
-        
+    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
+        infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+    }
+    
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -110,7 +108,7 @@ function nombre_disques_windows {
 #==============================================================
 #region 03 - PARTITIONS
 #==============================================================
-function partitions_windows {
+function partitions_linux {
     
     logEvent "DEMANDE_LISTE_PARTITIONS"
     
@@ -119,13 +117,14 @@ function partitions_windows {
     Write-Host ""
     
     # Je récupère tous les volumes qui ont une lettre de lecteur
-    $partitionsList = ssh_command "Get-Volume | Where-Object { `$_.DriveLetter } | Select-Object DriveLetter, FileSystemType, @{Name = 'SizeGB'; Expression = { [math]::Round(`$_.Size / 1GB, 2) } }, @{Name = 'FreeSpaceGB'; Expression = { [math]::Round(`$_.SizeRemaining / 1GB, 2) } }"
+    $partitionsList = bash_command "df -h --output=source,fstype,size,used,avail,target | grep -v tmpfs | grep -v devtmpfs"
     
     # J'affiche le tableau
     Write-Host $partitionsList
     
     # Je compte le nombre total de partitions
-    $nombrePartitions = (ssh_command "Get-Partition | Measure-Object").Count
+    $nombrePartitions = bash_command "lsblk -n -o TYPE | grep part | wc -l"
+    Write-Host ""
     Write-Host "► Nombre total de partitions : $nombrePartitions"
     
     # J'enregistre dans le fichier d'infos
@@ -144,23 +143,32 @@ function partitions_windows {
 #==============================================================
 #region 04 - LECTEURS MONTÉS
 #==============================================================
-function lecteurs_montes_windows {
+function lecteurs_montes_linux {
     
     logEvent "DEMANDE_LECTEURS_MONTES"
     
-    Write-Host "`n► LECTEURS MONTÉS`n"
+    Write-Host ""
+    Write-Host "► LECTEURS MONTÉS"
+    Write-Host ""
     
-    # Récupération et affichage des lecteurs montés
-    $lecteurs = ssh_command "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
-    Write-Host $lecteurs
+    # Je récupère tous les lecteurs de type fichiers montés
+    $lecteursList = bash_command "mount | grep -E '^/dev/' | awk '{print \$1, \$3, \$5}'"
     
-    # Enregistrement si disponible
+    # J'affiche le tableau
+    Write-Host $lecteursList
+    Write-Host ""
+    
+    # J'affiche aussi avec df pour avoir les tailles
+    bash_command "df -h | grep -E '^/dev/'"
+    
+    # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
+        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
     }
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
 }
 #endregion
 
@@ -168,7 +176,7 @@ function lecteurs_montes_windows {
 #==============================================================
 #region 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
-function liste_utilisateurs_windows {
+function liste_utilisateurs_linux {
     
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
     
@@ -177,13 +185,14 @@ function liste_utilisateurs_windows {
     Write-Host ""
     
     # Je récupère tous les utilisateurs locaux activés
-    $userList = ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
+    $userList = bash_command "awk -F: '\$3 >= 1000 && \$1 != \"nobody\" {print \$1, \$3, \$5}' /etc/passwd"
     
     # J'affiche le tableau
     Write-Host $userList
     
     # Je compte les utilisateurs
-    $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
+    $nombreUtilisateurs = bash_command "awk -F: '\$3 >= 1000 && \$1 != \"nobody\" {print \$1}' /etc/passwd | wc -l"
+    Write-Host ""
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
     # J'enregistre dans le fichier d'infos
@@ -203,59 +212,79 @@ function liste_utilisateurs_windows {
 #==============================================================
 #region 06 - 5 DERNIERS LOGINS
 #==============================================================
-function 5_derniers_logins_windows {
+function 5_derniers_logins_linux {
     
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
-    Write-Host "`n► LES 5 DERNIERS LOGINS`n"
+    
+    Write-Host ""
+    Write-Host "► LES 5 DERNIERS LOGINS"
+    Write-Host ""
     
     try {
-        # Récupération simple des 5 derniers logins
-        $logins = ssh_command "Get-EventLog Security -Newest 5 -InstanceId 4624"
-        Write-Host $logins
+        # Je récupère les 5 derniers événements de connexion réussie
+        $loginsList = bash_command "last -n 5 -w"
         
-        # Enregistrement
+        # J'affiche le tableau
+        Write-Host $loginsList
+        
+        # J'enregistre dans le fichier d'infos
         if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
+            infoFile $env:COMPUTERNAME "5 derniers logins:" $loginsList
         }
     }
     catch {
-        Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
+        Write-Host "► Erreur : Cette fonction nécessite des privilèges administrateur"
     }
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
+    
     informationMainMenu
 }
-    
 #endregion
 
 
 #==============================================================
 #region 07 - INFORMATIONS RÉSEAU
 #==============================================================
-function infos_reseau_windows {
+function infos_reseau_linux {
     
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
-    Write-Host "`n► INFORMATIONS RÉSEAU`n"
     
-    # Affichage des adresses IP
-    Write-Host "► Adresses IP :`n"
-    $ip = ssh_command "Get-NetIPAddress -AddressFamily IPv4"
-    Write-Host $ip
+    Write-Host ""
+    Write-Host "► INFORMATIONS RÉSEAU"
+    Write-Host ""
     
-    # Affichage de la passerelle
-    Write-Host "`n► Passerelle :`n"
-    $gw = ssh_command "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
-    Write-Host $gw
+    Write-Host "► Adresse IP et masque :"
+    Write-Host ""
     
-    # Enregistrement
+    # Je récupère les adresses IPv4 (sauf loopback)
+    $ipMasque = bash_command "ip -4 addr show | grep -v '127.0.0.1' | grep inet"
+    
+    # J'affiche le tableau
+    Write-Host $ipMasque
+    
+    Write-Host ""
+    Write-Host "► Passerelle par défaut :"
+    Write-Host ""
+    
+    # Je récupère la passerelle par défaut (route 0.0.0.0/0)
+    $passerelle = bash_command "ip route | grep default"
+    
+    # J'affiche le tableau
+    Write-Host $passerelle
+    
+    # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "IP:" $ip
-        infoFile $env:COMPUTERNAME "Passerelle:" $gw
+        infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
+        infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
     }
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
+    
     informationMainMenu
 }
 #endregion
@@ -264,7 +293,7 @@ function infos_reseau_windows {
 #==============================================================
 #region 08 - VERSION DU SYSTÈME
 #==============================================================
-function version_os_windows {
+function version_os_linux {
     
     logEvent "DEMANDE_VERSION_OS"
     
@@ -273,14 +302,20 @@ function version_os_windows {
     Write-Host ""
     
     # Je récupère les infos du système
-    $versionOS = ssh_command "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
+    $osName = bash_command "cat /etc/os-release | grep PRETTY_NAME | cut -d'=' -f2 | tr -d '\"'"
+    $osVersion = bash_command "cat /etc/os-release | grep VERSION_ID | cut -d'=' -f2 | tr -d '\"'"
+    $kernelVersion = bash_command "uname -r"
+    $architecture = bash_command "uname -m"
     
     # J'affiche les informations
-    Write-Host $versionOS
+    Write-Host "Nom du système : $osName"
+    Write-Host "Version        : $osVersion"
+    Write-Host "Kernel         : $kernelVersion"
+    Write-Host "Architecture   : $architecture"
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Version OS:" $versionOS
+        infoFile $env:COMPUTERNAME "Version OS:" "$osName - $osVersion - Kernel: $kernelVersion"
     }
     
     Write-Host ""
@@ -295,7 +330,7 @@ function version_os_windows {
 #==============================================================
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
-function mises_a_jour_windows {
+function mises_a_jour_linux {
     
     logEvent "DEMANDE_MISES_A_JOUR"
     
@@ -304,66 +339,54 @@ function mises_a_jour_windows {
     Write-Host ""
     
     try {
-        # Je vérifie si le module PSWindowsUpdate est installé
-        $moduleCheck = ssh_command "Get-Module -ListAvailable -Name PSWindowsUpdate"
+        # Je vérifie si le module PSlinuxUpdate est installé
+        Write-Host "► Recherche des mises à jour..."
+        Write-Host ""
         
-        if ($moduleCheck) {
-            
-            Write-Host "► Recherche des mises à jour..."
-            Write-Host ""
-            
-            # J'importe le module
-            ssh_command "Import-Module PSWindowsUpdate"
-            
-            # Je récupère les mises à jour de sécurité et critiques
-            $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
+        # Je détecte le gestionnaire de paquets
+        $packageManager = bash_command "which apt 2>/dev/null && echo 'apt' || which yum 2>/dev/null && echo 'yum' || which dnf 2>/dev/null && echo 'dnf' || echo 'unknown'"
+        
+        if ($packageManager -match "apt") {
+            # Pour Debian/Ubuntu
+            bash_sudo_command "apt update"
+            $majList = bash_command "apt list --upgradable 2>/dev/null | grep -v 'Listing'"
             
             if ($majList) {
-                # J'affiche les mises à jour disponibles
                 Write-Host $majList
-                
-                $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
+                $updateCount = bash_command "apt list --upgradable 2>/dev/null | grep -v 'Listing' | wc -l"
                 Write-Host ""
                 Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
             }
             else {
                 Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
             }
-            
-            # J'enregistre dans le fichier d'infos
-            if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-                infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
-            }
         }
-        else {
-            Write-Host "► Le module PSWindowsUpdate n'est pas installé" -ForegroundColor Yellow
-            Write-Host "► Pour installer : Install-Module PSWindowsUpdate -Force"
-            Write-Host ""
+        elseif ($packageManager -match "yum|dnf") {
+            # Pour RedHat/CentOS/Fedora
+            $majList = bash_sudo_command "$packageManager check-update"
             
-            # J'utilise la méthode alternative avec COM
-            Write-Host "► Recherche en cours..."
-            
-            # Je cherche les mises à jour non installées
-            $searchResult = ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$updateSearcher.Search('IsInstalled=0 and Type=''Software''').Updates.Count"
-            
-            if ($searchResult -gt 0) {
+            if ($LASTEXITCODE -eq 100) {
+                Write-Host $majList
+                $updateCount = bash_command "$packageManager check-update | grep -v '^$' | tail -n +2 | wc -l"
                 Write-Host ""
-                Write-Host "► Mises à jour disponibles :"
-                
-                # J'affiche chaque mise à jour
-                ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$searchResult = `$updateSearcher.Search('IsInstalled=0 and Type=''Software'''); foreach (`$update in `$searchResult.Updates) { Write-Host '  - ' `$update.Title }"
-                
-                Write-Host ""
-                Write-Host "► $searchResult mise(s) à jour disponible(s)" -ForegroundColor Yellow
+                Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
             }
             else {
                 Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
             }
         }
+        else {
+            Write-Host "► Gestionnaire de paquets non reconnu" -ForegroundColor Yellow
+        }
+        
+        # J'enregistre dans le fichier d'infos
+        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
+            infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
+        }
     }
     catch {
         Write-Host "► Erreur lors de la vérification des mises à jour"
-        Write-Host "► Conseil : Vérifiez manuellement via Windows Update"
+        Write-Host "► Conseil : Vérifiez manuellement via votre gestionnaire de paquets"
     }
     
     Write-Host ""
@@ -378,7 +401,7 @@ function mises_a_jour_windows {
 #==============================================================
 #region 10 - MARQUE ET MODÈLE
 #==============================================================
-function marque_modele_windows {
+function marque_modele_linux {
     
     logEvent "DEMANDE_MARQUE_MODELE"
     
@@ -387,19 +410,19 @@ function marque_modele_windows {
     Write-Host ""
     
     # Je récupère le fabricant
-    $fabricant = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer"
+    $fabricant = bash_sudo_command "dmidecode -s system-manufacturer"
     Write-Host "► Fabricant : $fabricant"
     
     # Je récupère le modèle
-    $modele = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Model"
+    $modele = bash_sudo_command "dmidecode -s system-product-name"
     Write-Host "► Modèle    : $modele"
     
     # Je récupère la version
-    $version = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version"
+    $version = bash_sudo_command "dmidecode -s system-version"
     Write-Host "► Version   : $version"
     
     # Je récupère le numéro de série
-    $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
+    $serial = bash_sudo_command "dmidecode -s system-serial-number"
     Write-Host "► N° série  : $serial"
     
     # J'enregistre dans le fichier d'infos
@@ -422,34 +445,9 @@ function marque_modele_windows {
 #==============================================================
 #region 11 - VÉRIFIER UAC
 #==============================================================
-function verifier_uac_windows {
-    
-    logEvent "DEMANDE_VERIFICATION_UAC"
-    
-    Write-Host ""
-    Write-Host "► STATUT UAC (Contrôle de Compte Utilisateur)"
-    Write-Host ""
-    
-    # Je lis la valeur UAC dans le registre (1=activé, 0=désactivé)
-    $uacValue = ssh_command "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
-    
-    if ($uacValue -eq 1) {
-        Write-Host "► UAC est ACTIVÉ (Sécurisé)" -ForegroundColor Green
-        $uacStatus = "UAC est ACTIVÉ (Sécurisé)"
-    }
-    else {
-        Write-Host "► UAC est DÉSACTIVÉ (Non sécurisé)" -ForegroundColor Red
-        Write-Host ""
-        Write-Host "  ⚠ ATTENTION : Système vulnérable"
-        Write-Host "  Pour activer : Panneau de configuration > Comptes d'utilisateurs"
-        $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
-    }
-    
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
-    }
-    
+function uac_info_linux {
+    Write-Host " Pas de UAC sous Linux " -ForegroundColor Yellow
+
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -457,6 +455,3 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
-
-
-

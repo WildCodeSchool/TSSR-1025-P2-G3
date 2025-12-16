@@ -1,8 +1,23 @@
 #!/bin/bash
 
-##################################### Menu Gestion Répertoire ####################################
+# Script Gestion Ordinateur Windows
+# Auteur : Safi
 
-# fonction de gestion de répertoires
+
+# Sommaire :
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Suppression de répertoire
+# 04 - Redémmarage
+# 05 - Prise en main à distance (CLI)
+# 06 - Activation du pare-feu
+# 07 - Exécution de scripts sur une machine distante
+
+
+
+#==============================================================
+# 01 - MENU GESTION REPERTOIRE
+#==============================================================
 gestion_repertoire_menu_windows() {
 
     logEvent "MENU_GESTION_RÉPERTOIRE"
@@ -60,8 +75,10 @@ gestion_repertoire_menu_windows() {
     done
 }
 
-################################## Fonction création répertoire #####################################
 
+#==============================================================
+# 02 - CREATION DE REPERTOIRE
+#==============================================================
 fonction_creer_dossier_windows() {
     logEvent "CRÉATION_DE_DOSSIER"
     read -p "►" creation_dossier
@@ -86,8 +103,11 @@ fonction_creer_dossier_windows() {
         echo "► Le dossier existe déjà"
     fi
 }
-#################################### Fonction supprimer dossier #####################################
 
+
+#==============================================================
+# 03 - SUPPRESSION DE REPERTOIRE
+#==============================================================
 fonction_supprimer_dossier_windows() {
 
     logEvent "SUPPRESSION_DE_DOSSIER"
@@ -113,9 +133,10 @@ fonction_supprimer_dossier_windows() {
     fi
 }
 
-###################################### Fonction redémarrage #######################################
 
-#fonction de redemarage poste distante
+#==============================================================
+# 04 - REDEMARRAGE
+#==============================================================
 fonction_redemarrage_windows() {
 
     # Demande si Voulez-vous redémarrer l'ordinateur distant
@@ -138,7 +159,10 @@ fonction_redemarrage_windows() {
 
 }
 
-################################### Fonction prise de main (CLI) ###################################
+
+#==============================================================
+# 05 - PRISE EN MAIN A DISTANCE
+#==============================================================
 fonction_prise_main_windows() {
 
     # apple au variables mainScript.sh (variables de connexion SSH)
@@ -160,7 +184,10 @@ fonction_prise_main_windows() {
     fi
 }
 
-################################### Fonction activation pare-feu ####################################
+
+#==============================================================
+# 06 - ACTIVATION PARE-FEU
+#==============================================================
 fonction_activer_parefeu_windows() {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
     echo "► Activation du pare-feu Windows"
@@ -196,7 +223,10 @@ fonction_activer_parefeu_windows() {
     computerMainMenu
 }
 
-################################# Fonction exécution script local ###################################
+
+#==============================================================
+# 07 - EXECUTION DE SCRIPT LOCAL
+#==============================================================
 fonction_exec_script_windows() {
 
     logEvent "DEMANDE_CHEMIN_SCRIPT"
@@ -221,3 +251,4 @@ fonction_exec_script_windows() {
     powershell_command "& $scriptlocal"
 
 }
+

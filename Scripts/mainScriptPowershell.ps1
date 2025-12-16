@@ -20,7 +20,7 @@
 
 
 #=====================================================
-#region 0 - Force le lancement en administrateur
+#region 0 - LANCEMENT EN ADMINISTRATEUR
 #=====================================================
 function lancementAdministrateur {
     if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -789,3 +789,4 @@ executionMode
 mainMenu
 
 #endregion
+

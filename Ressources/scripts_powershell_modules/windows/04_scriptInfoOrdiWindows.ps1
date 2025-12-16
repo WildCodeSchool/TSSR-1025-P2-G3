@@ -306,10 +306,6 @@ function mises_a_jour_windows {
             Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
         }
         
-        # J'enregistre dans le fichier d'infos
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
-        }
     }
     catch {
         Write-Host "► Erreur lors de la vérification des mises à jour" -ForegroundColor Red
@@ -404,6 +400,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

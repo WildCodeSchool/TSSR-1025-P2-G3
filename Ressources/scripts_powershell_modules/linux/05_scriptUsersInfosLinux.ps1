@@ -1,6 +1,7 @@
 ﻿# Script Information Utilisateurs Linux en Powershell
 # Auteur : Pierre-Jean
 
+
 # Sommaire :
 # 01. Date dernière connexion
 # 02. Date dernière modification mot de passe
@@ -270,4 +271,5 @@ function list_opensessions_linux {
     }
 }
 #endregion
+
 

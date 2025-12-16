@@ -1,16 +1,16 @@
 # Script de recherche dans le fichier de journalisation
 
 
-# Liste des fonctions :
-# 1. Recherche utilisateurs
-# 2. Recherche utilisateurs SSH
-# 3. Recherche Ordinateur Local
-# 4. Recherche Ordinateur SSH
-# 5. Menu Filtrage Recherche
+# Sommaire :
+# 01. Recherche utilisateurs
+# 02. Recherche utilisateurs SSH
+# 03. Recherche Ordinateur Local
+# 04. Recherche Ordinateur SSH
+# 05. Menu Filtrage Recherche
 
 
 #==============================================================
-#region 1 - RECHERCHE UTILISATEURS
+#region 01 - RECHERCHE UTILISATEURS
 #==============================================================
 function searchUser {
 
@@ -42,7 +42,7 @@ function searchUser {
 
 
 #==============================================================
-#region 2 - RECHERCHE UTILISATEURS SSH
+#region 02 - RECHERCHE UTILISATEURS SSH
 #==============================================================
 function searchUserSsh {
     
@@ -77,7 +77,7 @@ function searchUserSsh {
 
 
 #==============================================================
-#region 3 - RECHERCHE ORDINATEURS LOCAL
+#region 03 - RECHERCHE ORDINATEURS LOCAL
 #==============================================================
 function searchComputerLocal {
     
@@ -104,7 +104,7 @@ function searchComputerLocal {
 
 
 #==============================================================
-#region 4 - RECHERCHE ORDINATEURS SSH
+#region 04 - RECHERCHE ORDINATEURS SSH
 #==============================================================
 function searchComputerSsh {
     
@@ -139,7 +139,7 @@ function searchComputerSsh {
 
 
 #==============================================================
-#region 5 - FONCTION FILTRAGE DE RECHERCHE
+#region 05 - FONCTION FILTRAGE DE RECHERCHE
 #==============================================================
 function menuSearchlog {
     
@@ -198,3 +198,4 @@ function menuSearchlog {
     }
 }
 #endregion
+

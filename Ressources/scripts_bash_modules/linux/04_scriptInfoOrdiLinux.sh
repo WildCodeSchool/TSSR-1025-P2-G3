@@ -18,7 +18,7 @@
 
 
 #==============================================================
-#region 01 - MENU GESTION DISQUES
+# 01 - MENU GESTION DISQUES
 #==============================================================
 gestion_disques_menu_linux() {
 
@@ -79,11 +79,10 @@ gestion_disques_menu_linux() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - NOMBRE DE DISQUES
+# 02 - NOMBRE DE DISQUES
 #==============================================================
 fonction_nombre_disques_linux() {
 
@@ -95,11 +94,10 @@ fonction_nombre_disques_linux() {
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
 
 }
-#endregion
 
 
 #==============================================================
-#region 03 - PARTITIONS
+# 03 - PARTITIONS
 #==============================================================
 fonction_partitions_linux() {
 
@@ -117,11 +115,10 @@ fonction_partitions_linux() {
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
 }
-#endregion
 
 
 #==============================================================
-#region 04 - LECTEURS MONTÉS
+# 04 - LECTEURS MONTÉS
 #==============================================================
 fonction_lecteurs_montes_linux() {
 
@@ -133,11 +130,10 @@ fonction_lecteurs_montes_linux() {
     infoFile "$HOSTNAME" "Lecteurs montés:" "$lecteursList"
 
 }
-#endregion
 
 
 #==============================================================
-#region 05 - LISTE UTILISATEURS LOCAUX
+# 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
 fonction_liste_utilisateurs_linux() {
 
@@ -148,11 +144,10 @@ fonction_liste_utilisateurs_linux() {
     userList=$(command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd" | tee /dev/tty)
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 }
-#endregion
 
 
 #==============================================================
-#region 06 - 5 DERNIERS LOGINS
+# 06 - 5 DERNIERS LOGINS
 #==============================================================
 fonction_5_derniers_logins_linux() {
 
@@ -164,11 +159,10 @@ fonction_5_derniers_logins_linux() {
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
 }
-#endregion
 
 
 #==============================================================
-#region 07 - INFORMATIONS RÉSEAU
+# 07 - INFORMATIONS RÉSEAU
 #==============================================================
 fonction_infos_reseau_linux() {
 
@@ -187,11 +181,10 @@ fonction_infos_reseau_linux() {
     infoFile "$HOSTNAME" "Passerelle par défaut:" "$passerelle"
 
 }
-#endregion
 
 
 #==============================================================
-#region 08 - VERSION DU SYSTÈME
+# 08 - VERSION DU SYSTÈME
 #==============================================================
 fonction_version_os_linux() {
 
@@ -203,11 +196,10 @@ fonction_version_os_linux() {
     infoFile "$HOSTNAME" "Version OS:" "$versionOS"
 
 }
-#endregion
 
 
 #==============================================================
-#region 09 - MISES À JOUR CRITIQUES
+# 09 - MISES À JOUR CRITIQUES
 #==============================================================
 fonction_mises_a_jour_linux() {
 
@@ -221,11 +213,10 @@ fonction_mises_a_jour_linux() {
     echo ""
 
 }
-#endregion
 
 
 #==============================================================
-#region 10 - MARQUE ET MODÈLE
+# 10 - MARQUE ET MODÈLE
 #==============================================================
 fonction_marque_modele_linux() {
 
@@ -249,4 +240,3 @@ fonction_marque_modele_linux() {
     infoFile "$HOSTNAME" "Version:" "$version"
 
 }
-#endregion

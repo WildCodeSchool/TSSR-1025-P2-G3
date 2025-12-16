@@ -1,11 +1,11 @@
 # Script Gestion Utilisateurs Linux en Powershell
 
 
-# Liste des fonctions :
-# 1. Menu Utilisateurs
-# 2. Ajouter utilisateur
-# 3. Supprimer utilisateur
-# 4. Changer mot de passe utilisateur
+# Sommaire :
+# 01. Menu Utilisateurs
+# 02. Ajouter utilisateur
+# 03. Supprimer utilisateur
+# 04. Changer mot de passe utilisateur
 
 
 #==============================================================
@@ -397,4 +397,5 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 

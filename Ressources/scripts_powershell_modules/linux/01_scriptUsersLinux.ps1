@@ -9,7 +9,7 @@
 
 
 #==============================================================
-#region 1 - MENU UTILISATEURS
+#region 01 - MENU UTILISATEURS
 #==============================================================
 function userMenu_linux {
 
@@ -79,7 +79,7 @@ function userMenu_linux {
 
 
 #==============================================================
-#region 2 - AJOUTER UTILISATEURS
+#region 02 - AJOUTER UTILISATEURS
 #==============================================================
 function addUserMenu_linux {
 
@@ -193,7 +193,7 @@ function addUserMenu_linux {
 
 
 #==============================================================
-#region 3 - SUPPRIMER UTILISATEURS
+#region 03 - SUPPRIMER UTILISATEURS
 #==============================================================
 function deleteUserMenu_linux {
 
@@ -305,7 +305,7 @@ function deleteUserMenu_linux {
 
 
 #==============================================================
-#region 4 - CHANGER MOT DE PASSE UTILISATEUR
+#region 04 - CHANGER MOT DE PASSE UTILISATEUR
 #==============================================================
 function changePasswordUserMenu_linux {
 
@@ -397,5 +397,6 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 
 

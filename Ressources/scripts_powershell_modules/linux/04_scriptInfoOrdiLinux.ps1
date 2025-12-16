@@ -293,7 +293,7 @@ function version_os_linux {
 #==============================================================
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
-function mises_a_jour_windows {
+function mises_a_jour_linux {
     
     logEvent "DEMANDE_MISES_A_JOUR"
     
@@ -304,16 +304,13 @@ function mises_a_jour_windows {
     try {
         Write-Host "► Recherche des mises à jour..."
         Write-Host ""
-        
-        ssh_command "Import-Module PSWindowsUpdate"
-        
-        $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
+            
+        $majList = ssh_command "apt list --upgradable 2>/dev/null"
         
         if ($majList) {
-
             Write-Host $majList
             
-            $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
+            $updateCount = (ssh_command "apt list --upgradable 2>/dev/null | wc -l").Trim() - 1
             Write-Host ""
             Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
         }
@@ -324,7 +321,7 @@ function mises_a_jour_windows {
     }
     catch {
         Write-Host "► Erreur lors de la vérification des mises à jour" -ForegroundColor Red
-        Write-Host "► Conseil : Vérifiez manuellement via Windows Update"
+        Write-Host "► Conseil : Vérifiez manuellement avec 'apt list --upgradable'"
     }
     
     Write-Host ""
@@ -393,4 +390,5 @@ function uac_info_linux {
     informationMainMenu
 }
 #endregion
+
 

@@ -254,7 +254,6 @@ function prise_main_windows {
 #==============================================================
 #region 07 - ACTIVATION PARE-FEU
 #==============================================================
-
 function activation_parefeu_windows {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
     
@@ -352,5 +351,6 @@ function exec_script_windows {
 
 }
 #endregion
+
 
 

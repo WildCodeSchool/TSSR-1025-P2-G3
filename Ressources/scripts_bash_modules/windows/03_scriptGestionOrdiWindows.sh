@@ -192,7 +192,7 @@ fonction_prise_main_windows() {
 
 
 #==============================================================
-#region 07 - ACTIVATION PARE-FEU
+#region 06 - ACTIVATION PARE-FEU
 #==============================================================
 fonction_activer_parefeu_windows() {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
@@ -232,7 +232,7 @@ fonction_activer_parefeu_windows() {
 
 
 #==============================================================
-#region 08 - EXECUTION DE SCRIPT LOCAL
+#region 07 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 fonction_exec_script_windows() {
 

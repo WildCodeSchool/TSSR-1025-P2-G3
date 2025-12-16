@@ -4,7 +4,7 @@
 # Auteur : Safi
 
 
-﻿# Sommaire :
+# Sommaire :
 # 01 - Menu Gestion Répertoire
 # 02 - Création de répertoire
 # 03 - Création de répertoire Linux (SUDO)

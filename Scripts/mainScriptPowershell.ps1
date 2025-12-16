@@ -1,5 +1,5 @@
 # Script PowerShell principal du Projet 2
-
+# Auteur : Christian
 
 # Sommaire :
 # 00. Lancement en administrateur
@@ -789,6 +789,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

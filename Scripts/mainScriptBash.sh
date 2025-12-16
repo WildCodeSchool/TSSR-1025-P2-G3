@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Script Bash principal du Projet 2
+# Auteur : Christian
+
 
 #=====================================================
 # CHARGEMENT DES MODULES

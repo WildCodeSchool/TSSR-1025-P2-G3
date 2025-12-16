@@ -84,18 +84,18 @@ function nombre_disques_windows {
     Write-Host "► NOMBRE DE DISQUES"
     Write-Host ""
     
-    # Je récupère tous les disques physiques
+    # Récupère tous les disques physiques
     $disks = ssh_command "Get-Disk"
-    # Je compte le nombre de disques
+    # Compte le nombre de disques
     $nombreDisques = (ssh_command "Get-Disk | Measure-Object").Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     Write-Host ""
     
-    # J'affiche les détails de chaque disque
+    # Affiche les détails de chaque disque
     ssh_command "Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize"
     
-    # J'enregistre dans le fichier d'infos si la fonction existe
+    # Enregistre dans le fichier d'infos si la fonction existe
         if (Get-Command infoFile -ErrorAction SilentlyContinue) {
             infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
         }
@@ -110,33 +110,29 @@ function nombre_disques_windows {
 #==============================================================
 #region 03 - PARTITIONS
 #==============================================================
+
 function partitions_windows {
     
     logEvent "DEMANDE_LISTE_PARTITIONS"
+    Write-Host "`n► PARTITIONS`n"
     
-    Write-Host ""
-    Write-Host "► PARTITIONS"
-    Write-Host ""
+    # Récupération de tous les volumes
+    $partitions = ssh_command "Get-Volume"
+    Write-Host $partitions
     
-    # Je récupère tous les volumes qui ont une lettre de lecteur
-    $partitionsList = ssh_command "Get-Volume | Where-Object { `$_.DriveLetter } | Select-Object DriveLetter, FileSystemType, @{Name = 'SizeGB'; Expression = { [math]::Round(`$_.Size / 1GB, 2) } }, @{Name = 'FreeSpaceGB'; Expression = { [math]::Round(`$_.SizeRemaining / 1GB, 2) } }"
+    # Comptage du nombre de partitions
+    $nombre = ssh_command "Get-Partition | Measure-Object | Select -ExpandProperty Count"
+    Write-Host "`n► Nombre total de partitions : $nombre"
     
-    # J'affiche le tableau
-    Write-Host $partitionsList
-    
-    # Je compte le nombre total de partitions
-    $nombrePartitions = (ssh_command "Get-Partition | Measure-Object").Count
-    Write-Host "► Nombre total de partitions : $nombrePartitions"
-    
-    # J'enregistre dans le fichier d'infos
+    # Enregistrement dans le fichier d'info
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Liste de partitions:" $partitionsList
-        infoFile $env:COMPUTERNAME "Nombre de partitions:" $nombrePartitions
+        infoFile $env:COMPUTERNAME "Partitions:" $partitions
+        infoFile $env:COMPUTERNAME "Nombre:" $nombre
     }
     
     Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
+    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    informationMainMenu
 }
 #endregion
 
@@ -161,6 +157,7 @@ function lecteurs_montes_windows {
     
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
+    informationMainMenu
 }
 #endregion
 
@@ -457,6 +454,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

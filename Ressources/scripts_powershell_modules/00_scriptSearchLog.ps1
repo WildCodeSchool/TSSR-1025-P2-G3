@@ -1,4 +1,4 @@
-﻿# Script de recherche dans le fichier de journalisation
+# Script de recherche dans le fichier de journalisation
 
 
 # Liste des fonctions :
@@ -20,7 +20,21 @@ function searchUser {
 
     logEvent "RECHERCHE_LOGS_UTILISATEUR_SCRIPT:$userScriptSearch"
 
-    ##########################  FONCTION A FAIRE ICI ##########################
+    $resultats = Get-Content $LogFile | Where-Object {
+        $parts = $_ -split "_" 
+        $parts.Count -ge 3 -and $parts[2] -match $userScriptSearch
+    }
+
+    if ($resultats) {
+
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur une touche pour continuer..."
+    } else {
+        logEvent "UTILISATEUR_INEXISTANT:$userScriptSearch"
+        Write-Host "► L'utilisateur $userScriptSearch n'existe pas dans la journalisation"
+
+    }
 
     logsMainMenu
 }
@@ -31,14 +45,33 @@ function searchUser {
 # 2 - RECHERCHE UTILISATEURS SSH
 #==============================================================
 function searchUserSsh {
-
+    
     logEvent "RECHERCHE_LOGS_UTILISATEUR_SSH"
-
-    $userScriptSearchSSH = Read-Host "► Entrez un nom d'utilisateur à rechercher "
-
+    
+    $userScriptSearchSSH = Read-Host "► Entrez un nom d'utilisateur distant à rechercher"
+    
     logEvent "RECHERCHE_LOGS_UTILISATEUR_SSH:$userScriptSearchSSH"
-
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match $userScriptSearchSSH
+    }
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    } else {
+        logEvent "UTILISATEUR_SSH_INEXISTANT:$userScriptSearchSSH"
+        Write-Host ""
+        Write-Host "► L'utilisateur $userScriptSearchSSH n'existe pas dans la journalisation"
+        
+    }
+    
     logsMainMenu
+    
 }
 
 
@@ -47,13 +80,25 @@ function searchUserSsh {
 # 3 - RECHERCHE ORDINATEURS LOCAL
 #==============================================================
 function searchComputerLocal {
-
+    
     logEvent "RECHERCHE_LOGS_ORDINATEUR_LOCAL"
-
-    ##########################  FONCTION A FAIRE ICI ##########################
-
-
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match "local"
+    }
+    
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    }
+    
     logsMainMenu
+    
 }
 
 
@@ -62,25 +107,42 @@ function searchComputerLocal {
 # 4 - RECHERCHE ORDINATEURS SSH
 #==============================================================
 function searchComputerSsh {
-
+    
     logEvent "RECHERCHE_LOGS_ORDINATEUR_SSH"
-
-    $computerScriptSearchSSH = Read-Host "► Entrez un nom d'ordinateur distant à rechercher "
-
+    
+    $computerScriptSearchSSH = Read-Host "► Entrez un nom d'ordinateur distant à rechercher"
+    
     logEvent "RECHERCHE_LOGS_ORDINATEUR_SSH:$computerScriptSearchSSH"
-    ##########################  FONCTION A FAIRE ICI ##########################
-
-
+    
+    $resultats = Get-Content $LogFile | Where-Object {
+        $fields = $_ -split '_'
+        $fields.Count -ge 4 -and $fields[3] -match $computerScriptSearchSSH
+    }
+    
+    if ($resultats) {
+        
+        menuSearchlog
+        Write-Host ""
+        Read-Host "► Appuyez sur ENTRÉE pour continuer..."
+        
+    } else {
+        
+        logEvent "ORDINATEUR_INEXISTANT:$userScriptSearch"
+        Write-Host "► L'ordinateur $computerScriptSearchSSH n'existe pas dans la journalisation"
+        
+    }
+    
     logsMainMenu
+    
 }
 
 #==============================================================
 # 5 - FONCTION FILTRAGE DE RECHERCHE
 #==============================================================
 function menuSearchlog {
-
+    
     logEvent "MENU_FILTRAGE_RECHERCHE"
-
+    
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│             MENU FILTRAGE RECHERCHE              │"
@@ -93,36 +155,43 @@ function menuSearchlog {
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯"
     Write-Host ""
-
-    $menuSearchLogs = Read-Host "► Choisissez une option "
-
-    switch ($menuSearchLogs) {
-
+    
+    $menuSearch = Read-Host "► Choisissez une option"
+    
+    switch ($menuSearch) {
+        
         1 {
+
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_20_DERNIERS_RESULTATS"
-            ##########################  FONCTION A FAIRE ICI ##########################
-        }
+            $resultats | Select-Object -Last 20
 
+        }
+        
         2 {
+
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_PAGE_PAR_PAGE"
-            ##########################  FONCTION A FAIRE ICI ##########################
+            $resultats | Out-Host -Paging
+
         }
-
+        
         3 {
-            logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
-            ##########################  FONCTION A FAIRE ICI ##########################
-        }    
 
+            logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
+            $resultats
+
+        }
+        
         4 {
-            logEvent "MENU_FILTRAGE_RECHERCHE:MENU_PRECEDENT"    
-            Write-Host "Retour au menu précédent"
+
+            logEvent "MENU_FILTRAGE_RECHERCHE:MENU_PRECEDENT"
             logsMainMenu
-        }  
+
+        }
 
         default {
-            logEvent "MENU_FILTRAGE_RECHERCHE:OPTION_INVALIDE"
-            Write-Host "► Entrée invalide !"
-
+            logEvent "MENU_FILTRAGE_RECHERCHE:ENTREE_INVALIDE"
+            Write-Host "► Option invalide."
+            menuSearchlog
         }
     }
 }

@@ -18,7 +18,7 @@
 
 
 #==============================================================
-#region 01 - MENU GESTION DISQUES
+# 01 - MENU GESTION DISQUES
 #==============================================================
 gestion_disques_menu_windows() {
 
@@ -79,11 +79,10 @@ gestion_disques_menu_windows() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - NOMBRE DE DISQUES
+# 02 - NOMBRE DE DISQUES
 #==============================================================
 fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
@@ -97,11 +96,10 @@ fonction_nombre_disques_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
-#endregion
 
 
 #==============================================================
-#region 03 - PARTITIONS
+# 03 - PARTITIONS
 #==============================================================
 fonction_partitions_windows() {
 
@@ -124,11 +122,10 @@ fonction_partitions_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
-#endregion
 
 
 #==============================================================
-#region 04 - LECTEURS MONTÉS
+# 04 - LECTEURS MONTÉS
 #==============================================================
 fonction_lecteurs_montes_windows() {
 
@@ -145,11 +142,10 @@ fonction_lecteurs_montes_windows() {
     gestion_disques_menu_windows
 
 }
-#endregion
 
 
 #==============================================================
-#region 05 - LISTE UTILISATEURS LOCAUX
+# 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
 fonction_liste_utilisateurs_windows() {
 
@@ -165,11 +161,10 @@ fonction_liste_utilisateurs_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 06 - 5 DERNIERS LOGINS
+# 06 - 5 DERNIERS LOGINS
 #==============================================================
 fonction_5_derniers_logins_windows() {
 
@@ -189,7 +184,7 @@ fonction_5_derniers_logins_windows() {
 
 
 #==============================================================
-#region 07 - INFORMATIONS RÉSEAU
+# 07 - INFORMATIONS RÉSEAU
 #==============================================================
 fonction_infos_reseau_windows() {
 
@@ -212,11 +207,10 @@ fonction_infos_reseau_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 08 - VERSION DU SYSTÈME
+# 08 - VERSION DU SYSTÈME
 #==============================================================
 fonction_version_os_windows() {
 
@@ -232,11 +226,10 @@ fonction_version_os_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 09 - MISES À JOUR CRITIQUES
+# 09 - MISES À JOUR CRITIQUES
 #==============================================================
 fonction_mises_a_jour_windows() {
     
@@ -260,11 +253,10 @@ fonction_mises_a_jour_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 10 - MARQUE ET MODÈLE
+# 10 - MARQUE ET MODÈLE
 #==============================================================
 fonction_marque_modele_windows() {
 
@@ -291,11 +283,10 @@ fonction_marque_modele_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 11 - VÉRIFIER UAC
+# 11 - VÉRIFIER UAC
 #==============================================================
 fonction_verifier_uac_windows() {
     logEvent "DEMANDE_VERIFICATION_UAC"
@@ -308,4 +299,4 @@ fonction_verifier_uac_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
-#endregion
+

@@ -1,7 +1,7 @@
 # Script PowerShell principal du Projet 2
 
 
-# Liste des fonctions :
+# Sommaire :
 # 0. Lancement en administrateur
 # 1. Chargement des modules
 # 2. Journalisation
@@ -789,4 +789,5 @@ executionMode
 mainMenu
 
 #endregion
+
 

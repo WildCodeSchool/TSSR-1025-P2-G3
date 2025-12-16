@@ -1,12 +1,18 @@
-﻿# Sommaire :
-# 01. Menu Gestion Répertoire
-# 02. Création de répertoire
-# 03. Création de répertoire Linux (SUDO)
-# 04. Suppression de répertoire
-# 05. Redémmarage
-# 06. Prise en main à distance (CLI)
-# 07. Activation du pare-feu
-# 08. Exécution de scripts sur une machine distante
+# Script Gestion Ordinateur Windows
+# Auteur : Safi
+
+
+
+# Sommaire :
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Création de répertoire Linux (SUDO)
+# 04 - Suppression de répertoire
+# 05 - Redémmarage
+# 06 - Prise en main à distance (CLI)
+# 07 - Activation du pare-feu
+# 08 - Exécution de scripts sur une machine distante
+
 
 
 #==============================================================
@@ -250,7 +256,6 @@ function prise_main_distance_linux {
 #==============================================================
 #region 07 - ACTIVATION PARE-FEU
 #==============================================================
-
 function activation_parefeu_linux {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
     
@@ -343,6 +348,6 @@ function exec_script_linux {
     
     Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
-
 }
 #endregion
+

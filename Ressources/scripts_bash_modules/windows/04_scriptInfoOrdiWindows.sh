@@ -1,8 +1,25 @@
 #!/bin/bash
 
-##################################### Menu Gestion Disques ####################################
+# Script Informations Système Windows en Powershell
+# Auteur : Safi
 
-# Menu principal de gestion des disques
+# Sommaire :
+# 01 - MENU GESTION DISQUE
+# 02 - NOMBRE DE DISQUES
+# 03 - PARTITIONS
+# 04 - LECTEURS MONTÉS
+# 05 - LISTE UTILISATEURS LOCAUX
+# 06 - 5 DERNIERS LOGINS
+# 07 - INFORMATIONS RÉSEAU
+# 08 - VERSION DU OS
+# 09-  MISES À JOUR CRITIQUES
+# 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
+# 11 - VÉRIFIER UAC
+
+
+#==============================================================
+# 01 - MENU GESTION DISQUES
+#==============================================================
 gestion_disques_menu_windows() {
 
     logEvent "MENU_GESTION_DISQUES"
@@ -63,8 +80,10 @@ gestion_disques_menu_windows() {
     done
 }
 
-#################################### Fonction Nombre de disques ##########################################
 
+#==============================================================
+# 02 - NOMBRE DE DISQUES
+#==============================================================
 fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
     
@@ -77,9 +96,11 @@ fonction_nombre_disques_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
-#################################### Fonction Partitions ###################################################
 
-# Affiche les partitions avec leurs détails et leur nombre total
+
+#==============================================================
+# 03 - PARTITIONS
+#==============================================================
 fonction_partitions_windows() {
 
     logEvent "DEMANDE_LISTE_PARTITIONS"
@@ -102,9 +123,10 @@ fonction_partitions_windows() {
     gestion_disques_menu_windows
 }
 
-#################################### Fonction Lecteurs montés ############################################
 
-# Affiche tous les lecteurs physiques actuellement montés
+#==============================================================
+# 04 - LECTEURS MONTÉS
+#==============================================================
 fonction_lecteurs_montes_windows() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
@@ -121,9 +143,10 @@ fonction_lecteurs_montes_windows() {
 
 }
 
-#################################### Fonction liste utilisateurs locaux #################################
 
-# Liste les utilisateurs locaux (non système)
+#==============================================================
+# 05 - LISTE UTILISATEURS LOCAUX
+#==============================================================
 fonction_liste_utilisateurs_windows() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
@@ -139,9 +162,10 @@ fonction_liste_utilisateurs_windows() {
     informationMainMenu
 }
 
-#################################### Fonction 5 derniers logins #######################################
 
-# Affiche les 5 dernières connexions utilisateurs
+#==============================================================
+# 06 - 5 DERNIERS LOGINS
+#==============================================================
 fonction_5_derniers_logins_windows() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
@@ -156,10 +180,12 @@ fonction_5_derniers_logins_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction IP, masque, passerelle ####################################
 
-# Affiche les informations réseau (IP, masque et passerelle)
+#==============================================================
+# 07 - INFORMATIONS RÉSEAU
+#==============================================================
 fonction_infos_reseau_windows() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
@@ -182,9 +208,10 @@ fonction_infos_reseau_windows() {
     informationMainMenu
 }
 
-#################################### Fonction : Version OS ####################################
 
-# Affiche la version du système d'exploitation
+#==============================================================
+# 08 - VERSION DU SYSTÈME
+#==============================================================
 fonction_version_os_windows() {
 
     logEvent "DEMANDE_VERSION_OS"
@@ -200,9 +227,10 @@ fonction_version_os_windows() {
     informationMainMenu
 }
 
-#################################### Fonction : Mises à jour critiques ####################################
 
-# Liste les mises à jour disponibles
+#==============================================================
+# 09 - MISES À JOUR CRITIQUES
+#==============================================================
 fonction_mises_a_jour_windows() {
     
     logEvent "DEMANDE_MISES_A_JOUR"
@@ -226,9 +254,10 @@ fonction_mises_a_jour_windows() {
     informationMainMenu
 }
 
-#################################### Fonction : Marque / Modèle ####################################
 
-# Affiche les informations matérielles marque et modèle
+#==============================================================
+# 10 - MARQUE ET MODÈLE
+#==============================================================
 fonction_marque_modele_windows() {
 
     logEvent "DEMANDE_MARQUE_MODELE"
@@ -255,8 +284,10 @@ fonction_marque_modele_windows() {
     informationMainMenu
 }
 
-#################################### Fonction : Vérifier UAC ####################################
 
+#==============================================================
+# 11 - VÉRIFIER UAC
+#==============================================================
 fonction_verifier_uac_windows() {
     logEvent "DEMANDE_VERIFICATION_UAC"
     echo "► Statut du contrôle de compte utilisateur (UAC) :"
@@ -268,3 +299,4 @@ fonction_verifier_uac_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+

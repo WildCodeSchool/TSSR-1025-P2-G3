@@ -3,10 +3,19 @@
 # Script de recherche dans le fichier de journalisation
 # Auteur : Christian
 
-#=====================================================
-# FONCTION RECHERCHE UTILISATEURS
-#=====================================================
 
+# Sommaire :
+# 01 - Recherche utilisateurs
+# 02 - Recherche utilisateurs SSH
+# 03 - Recherche Ordinateur Local
+# 04 - Recherche Ordinateur SSH
+# 05 - Menu Filtrage Recherche
+
+
+
+#==============================================================
+# 01 - RECHERCHE UTILISATEURS
+#==============================================================
 function searchUser() {
 
     logEvent "RECHERCHE_LOGS_UTILISATEUR_SCRIPT"
@@ -35,6 +44,10 @@ function searchUser() {
 
 }
 
+
+#==============================================================
+# 02 - RECHERCHE UTILISATEURS SSH
+#==============================================================
 function searchUserSsh() {
 
     logEvent "RECHERCHE_LOGS_UTILISATEUR_SSH"
@@ -62,10 +75,10 @@ function searchUserSsh() {
 
 }
 
-#=====================================================
-# FONCTION RECHERCHE ORDINATEURS
-#=====================================================
 
+#==============================================================
+# 03 - RECHERCHE ORDINATEURS LOCAL
+#==============================================================
 function searchComputerLocal() {
 
     logEvent "RECHERCHE_LOGS_ORDINATEUR_LOCAL"
@@ -85,6 +98,10 @@ function searchComputerLocal() {
 
 }
 
+
+#==============================================================
+# 04 - RECHERCHE ORDINATEURS SSH
+#==============================================================
 function searchComputerSsh() {
 
     logEvent "RECHERCHE_LOGS_ORDINATEUR_SSH"
@@ -112,10 +129,10 @@ function searchComputerSsh() {
 
 }
 
-#=====================================================
-# FONCTION FILTRAGE DE RECHERCHE
-#=====================================================
 
+#==============================================================
+# 05 - FONCTION FILTRAGE DE RECHERCHE
+#==============================================================
 function menuSearchlog() {
 
     logEvent "MENU_FILTRAGE_RECHERCHE"
@@ -157,3 +174,4 @@ function menuSearchlog() {
         ;;
     esac
 }
+

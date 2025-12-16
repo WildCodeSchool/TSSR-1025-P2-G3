@@ -1,12 +1,17 @@
-﻿# Sommaire :
-# 01. Menu Gestion Répertoire
-# 02. Création de répertoire
-# 03. Création de répertoire Linux (SUDO)
-# 04. Suppression de répertoire
-# 05. Redémmarage
-# 06. Prise en main à distance (CLI)
-# 07. Activation du pare-feu
-# 08. Exécution de scripts sur une machine distante
+
+# Script Gestion Ordinateur Windows
+# Auteur : Safi
+
+
+# Sommaire :
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Création de répertoire Linux (SUDO)
+# 04 - Suppression de répertoire
+# 05 - Redémmarage
+# 06 - Prise en main à distance (CLI)
+# 07 - Activation du pare-feu
+# 08 - Exécution de scripts sur une machine distante
 
 
 #==============================================================
@@ -75,13 +80,13 @@ function creer_dossier_windows {
     $chemin = Read-Host "►"
 
     # Condition Vérification existence du dossier
-    if ((command_ssh "Test-Path '$chemin'") -eq "True") {
+    if ((ssh_command "Test-Path '$chemin'") -eq "True") {
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ:$chemin"
         Write-Host "► Le dossier existe déjà"
     }
     else {
         # Création du dossier
-        command_ssh "New-Item -Path '$chemin' -ItemType Directory -Force"
+        ssh_command "New-Item -Path '$chemin' -ItemType Directory -Force"
         
         if ($LASTEXITCODE -eq 0) {
             logEvent "DOSSIER_CRÉÉ:$chemin"
@@ -110,13 +115,13 @@ function creer_dossier_admin_windows {
     $chemin = Read-Host "►"
 
     # Condition Vérification existence du dossier
-    if ((command_ssh "Test-Path '$chemin'") -eq "True") {
+    if ((ssh_command "Test-Path '$chemin'") -eq "True") {
         logEvent "LE_DOSSIER_EXISTE_DÉJÀ:$chemin"
         Write-Host "► Le dossier existe déjà"
     }
     else {
         # Création du dossier avec permissions admin
-        command_ssh "New-Item -Path '$chemin' -ItemType Directory -Force; icacls '$chemin' /inheritance:r /grant Administrateurs:F SYSTEM:F"
+        ssh_command "New-Item -Path '$chemin' -ItemType Directory -Force; icacls '$chemin' /inheritance:r /grant Administrateurs:F SYSTEM:F"
         # Vérification de la création
         if ($LASTEXITCODE -eq 0) {
             logEvent "DOSSIER_ADMIN_CRÉÉ:$chemin"
@@ -146,7 +151,7 @@ function supprimer_dossier_windows {
     $chemin = Read-Host "►"
 
     # Vérification existence du dossier
-    if ((command_ssh "Test-Path '$chemin'") -ne "True") {
+    if ((ssh_command "Test-Path '$chemin'") -ne "True") {
         logEvent "DOSSIER_INEXISTANT:$chemin"
         Write-Host "► Le dossier n'existe pas"
     }
@@ -156,7 +161,7 @@ function supprimer_dossier_windows {
         # Confirmation de la suppression
         if ((Read-Host "► Confirmer la suppression de '$chemin' ? (o/n)") -eq "o") {
             # Suppression du dossier
-            command_ssh "Remove-Item -Path '$chemin' -Recurse -Force"
+            ssh_command "Remove-Item -Path '$chemin' -Recurse -Force"
             
             if ($LASTEXITCODE -eq 0) {
                 logEvent "SUPPRESSION_EFFECTUÉE:$chemin"
@@ -193,7 +198,7 @@ function redemarrage_windows {
         Start-Sleep -Seconds 3
         
         # Redémarrage de la machine distante
-        command_ssh "shutdown /r /t 10"
+        ssh_command "shutdown /r /t 10"
         
         if ($LASTEXITCODE -eq 0) {
             logEvent "REDEMARRAGE_SUCCESS"
@@ -250,7 +255,6 @@ function prise_main_windows {
 #==============================================================
 #region 07 - ACTIVATION PARE-FEU
 #==============================================================
-
 function activation_parefeu_windows {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
     
@@ -258,20 +262,20 @@ function activation_parefeu_windows {
     Write-Host ""
     
     # Appel direct sans &
-    command_ssh "Get-NetFirewallProfile | Select-Object Name,Enabled"
+    ssh_command "Get-NetFirewallProfile | Select-Object Name,Enabled"
     Write-Host ""
     # Demande confirmation activation
     if ((Read-Host "► Voulez-vous activer le pare-feu Windows ? (o/n)") -eq "o") {
         Write-Host "► Activation en cours..."
         # Activation du pare-feu
-        command_ssh "Set-NetFirewallProfile -All -Enabled True"
+        ssh_command "Set-NetFirewallProfile -All -Enabled True"
         # Vérification de l'activation
         if ($LASTEXITCODE -eq 0) {
             logEvent "PAREFEU_ACTIVE"
             Write-Host "► Pare-feu activé avec succès"
             Write-Host ""
             Write-Host "► Nouveau statut :"
-            command_ssh "Get-NetFirewallProfile | Select-Object Name,Enabled"
+            ssh_command "Get-NetFirewallProfile | Select-Object Name,Enabled"
         }
         else {
             logEvent "ERREUR_ACTIVATION_PAREFEU"
@@ -332,7 +336,7 @@ function exec_script_windows {
     $encoded = [Convert]::ToBase64String($bytes)
     
     # Exécution du script encodé sur la machine distante
-    command_ssh "powershell -EncodedCommand $encoded"
+    ssh_command "powershell -EncodedCommand $encoded"
     
     if ($LASTEXITCODE -eq 0) {
         logEvent "SCRIPT_EXECUTE_SUCCESS"
@@ -348,4 +352,10 @@ function exec_script_windows {
 
 }
 #endregion
+
+
+
+
+
+
 

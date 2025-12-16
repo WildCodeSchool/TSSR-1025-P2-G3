@@ -1,8 +1,24 @@
 #!/bin/bash
 
-##################################### Menu Gestion Répertoire ####################################
+# Script Gestion Ordinateur Linux
+# Auteur : Safi
 
-# fonction de gestion de répertoires
+
+# Sommaire :
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Création de répertoire Linux (SUDO)
+# 04 - Suppression de répertoire
+# 05 - Redémmarage
+# 06 - Prise en main à distance (CLI)
+# 07 - Activation du pare-feu
+# 08 - Exécution de scripts sur une machine distante
+
+
+
+#==============================================================
+# 01 - MENU GESTION REPERTOIRE
+#==============================================================
 gestion_repertoire_menu_linux() {
 
     logEvent "MENU_GESTION_RÉPERTOIRE"
@@ -66,8 +82,10 @@ gestion_repertoire_menu_linux() {
     done
 }
 
-################################## Fonction création répertoire #####################################
 
+#==============================================================
+# 02 - CREATION DE REPERTOIRE
+#==============================================================
 fonction_creer_dossier_linux() {
 
     logEvent "CRÉATION_DE_DOSSIER"
@@ -103,8 +121,10 @@ fonction_creer_dossier_linux() {
     fi
 }
 
-################################## Fonction création répertoire SUDO #####################################
 
+#==============================================================
+# 03 - CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
+#==============================================================
 fonction_creer_dossier_sudo_linux() {
 
     logEvent "CRÉATION_DE_DOSSIER"
@@ -138,8 +158,10 @@ fonction_creer_dossier_sudo_linux() {
     fi
 }
 
-#################################### Fonction supprimer dossier #####################################
 
+#==============================================================
+# 04 - SUPPRESSION DE REPERTOIRE
+#==============================================================
 fonction_supprimer_dossier_linux() {
 
     logEvent "SUPPRESSION_DE_DOSSIER"
@@ -165,8 +187,10 @@ fonction_supprimer_dossier_linux() {
     fi
 }
 
-###################################### Fonction redémarrage #######################################
 
+#==============================================================
+# 05 - REDEMARRAGE
+#==============================================================
 #fonction de redemarage poste distante
 fonction_redemarrage_linux() {
     # Demande si Voulez-vous redémarrer l'ordinateur distant
@@ -188,7 +212,10 @@ fonction_redemarrage_linux() {
 
 }
 
-################################### Fonction prise de main (CLI) ###################################
+
+#==============================================================
+# 06 - PRISE EN MAIN A DISTANCE (CLI)
+#==============================================================
 fonction_prise_main_linux() {
 
     # apple au variables mainScript.sh (variables de connexion SSH)
@@ -210,7 +237,10 @@ fonction_prise_main_linux() {
     fi
 }
 
-################################### Fonction activation pare-feu ####################################
+
+#==============================================================
+# 07 - ACTIVATION PARE-FEU
+#==============================================================
 fonction_activer_parefeu_linux() {
 
     logEvent "DEMANDE_ACTIVATION_UFW"
@@ -242,7 +272,10 @@ fonction_activer_parefeu_linux() {
     fi
 }
 
-################################# Fonction exécution script local ###################################
+
+#==============================================================
+# 08 - EXECUTION DE SCRIPT LOCAL
+#==============================================================
 fonction_exec_script_linux() {
 
     logEvent "DEMANDE_CHEMIN_SCRIPT"

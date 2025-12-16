@@ -1,8 +1,25 @@
 #!/bin/bash
 
-##################################### Menu Gestion Disques ####################################
+# Script Informations Système Windows en Powershell
+# Auteur : Safi
 
-# Menu principal de gestion des disques
+# Sommaire :
+# 01 - MENU GESTION DISQUE
+# 02 - NOMBRE DE DISQUES
+# 03 - PARTITIONS
+# 04 - LECTEURS MONTÉS
+# 05 - LISTE UTILISATEURS LOCAUX
+# 06 - 5 DERNIERS LOGINS
+# 07 - INFORMATIONS RÉSEAU
+# 08 - VERSION DU OS
+# 09-  MISES À JOUR CRITIQUES
+# 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
+# 11 - VÉRIFIER UAC
+
+
+#==============================================================
+#region 01 - MENU GESTION DISQUES
+#==============================================================
 gestion_disques_menu_windows() {
 
     logEvent "MENU_GESTION_DISQUES"
@@ -62,9 +79,12 @@ gestion_disques_menu_windows() {
 
     done
 }
+#endregion
 
-#################################### Fonction Nombre de disques ##########################################
 
+#==============================================================
+#region 02 - NOMBRE DE DISQUES
+#==============================================================
 fonction_nombre_disques_windows() {
     logEvent "DEMANDE_NOMBRE_DISQUES"
     
@@ -77,8 +97,12 @@ fonction_nombre_disques_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
-#################################### Fonction Partitions ###################################################
+#endregion
 
+
+#==============================================================
+#region 03 - PARTITIONS
+#==============================================================
 # Affiche les partitions avec leurs détails et leur nombre total
 fonction_partitions_windows() {
 
@@ -101,9 +125,12 @@ fonction_partitions_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     gestion_disques_menu_windows
 }
+#endregion
 
-#################################### Fonction Lecteurs montés ############################################
 
+#==============================================================
+#region 04 - LECTEURS MONTÉS
+#==============================================================
 # Affiche tous les lecteurs physiques actuellement montés
 fonction_lecteurs_montes_windows() {
 
@@ -120,9 +147,12 @@ fonction_lecteurs_montes_windows() {
     gestion_disques_menu_windows
 
 }
+#endregion
 
-#################################### Fonction liste utilisateurs locaux #################################
 
+#==============================================================
+#region 05 - LISTE UTILISATEURS LOCAUX
+#==============================================================
 # Liste les utilisateurs locaux (non système)
 fonction_liste_utilisateurs_windows() {
 
@@ -138,9 +168,12 @@ fonction_liste_utilisateurs_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction 5 derniers logins #######################################
 
+#==============================================================
+#region 06 - 5 DERNIERS LOGINS
+#==============================================================
 # Affiche les 5 dernières connexions utilisateurs
 fonction_5_derniers_logins_windows() {
 
@@ -156,9 +189,12 @@ fonction_5_derniers_logins_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction IP, masque, passerelle ####################################
 
+#==============================================================
+#region 07 - INFORMATIONS RÉSEAU
+#==============================================================
 # Affiche les informations réseau (IP, masque et passerelle)
 fonction_infos_reseau_windows() {
 
@@ -181,9 +217,12 @@ fonction_infos_reseau_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction : Version OS ####################################
 
+#==============================================================
+#region 08 - VERSION DU SYSTÈME
+#==============================================================
 # Affiche la version du système d'exploitation
 fonction_version_os_windows() {
 
@@ -199,9 +238,12 @@ fonction_version_os_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction : Mises à jour critiques ####################################
 
+#==============================================================
+#region 09 - MISES À JOUR CRITIQUES
+#==============================================================
 # Liste les mises à jour disponibles
 fonction_mises_a_jour_windows() {
     
@@ -225,9 +267,12 @@ fonction_mises_a_jour_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction : Marque / Modèle ####################################
 
+#==============================================================
+#region 10 - MARQUE ET MODÈLE
+#==============================================================
 # Affiche les informations matérielles marque et modèle
 fonction_marque_modele_windows() {
 
@@ -254,9 +299,12 @@ fonction_marque_modele_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion
 
-#################################### Fonction : Vérifier UAC ####################################
 
+#==============================================================
+#region 11 - VÉRIFIER UAC
+#==============================================================
 fonction_verifier_uac_windows() {
     logEvent "DEMANDE_VERIFICATION_UAC"
     echo "► Statut du contrôle de compte utilisateur (UAC) :"
@@ -268,3 +316,4 @@ fonction_verifier_uac_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     informationMainMenu
 }
+#endregion

@@ -10,7 +10,7 @@
 
 
 #==============================================================
-# 1 - RECHERCHE UTILISATEURS
+#region 1 - RECHERCHE UTILISATEURS
 #==============================================================
 function searchUser {
 
@@ -38,11 +38,11 @@ function searchUser {
 
     logsMainMenu
 }
-
+#endregion
 
 
 #==============================================================
-# 2 - RECHERCHE UTILISATEURS SSH
+#region 2 - RECHERCHE UTILISATEURS SSH
 #==============================================================
 function searchUserSsh {
     
@@ -73,11 +73,11 @@ function searchUserSsh {
     logsMainMenu
     
 }
-
+#endregion
 
 
 #==============================================================
-# 3 - RECHERCHE ORDINATEURS LOCAL
+#region 3 - RECHERCHE ORDINATEURS LOCAL
 #==============================================================
 function searchComputerLocal {
     
@@ -100,11 +100,11 @@ function searchComputerLocal {
     logsMainMenu
     
 }
-
+#endregion
 
 
 #==============================================================
-# 4 - RECHERCHE ORDINATEURS SSH
+#region 4 - RECHERCHE ORDINATEURS SSH
 #==============================================================
 function searchComputerSsh {
     
@@ -135,9 +135,11 @@ function searchComputerSsh {
     logsMainMenu
     
 }
+#endregion
+
 
 #==============================================================
-# 5 - FONCTION FILTRAGE DE RECHERCHE
+#region 5 - FONCTION FILTRAGE DE RECHERCHE
 #==============================================================
 function menuSearchlog {
     
@@ -178,7 +180,7 @@ function menuSearchlog {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
             $resultats
-            logsMainMenu
+
         }
         
         4 {
@@ -190,10 +192,9 @@ function menuSearchlog {
 
         default {
             logEvent "MENU_FILTRAGE_RECHERCHE:ENTREE_INVALIDE"
-            Write-Host "► Option invalide !"
+            Write-Host "► Option invalide."
             menuSearchlog
         }
     }
 }
-
-
+#endregion

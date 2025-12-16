@@ -1,7 +1,7 @@
 ﻿# Script Gestion de groupes Linux en Powershell
 
 
-# Liste des fonctions :
+# Sommaire :
 # 01. Menu Groupe
 # 02. Ajouter un utilisateur au groupe sudo
 # 03. Ajouter un utilisateur à un groupe
@@ -362,3 +362,4 @@ function del_user_group_linux {
     }
 }
 #endregion
+

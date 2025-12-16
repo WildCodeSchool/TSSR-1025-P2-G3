@@ -1,5 +1,5 @@
 # Script Gestion Utilisateurs Linux en Powershell
-
+# Auteur : Christian
 
 # Sommaire :
 # 01. Menu Utilisateurs
@@ -397,6 +397,7 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 
 
 

@@ -178,7 +178,7 @@ function menuSearchlog {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
             $resultats
-
+            logsMainMenu
         }
         
         4 {
@@ -195,4 +195,5 @@ function menuSearchlog {
         }
     }
 }
+
 

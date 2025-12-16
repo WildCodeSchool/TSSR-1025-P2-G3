@@ -1,22 +1,19 @@
-﻿# Script Informations Système Windows en Powershell
-
-
-# Sommaire :
-# 01. MENU GESTION DISQUE
-# 02. NOMBRE DE DISQUES
-# 03. PARTITIONS
-# 04. LECTEURS MONTÉS
-# 05. LISTE UTILISATEURS LOCAUX
-# 06. 5 DERNIERS LOGINS
-# 07. INFORMATIONS RÉSEAU
-# 08. VERSION DU OS
-# 09. MISES À JOUR CRITIQUES
-# 10. MARQUE ET MODÈLE DE L'ORDINATEUR
-# 11. VÉRIFIER UAC
+# Liste des fonctions :
+# 1. FONCTION : MENU GESTION DISQUE
+# 2. FONCTION : NOMBRE DE DISQUES
+# 3. FONCTION : PARTITIONS
+# 4. FONCTION : LECTEURS MONTÉS
+# 5. FONCTION : LISTE UTILISATEURS LOCAUX
+# 6. FONCTION : 5 DERNIERS LOGINS
+# 7. FONCTION : INFORMATIONS RÉSEAU
+# 8. FONCTION : VERSION DU OS
+# 9. FONCTION : MISES À JOUR CRITIQUES
+# 10. FONCTION : MARQUE ET MODÈLE DE L'ORDINATEUR
+# 11. FONCTION : VÉRIFIER UAC
 
 
 #==============================================================
-#region 01 - MENU GESTION DISQUES
+# MENU GESTION DISQUES
 #==============================================================
 function gestion_disques_menu_windows {
     
@@ -41,18 +38,22 @@ function gestion_disques_menu_windows {
         switch ($choix) {
             '1' { 
                 logEvent "SELECTION_NOMBRE_DISQUES"
-                fonction_nombre_disques_windows 
+                # Appel de la fonction nombre_disques_windows
+                nombre_disques_windows 
             }
             '2' { 
                 logEvent "SELECTION_PARTITIONS"
-                fonction_partitions_windows 
+                # Appel de la fonction partitions_windows
+                partitions_windows 
             }
             '3' { 
                 logEvent "SELECTION_LECTEURS_MONTES"
-                fonction_lecteurs_montes_windows 
+                # Appel de la fonction lecteurs_montes_windows
+                lecteurs_montes_windows 
             }
             '4' { 
                 logEvent "RETOUR_MENU_PRECEDENT"
+                # Retour au menu précédent
                 Write-Host "► Retour au menu précédent"
                 informationMainMenu
                 return 
@@ -64,10 +65,10 @@ function gestion_disques_menu_windows {
         }
     }
 }
-#endregion
+
 
 #==============================================================
-#region 02 - NOMBRE DE DISQUES
+# FONCTION : NOMBRE DE DISQUES
 #==============================================================
 function nombre_disques_windows {
     
@@ -78,29 +79,29 @@ function nombre_disques_windows {
     Write-Host ""
     
     # Je récupère tous les disques physiques
-    $disks = Get-Disk
+    $disks = ssh_command "Get-Disk"
     # Je compte le nombre de disques
-    $nombreDisques = ($disks | Measure-Object).Count
+    $nombreDisques = (ssh_command "Get-Disk | Measure-Object").Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     Write-Host ""
     
     # J'affiche les détails de chaque disque
-    $disks | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize
+    ssh_command "Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize"
     
     # J'enregistre dans le fichier d'infos si la fonction existe
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-    }
-    
+        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
+            infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+        }
+        
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
-#endregion
+
 
 #==============================================================
-#region 03 - PARTITIONS
+# FONCTION : PARTITIONS
 #==============================================================
 function partitions_windows {
     
@@ -111,23 +112,18 @@ function partitions_windows {
     Write-Host ""
     
     # Je récupère tous les volumes qui ont une lettre de lecteur
-    $partitionsList = Get-Volume | Where-Object { $_.DriveLetter } | 
-        Select-Object DriveLetter, FileSystemType, 
-            # Je convertis la taille en Go avec 2 décimales
-            @{Name = "SizeGB"; Expression = { [math]::Round($_.Size / 1GB, 2) } },
-            @{Name = "FreeSpaceGB"; Expression = { [math]::Round($_.SizeRemaining / 1GB, 2) } }
+    $partitionsList = ssh_command "Get-Volume | Where-Object { `$_.DriveLetter } | Select-Object DriveLetter, FileSystemType, @{Name = 'SizeGB'; Expression = { [math]::Round(`$_.Size / 1GB, 2) } }, @{Name = 'FreeSpaceGB'; Expression = { [math]::Round(`$_.SizeRemaining / 1GB, 2) } }"
     
     # J'affiche le tableau
-    $partitionsList | Format-Table -AutoSize
+    Write-Host $partitionsList
     
     # Je compte le nombre total de partitions
-    $nombrePartitions = (Get-Partition | Measure-Object).Count
+    $nombrePartitions = (ssh_command "Get-Partition | Measure-Object").Count
     Write-Host "► Nombre total de partitions : $nombrePartitions"
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        $partitionsText = $partitionsList | Out-String
-        infoFile $env:COMPUTERNAME "Liste de partitions:" $partitionsText
+        infoFile $env:COMPUTERNAME "Liste de partitions:" $partitionsList
         infoFile $env:COMPUTERNAME "Nombre de partitions:" $nombrePartitions
     }
     
@@ -135,10 +131,10 @@ function partitions_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
-#endregion
+
 
 #==============================================================
-#region 04 - LECTEURS MONTÉS
+# FONCTION : LECTEURS MONTÉS
 #==============================================================
 function lecteurs_montes_windows {
     
@@ -149,31 +145,24 @@ function lecteurs_montes_windows {
     Write-Host ""
     
     # Je récupère tous les lecteurs de type fichiers (disques, USB, CD, etc.)
-    $lecteursList = Get-PSDrive -PSProvider FileSystem | 
-        Select-Object Name, 
-            # Je convertis l'espace utilisé en Go
-            @{Name = "UsedGB"; Expression = { [math]::Round($_.Used / 1GB, 2) } },
-            # Je convertis l'espace libre en Go
-            @{Name = "FreeGB"; Expression = { [math]::Round($_.Free / 1GB, 2) } },
-            Root
+    $lecteursList = ssh_command "Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name = 'UsedGB'; Expression = { [math]::Round(`$_.Used / 1GB, 2) } }, @{Name = 'FreeGB'; Expression = { [math]::Round(`$_.Free / 1GB, 2) } }, Root"
     
     # J'affiche le tableau
-    $lecteursList | Format-Table -AutoSize
+    Write-Host $lecteursList
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        $lecteursText = $lecteursList | Out-String
-        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursText
+        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
     }
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
-#endregion
+
 
 #==============================================================
-#region 05 - LISTE UTILISATEURS LOCAUX
+# FONCTION : LISTE UTILISATEURS LOCAUX
 #==============================================================
 function liste_utilisateurs_windows {
     
@@ -184,20 +173,18 @@ function liste_utilisateurs_windows {
     Write-Host ""
     
     # Je récupère tous les utilisateurs locaux activés
-    $userList = Get-LocalUser | Where-Object { $_.Enabled -eq $true } | 
-        Select-Object Name, Enabled, LastLogon, Description
+    $userList = ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
     
     # J'affiche le tableau
-    $userList | Format-Table -AutoSize
+    Write-Host $userList
     
     # Je compte les utilisateurs
-    $nombreUtilisateurs = ($userList | Measure-Object).Count
+    $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        $usersText = $userList | Out-String
-        infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $usersText
+        infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
     }
     
     Write-Host ""
@@ -206,10 +193,10 @@ function liste_utilisateurs_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 06 - 5 DERNIERS LOGINS
+# FONCTION : 5 DERNIERS LOGINS
 #==============================================================
 function 5_derniers_logins_windows {
     
@@ -221,24 +208,14 @@ function 5_derniers_logins_windows {
     
     try {
         # Je récupère les 5 derniers événements de connexion réussie (ID 4624)
-        $loginsList = Get-EventLog -LogName Security -InstanceId 4624 -Newest 5 -ErrorAction Stop | 
-            Select-Object TimeGenerated, 
-                # J'extrais le nom d'utilisateur du message
-                @{Name = "Utilisateur"; Expression = {
-                    if ($_.Message -match "Account Name:\s+(\S+)") { $matches[1] } else { "N/A" }
-                }},
-                # J'extrais le domaine du message
-                @{Name = "Domaine"; Expression = {
-                    if ($_.Message -match "Account Domain:\s+(\S+)") { $matches[1] } else { "N/A" }
-                }}
+        $loginsList = ssh_command "Get-EventLog -LogName Security -InstanceId 4624 -Newest 5 | Select-Object TimeGenerated, @{Name = 'Utilisateur'; Expression = { if (`$_.Message -match 'Account Name:\s+(\S+)') { `$matches[1] } else { 'N/A' } }}, @{Name = 'Domaine'; Expression = { if (`$_.Message -match 'Account Domain:\s+(\S+)') { `$matches[1] } else { 'N/A' } }}"
         
         # J'affiche le tableau
-        $loginsList | Format-Table -AutoSize
+        Write-Host $loginsList
         
         # J'enregistre dans le fichier d'infos
         if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            $loginsText = $loginsList | Out-String
-            infoFile $env:COMPUTERNAME "5 derniers logins:" $loginsText
+            infoFile $env:COMPUTERNAME "5 derniers logins:" $loginsList
         }
     }
     catch {
@@ -251,10 +228,10 @@ function 5_derniers_logins_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 07 - INFORMATIONS RÉSEAU
+# FONCTION : INFORMATIONS RÉSEAU
 #==============================================================
 function infos_reseau_windows {
     
@@ -268,32 +245,25 @@ function infos_reseau_windows {
     Write-Host ""
     
     # Je récupère les adresses IPv4 (sauf loopback)
-    $ipMasque = Get-NetIPAddress | Where-Object { 
-        $_.AddressFamily -eq 'IPv4' -and 
-        $_.InterfaceAlias -notlike 'Loopback*' 
-    } | Select-Object InterfaceAlias, IPAddress, PrefixLength
+    $ipMasque = ssh_command "Get-NetIPAddress | Where-Object { `$_.AddressFamily -eq 'IPv4' -and `$_.InterfaceAlias -notlike 'Loopback*' } | Select-Object InterfaceAlias, IPAddress, PrefixLength"
     
     # J'affiche le tableau
-    $ipMasque | Format-Table -AutoSize
+    Write-Host $ipMasque
     
     Write-Host ""
     Write-Host "► Passerelle par défaut :"
     Write-Host ""
     
     # Je récupère la passerelle par défaut (route 0.0.0.0/0)
-    $passerelle = Get-NetRoute | Where-Object { 
-        $_.DestinationPrefix -eq '0.0.0.0/0' 
-    } | Select-Object InterfaceAlias, NextHop
+    $passerelle = ssh_command "Get-NetRoute | Where-Object { `$_.DestinationPrefix -eq '0.0.0.0/0' } | Select-Object InterfaceAlias, NextHop"
     
     # J'affiche le tableau
-    $passerelle | Format-Table -AutoSize
+    Write-Host $passerelle
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        $ipText = $ipMasque | Out-String
-        $passerelleText = $passerelle | Out-String
-        infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipText
-        infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelleText
+        infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
+        infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
     }
     
     Write-Host ""
@@ -302,10 +272,10 @@ function infos_reseau_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 08 - VERSION DU SYSTÈME
+# FONCTION : VERSION DU SYSTÈME
 #==============================================================
 function version_os_windows {
     
@@ -316,19 +286,14 @@ function version_os_windows {
     Write-Host ""
     
     # Je récupère les infos du système
-    $versionOS = Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId
+    $versionOS = ssh_command "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
     
     # J'affiche les informations
-    Write-Host "Nom du produit : $($versionOS.WindowsProductName)"
-    Write-Host "Édition        : $($versionOS.WindowsEditionId)"
-    Write-Host "Version        : $($versionOS.WindowsVersion)"
-    Write-Host "Build          : $($versionOS.OsBuildNumber)"
-    Write-Host "Version OS     : $($versionOS.OsVersion)"
+    Write-Host $versionOS
     
     # J'enregistre dans le fichier d'infos
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        $osText = $versionOS | Out-String
-        infoFile $env:COMPUTERNAME "Version OS:" $osText
+        infoFile $env:COMPUTERNAME "Version OS:" $versionOS
     }
     
     Write-Host ""
@@ -337,10 +302,10 @@ function version_os_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 09 - MISES À JOUR CRITIQUES
+# FONCTION : MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_windows {
     
@@ -352,22 +317,24 @@ function mises_a_jour_windows {
     
     try {
         # Je vérifie si le module PSWindowsUpdate est installé
-        if (Get-Module -ListAvailable -Name PSWindowsUpdate) {
+        $moduleCheck = ssh_command "Get-Module -ListAvailable -Name PSWindowsUpdate"
+        
+        if ($moduleCheck) {
             
             Write-Host "► Recherche des mises à jour..."
             Write-Host ""
             
             # J'importe le module
-            Import-Module PSWindowsUpdate -ErrorAction Stop
+            ssh_command "Import-Module PSWindowsUpdate"
             
             # Je récupère les mises à jour de sécurité et critiques
-            $majList = Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' -ErrorAction Stop
+            $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
             
             if ($majList) {
                 # J'affiche les mises à jour disponibles
-                $majList | Select-Object Title, KB, Size | Format-Table -AutoSize
+                Write-Host $majList
                 
-                $updateCount = ($majList | Measure-Object).Count
+                $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
                 Write-Host ""
                 Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
             }
@@ -377,8 +344,7 @@ function mises_a_jour_windows {
             
             # J'enregistre dans le fichier d'infos
             if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-                $majText = $majList | Out-String
-                infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majText
+                infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
             }
         }
         else {
@@ -387,25 +353,20 @@ function mises_a_jour_windows {
             Write-Host ""
             
             # J'utilise la méthode alternative avec COM
-            $updateSession = New-Object -ComObject Microsoft.Update.Session
-            $updateSearcher = $updateSession.CreateUpdateSearcher()
-            
             Write-Host "► Recherche en cours..."
             
             # Je cherche les mises à jour non installées
-            $searchResult = $updateSearcher.Search("IsInstalled=0 and Type='Software'")
+            $searchResult = ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$updateSearcher.Search('IsInstalled=0 and Type=''Software''').Updates.Count"
             
-            if ($searchResult.Updates.Count -gt 0) {
+            if ($searchResult -gt 0) {
                 Write-Host ""
                 Write-Host "► Mises à jour disponibles :"
                 
                 # J'affiche chaque mise à jour
-                foreach ($update in $searchResult.Updates) {
-                    Write-Host "  - $($update.Title)"
-                }
+                ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$searchResult = `$updateSearcher.Search('IsInstalled=0 and Type=''Software'''); foreach (`$update in `$searchResult.Updates) { Write-Host '  - ' `$update.Title }"
                 
                 Write-Host ""
-                Write-Host "► $($searchResult.Updates.Count) mise(s) à jour disponible(s)" -ForegroundColor Yellow
+                Write-Host "► $searchResult mise(s) à jour disponible(s)" -ForegroundColor Yellow
             }
             else {
                 Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
@@ -423,10 +384,10 @@ function mises_a_jour_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 10 - MARQUE ET MODÈLE
+# FONCTION : MARQUE ET MODÈLE
 #==============================================================
 function marque_modele_windows {
     
@@ -437,19 +398,19 @@ function marque_modele_windows {
     Write-Host ""
     
     # Je récupère le fabricant
-    $fabricant = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
+    $fabricant = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer"
     Write-Host "► Fabricant : $fabricant"
     
     # Je récupère le modèle
-    $modele = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
+    $modele = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystem).Model"
     Write-Host "► Modèle    : $modele"
     
     # Je récupère la version
-    $version = (Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version
+    $version = ssh_command "(Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version"
     Write-Host "► Version   : $version"
     
     # Je récupère le numéro de série
-    $serial = (Get-CimInstance -ClassName Win32_BIOS).SerialNumber
+    $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
     Write-Host "► N° série  : $serial"
     
     # J'enregistre dans le fichier d'infos
@@ -466,10 +427,10 @@ function marque_modele_windows {
     
     informationMainMenu
 }
-#endregion
+
 
 #==============================================================
-#region 11 - VÉRIFIER UAC
+# FONCTION : VÉRIFIER UAC
 #==============================================================
 function verifier_uac_windows {
     
@@ -480,7 +441,7 @@ function verifier_uac_windows {
     Write-Host ""
     
     # Je lis la valeur UAC dans le registre (1=activé, 0=désactivé)
-    $uacValue = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA
+    $uacValue = ssh_command "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
     
     if ($uacValue -eq 1) {
         Write-Host "► UAC est ACTIVÉ (Sécurisé)" -ForegroundColor Green
@@ -504,6 +465,4 @@ function verifier_uac_windows {
     $null = Read-Host
     
     informationMainMenu
-
 }
-#endregion

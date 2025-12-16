@@ -1,6 +1,7 @@
 # Script Informations Système Windows en Powershell
 # Auteur : Safi
 
+
 # Sommaire :
 # 01 - MENU GESTION DISQUE
 # 02 - NOMBRE DE DISQUES
@@ -13,6 +14,7 @@
 # 09-  MISES À JOUR CRITIQUES
 # 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
 # 11 - VÉRIFIER UAC
+
 
 
 #==============================================================
@@ -480,3 +482,4 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+

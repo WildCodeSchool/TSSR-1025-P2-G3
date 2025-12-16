@@ -1,12 +1,12 @@
 # Script de recherche dans le fichier de journalisation
-
+# Auteur : Christian
 
 # Sommaire :
-# 01. Recherche utilisateurs
-# 02. Recherche utilisateurs SSH
-# 03. Recherche Ordinateur Local
-# 04. Recherche Ordinateur SSH
-# 05. Menu Filtrage Recherche
+# 01 - Recherche utilisateurs
+# 02 - Recherche utilisateurs SSH
+# 03 - Recherche Ordinateur Local
+# 04 - Recherche Ordinateur SSH
+# 05 - Menu Filtrage Recherche
 
 
 #==============================================================
@@ -198,4 +198,5 @@ function menuSearchlog {
     }
 }
 #endregion
+
 

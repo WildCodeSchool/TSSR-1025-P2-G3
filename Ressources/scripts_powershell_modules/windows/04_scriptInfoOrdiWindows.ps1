@@ -84,21 +84,13 @@ function nombre_disques_windows {
     Write-Host "► NOMBRE DE DISQUES"
     Write-Host ""
     
-    # Je récupère tous les disques physiques
-    $disks = ssh_command "Get-Disk"
-    # Je compte le nombre de disques
-    $nombreDisques = (ssh_command "Get-Disk | Measure-Object").Count
+    $nombreDisques = (command_ssh "Get-Disk | Measure-Object").Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     Write-Host ""
-    
-    # J'affiche les détails de chaque disque
-    ssh_command "Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize"
-    
-    # J'enregistre dans le fichier d'infos si la fonction existe
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-        }
+   
+    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+
         
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -110,33 +102,29 @@ function nombre_disques_windows {
 #==============================================================
 #region 03 - PARTITIONS
 #==============================================================
+
 function partitions_windows {
     
     logEvent "DEMANDE_LISTE_PARTITIONS"
+    Write-Host "`n► PARTITIONS`n"
     
-    Write-Host ""
-    Write-Host "► PARTITIONS"
-    Write-Host ""
+    # Récupération de tous les volumes
+    $partitions = ssh_command "Get-Volume"
+    Write-Host $partitions
     
-    # Je récupère tous les volumes qui ont une lettre de lecteur
-    $partitionsList = ssh_command "Get-Volume | Where-Object { `$_.DriveLetter } | Select-Object DriveLetter, FileSystemType, @{Name = 'SizeGB'; Expression = { [math]::Round(`$_.Size / 1GB, 2) } }, @{Name = 'FreeSpaceGB'; Expression = { [math]::Round(`$_.SizeRemaining / 1GB, 2) } }"
+    # Comptage du nombre de partitions
+    $nombre = ssh_command "Get-Partition | Measure-Object | Select -ExpandProperty Count"
+    Write-Host "`n► Nombre total de partitions : $nombre"
     
-    # J'affiche le tableau
-    Write-Host $partitionsList
-    
-    # Je compte le nombre total de partitions
-    $nombrePartitions = (ssh_command "Get-Partition | Measure-Object").Count
-    Write-Host "► Nombre total de partitions : $nombrePartitions"
-    
-    # J'enregistre dans le fichier d'infos
+    # Enregistrement dans le fichier d'info
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Liste de partitions:" $partitionsList
-        infoFile $env:COMPUTERNAME "Nombre de partitions:" $nombrePartitions
+        infoFile $env:COMPUTERNAME "Partitions:" $partitions
+        infoFile $env:COMPUTERNAME "Nombre:" $nombre
     }
     
     Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
+    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    informationMainMenu
 }
 #endregion
 
@@ -154,13 +142,12 @@ function lecteurs_montes_windows {
     $lecteurs = ssh_command "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
     Write-Host $lecteurs
     
-    # Enregistrement si disponible
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
-    }
+    infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
+ 
     
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
+    informationMainMenu
 }
 #endregion
 
@@ -186,10 +173,8 @@ function liste_utilisateurs_windows {
     $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
-    }
+    infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
+ 
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -213,10 +198,8 @@ function 5_derniers_logins_windows {
         $logins = ssh_command "Get-EventLog Security -Newest 5 -InstanceId 4624"
         Write-Host $logins
         
-        # Enregistrement
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
-        }
+        infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
+        
     }
     catch {
         Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
@@ -278,10 +261,8 @@ function version_os_windows {
     # J'affiche les informations
     Write-Host $versionOS
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Version OS:" $versionOS
-    }
+    infoFile $env:COMPUTERNAME "Version OS:" $versionOS
+ 
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -402,13 +383,12 @@ function marque_modele_windows {
     $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
     Write-Host "► N° série  : $serial"
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
-        infoFile $env:COMPUTERNAME "Modèle:" $modele
-        infoFile $env:COMPUTERNAME "Version:" $version
-        infoFile $env:COMPUTERNAME "Numéro de série:" $serial
-    }
+
+    infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
+    infoFile $env:COMPUTERNAME "Modèle:" $modele
+    infoFile $env:COMPUTERNAME "Version:" $version
+    infoFile $env:COMPUTERNAME "Numéro de série:" $serial
+
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -445,10 +425,8 @@ function verifier_uac_windows {
         $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
     }
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
-    }
+    infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
+
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -457,6 +435,9 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
+
+
 
 
 

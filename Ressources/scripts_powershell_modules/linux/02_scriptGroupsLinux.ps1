@@ -1,5 +1,5 @@
 ﻿# Script Gestion de groupes Linux en Powershell
-
+# Auteur : Pierre-Jean
 
 # Sommaire :
 # 01. Menu Groupe
@@ -362,4 +362,5 @@ function del_user_group_linux {
     }
 }
 #endregion
+
 

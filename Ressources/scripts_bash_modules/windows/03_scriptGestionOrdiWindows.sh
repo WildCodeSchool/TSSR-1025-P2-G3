@@ -3,21 +3,21 @@
 # Script Gestion Ordinateur Windows
 # Auteur : Safi
 
+
 # Sommaire :
-# 01. Menu Gestion Répertoire
-# 02. Création de répertoire
-# 03. Suppression de répertoire
-# 04. Redémmarage
-# 05. Prise en main à distance (CLI)
-# 06. Activation du pare-feu
-# 07. Exécution de scripts sur une machine distante
+# 01 - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Suppression de répertoire
+# 04 - Redémmarage
+# 05 - Prise en main à distance (CLI)
+# 06 - Activation du pare-feu
+# 07 - Exécution de scripts sur une machine distante
 
 
 
 #==============================================================
 #region 01 - MENU GESTION REPERTOIRE
 #==============================================================
-# fonction de gestion de répertoires
 gestion_repertoire_menu_windows() {
 
     logEvent "MENU_GESTION_RÉPERTOIRE"
@@ -140,7 +140,6 @@ fonction_supprimer_dossier_windows() {
 #==============================================================
 #region 04 - REDEMARRAGE
 #==============================================================
-#fonction de redemarage poste distante
 fonction_redemarrage_windows() {
 
     # Demande si Voulez-vous redémarrer l'ordinateur distant

@@ -1,4 +1,9 @@
-# Liste des fonctions :
+# Script Gestion Ordinateur Windows
+# Auteur : Safi
+
+
+
+# Sommaire :
 # 1. Menu Gestion Répertoire
 # 2. Création de répertoire
 # 3. Création de répertoire Linux (SUDO)
@@ -334,3 +339,4 @@ function exec_script_linux {
     Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
+

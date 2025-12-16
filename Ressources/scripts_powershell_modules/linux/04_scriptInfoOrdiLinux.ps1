@@ -141,12 +141,12 @@ function lecteurs_montes_linux {
     Write-Host "► LECTEURS MONTÉS"
     Write-Host ""
     
-    $lecteursList = bash_command "mount | grep -E '^/dev/' | awk '{print \$1, \$3, \$5}'"
+    $lecteursList = bash_command "mount | grep -E '^/dev/' | awk '{print $1, $3, $5}'"
     
     Write-Host $lecteursList
     Write-Host ""
     
-    bash_command "df -h | grep -E '^/dev/'"
+    bash_command "df -h | grep '^/dev/'"
  
     infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
     
@@ -168,13 +168,9 @@ function liste_utilisateurs_linux {
     Write-Host "► LISTE DES UTILISATEURS LOCAUX"
     Write-Host ""
     
-    $userList = bash_command "awk -F: '\$3 >= 1000 && \$1 != \"nobody\" {print \$1, \$3, \$5}' /etc/passwd"
+    $userList = bash_command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd"
     
     Write-Host $userList
-    
-    $nombreUtilisateurs = bash_command "awk -F: '\$3 >= 1000 && \$1 != \"nobody\" {print \$1}' /etc/passwd | wc -l"
-    Write-Host ""
-    Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
 
     infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
     
@@ -190,7 +186,7 @@ function liste_utilisateurs_linux {
 #==============================================================
 #region 06 - 5 DERNIERS LOGINS
 #==============================================================
-function 5_derniers_logins_linux {
+function cinq_derniers_logins_linux {
     
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
     
@@ -285,6 +281,7 @@ function version_os_linux {
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_linux {
+
     logEvent "DEMANDE_MISES_A_JOUR"
     Write-Host "`n► MISES À JOUR CRITIQUES`n"
     
@@ -317,6 +314,7 @@ function mises_a_jour_linux {
 #region 10 - MARQUE ET MODÈLE
 #==============================================================
 function marque_modele_linux {
+ 
     
     logEvent "DEMANDE_MARQUE_MODELE"
     
@@ -369,6 +367,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

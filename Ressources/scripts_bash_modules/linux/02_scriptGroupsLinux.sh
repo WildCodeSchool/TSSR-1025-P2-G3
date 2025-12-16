@@ -13,7 +13,7 @@
 
 
 #==============================================================
-#region 01 - MENU GROUPE
+# 01 - MENU GROUPE
 #==============================================================
 fonc_menu_group_linux() {
     logEvent "MENU_GROUPES"
@@ -61,11 +61,10 @@ fonc_menu_group_linux() {
     done
 
 }
-#endregion
 
 
 #==============================================================
-#region 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
+# 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
 #==============================================================
 fonc_add_user_admin_linux() {
     echo ""
@@ -145,11 +144,10 @@ fonc_add_user_admin_linux() {
         ;;
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
+# 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
 #==============================================================
 fonc_add_user_group_linux() {
     echo ""
@@ -234,11 +232,10 @@ fonc_add_user_group_linux() {
         ;;
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
+# 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
 #==============================================================
 fonc_exit_group_linux() {
     echo ""
@@ -324,5 +321,4 @@ fonc_exit_menu() {
     exit 0
 
 }
-#endregion
 

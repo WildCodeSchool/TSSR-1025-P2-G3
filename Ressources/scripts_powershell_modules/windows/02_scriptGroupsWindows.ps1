@@ -1,5 +1,5 @@
 ﻿# Script Gestion de groupes Windows en Powershell
-# Auteur : Pierre-Jan
+# Auteur : Pierre-Jean
 
 
 # Sommaire :
@@ -160,7 +160,6 @@ function add_user_admin_group_windows {
 #==============================================================
 #region 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
 #==============================================================
-
 function add_user_group_windows {
 
     logEvent "MENU_AJOUT_GROUPE"
@@ -251,11 +250,9 @@ function add_user_group_windows {
 #endregion
 
 
-
 #==============================================================
 #region 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
 #==============================================================
-
 function del_user_group_windows {
 
     logEvent "MENU_SUPPRESSION_GROUPE"
@@ -339,6 +336,4 @@ function del_user_group_windows {
     }
 }
 #endregion
-
-
 

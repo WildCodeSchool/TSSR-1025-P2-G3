@@ -91,7 +91,7 @@ function add_user_sudo_group_linux {
             
             Write-Host ""
             Write-Host "► Voici la liste des utilisateurs : "
-            bash_command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd"
+            bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
             Write-Host ""
 
             $useraddadmin = Read-Host "► Quel utilisateur souhaitez-vous ajouter au groupe sudo ? "
@@ -188,10 +188,7 @@ function add_user_group_linux {
 
             if ($userExists.Trim() -eq "true") {
                 Write-Host ""
-                Write-Host "► Liste des groupes existants :"
-                bash_command "cat /etc/group | cut -d: -f1 | sort"
-                Write-Host ""
-                
+                    
                 $namegroup = Read-Host "► À quel groupe souhaitez-vous l'ajouter ? "
 
                 # Vérification si le groupe existe

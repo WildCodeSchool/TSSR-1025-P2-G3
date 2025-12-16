@@ -2,14 +2,14 @@
 
 
 # Liste des fonctions :
-# 1. Menu Groupe
-# 2. Ajouter un utilisateur au groupe Admin
-# 3. Ajouter un utilisateur à un groupe
-# 4. Supprimer un utilisateur d'un groupe
+# 01. Menu Groupe
+# 02. Ajouter un utilisateur au groupe Admin
+# 03. Ajouter un utilisateur à un groupe
+# 04. Supprimer un utilisateur d'un groupe
 
 
 #==============================================================
-# 1 - MENU GROUPE
+#region 01 - MENU GROUPE
 #==============================================================
 function gestion_menu_group_windows {
 
@@ -62,11 +62,11 @@ function gestion_menu_group_windows {
         }
     }
 }
-
+#endregion
 
 
 #==============================================================
-# 2 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
+#region 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
 #==============================================================
 function add_user_admin_group_windows {
 
@@ -153,11 +153,11 @@ function add_user_admin_group_windows {
 
 
 }
-
+#endregion
 
 
 #==============================================================
-# 3 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
+#region 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
 #==============================================================
 
 function add_user_group_windows {
@@ -247,12 +247,12 @@ function add_user_group_windows {
     }
 
 }
-
+#endregion
 
 
 
 #==============================================================
-# 4 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
+#region 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
 #==============================================================
 
 function del_user_group_windows {
@@ -337,3 +337,4 @@ function del_user_group_windows {
         }
     }
 }
+#endregion

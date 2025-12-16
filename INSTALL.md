@@ -6,7 +6,8 @@
 
 3. [Configuration sur le serveur Windows ( Windows serveur 2022 )](#3-configuration-sur-le-serveur-windows--windows-serveur-2022-)
 
-4. [Configuration sur le client Linux ( Ubuntu 24.04 LTS )](#4-configuration-sur-le-client-linux--ubuntu-2404-lts-)
+4. [Configuration sur le client Linux ( Ubuntu 24.04 LTS )]
+(#4.-Configuration sur le client Linux ( Ubuntu ))
 
 5. [Configuration sur le client Windows ( Windows 10 )](#5-configuration-sur-le-client-windows--windows-10-)
 
@@ -23,7 +24,7 @@ Groupe 3
 - **Serveur Debian** :
  Nom : **srvlx01**  
  IP : **172.16.30.10**  
- 
+
 - **Serveur Windows 2022** :  
  Nom : **srvwin01**  
  IP : **172.16.30.5**  
@@ -46,12 +47,17 @@ Il faut un compte utilisateur **wilder** sur les 2 VM **Client Windows** et **Cl
 
 - Mettre à jour les paquets avec `sudo apt update`
 - Installer open-ssh avec `sudo apt install openssh-server`
-sudo nano /etc/ssh/sshd_config
 
-### Configuration du fichier config (pour une connection rapide)  
+### Configuration du fichier config  
 
 Si il n'existe pas, créez le fichier config dans ~./ssh
 `sudo mkdir -p ~./ssh/config`
+
+Ajoutez les informations de connection des machines cibles :
+
+![ssh_debian](Ressources/images/install/config_ssh_debian.png)
+
+IdentityFile renseigne le chemin de la clé RSA utilisé en regard de la clé publique transférée aux machines cibles.
 
 Nous pouvons y renseigner les informations des machines cibles :
 
@@ -64,12 +70,13 @@ En ligne de commande, pour générer une paire de clés RSA (4096 bits recommand
 
 ### Transfert des clés publiques sur les machines cibles (Ubuntu et Windows 10 dans notre cas)
 
-* Vers Ubuntu :
- 	- `ssh-copy-id -p 4444 -i ~/.ssh/projet2deb.pub wilder@172.16.30.30`
-- Vers Windows 10 :
- 	- `scp -P 4444 ~/.ssh/projet2deb.pub Wilder@172.16.30.20:C:\Users\Wilder`
+- Vers Ubuntu :
+  - `ssh-copy-id -p 4444 -i ~/.ssh/projet2deb.pub wilder@172.16.30.30`
 
-Une fois la connection réussie en ssh vers les machines cible à l'aide des clés RSA il sera possible de désactiver l'authentification par mot de passe.
+- Vers Windows 10 :
+  - `scp -P 4444 ~/.ssh/projet2deb.pub Wilder@172.16.30.20:C:\Users\Wilder`
+
+Une fois la connection réussie en ssh vers les machines cible à l'aide des clés RSA il sera possible de désactiver l'authentification par mot de passe dans le fichier sshd_config des machine cibles. `PasswordAuthentication yes` => `PasswordAuthentication no`
 
 ## 3. Configuration sur le serveur Windows ( Windows serveur 2022 )
 
@@ -77,10 +84,42 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 ## 4. Configuration sur le client Linux ( Ubuntu )
 
+### Instalation de open-ssh
+
+- Mettre à jour les paquets avec `sudo apt update`
+- Installer open-ssh avec `sudo apt install openssh-server`
+
+### Ouverture du port 4444 pour le service ssh
+
+`sudo ufw allow 4444/tcp`  
+`sudo ufw enable`
+
+### Configuration du fichier sshd_config
+
+`sudo nano /etc/ssh/sshd_config`
+
+```
+Modifiez ou ajoutez ces lignes :
+
+Port 4444
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitRootLogin no
+```
+
+### Ajout des clés publiques serveurs
+
+Vérifiez que la clé publique du serveur debian a bien été copié dans le fichier "authorized_keys" dans le dossier ./ssh grace à la commande `ssh-copy-id`
+
+`cat ~./ssh/authorized_keys`  
+
+Si ce n'est pas le cas, copiez la clé publique du serveur dans le fichier.
+Chaque ligne dans authorized_keys correspond à une clé publique autorisée à se connecter. Vous pouvez en avoir plusieurs (une par machine autorisé).
+
 ## 5. Configuration sur le client windows ( Windows 10 )
 
 Ajoutez la fonctionnalité facultative "open-ssh server"
 
-![]
+![ssh_install](Ressources/images/install/install_ssh_windows10.png)
 
 ## 6. FAQ

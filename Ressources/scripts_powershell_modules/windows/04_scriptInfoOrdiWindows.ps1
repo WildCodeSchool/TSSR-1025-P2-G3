@@ -285,65 +285,34 @@ function mises_a_jour_windows {
     Write-Host ""
     
     try {
-        # Je vérifie si le module PSWindowsUpdate est installé
-        $moduleCheck = ssh_command "Get-Module -ListAvailable -Name PSWindowsUpdate"
+        Write-Host "► Recherche des mises à jour..."
+        Write-Host ""
         
-        if ($moduleCheck) {
+        # J'importe le module
+        ssh_command "Import-Module PSWindowsUpdate"
+        
+        # Je récupère les mises à jour de sécurité et critiques
+        $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
+        
+        if ($majList) {
+            # J'affiche les mises à jour disponibles
+            Write-Host $majList
             
-            Write-Host "► Recherche des mises à jour..."
+            $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
             Write-Host ""
-            
-            # J'importe le module
-            ssh_command "Import-Module PSWindowsUpdate"
-            
-            # Je récupère les mises à jour de sécurité et critiques
-            $majList = ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates'"
-            
-            if ($majList) {
-                # J'affiche les mises à jour disponibles
-                Write-Host $majList
-                
-                $updateCount = (ssh_command "Get-WindowsUpdate -Category 'Security Updates', 'Critical Updates' | Measure-Object").Count
-                Write-Host ""
-                Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
-            }
-            else {
-                Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
-            }
-            
-            # J'enregistre dans le fichier d'infos
-            if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-                infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
-            }
+            Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
         }
         else {
-            Write-Host "► Le module PSWindowsUpdate n'est pas installé" -ForegroundColor Yellow
-            Write-Host "► Pour installer : Install-Module PSWindowsUpdate -Force"
-            Write-Host ""
-            
-            # J'utilise la méthode alternative avec COM
-            Write-Host "► Recherche en cours..."
-            
-            # Je cherche les mises à jour non installées
-            $searchResult = ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$updateSearcher.Search('IsInstalled=0 and Type=''Software''').Updates.Count"
-            
-            if ($searchResult -gt 0) {
-                Write-Host ""
-                Write-Host "► Mises à jour disponibles :"
-                
-                # J'affiche chaque mise à jour
-                ssh_command "`$updateSession = New-Object -ComObject Microsoft.Update.Session; `$updateSearcher = `$updateSession.CreateUpdateSearcher(); `$searchResult = `$updateSearcher.Search('IsInstalled=0 and Type=''Software'''); foreach (`$update in `$searchResult.Updates) { Write-Host '  - ' `$update.Title }"
-                
-                Write-Host ""
-                Write-Host "► $searchResult mise(s) à jour disponible(s)" -ForegroundColor Yellow
-            }
-            else {
-                Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
-            }
+            Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
+        }
+        
+        # J'enregistre dans le fichier d'infos
+        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
+            infoFile $env:COMPUTERNAME "Mises à jour de sécurité:" $majList
         }
     }
     catch {
-        Write-Host "► Erreur lors de la vérification des mises à jour"
+        Write-Host "► Erreur lors de la vérification des mises à jour" -ForegroundColor Red
         Write-Host "► Conseil : Vérifiez manuellement via Windows Update"
     }
     
@@ -435,6 +404,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

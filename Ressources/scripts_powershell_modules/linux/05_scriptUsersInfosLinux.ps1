@@ -52,7 +52,7 @@ function date_lastconnection_linux {
                     Write-Host "► L'utilisateur ${userlastconnect} s'est connecté pour la dernière fois : "
                     
                     # Récupération de la dernière connexion via last
-                    $lastconnection = bash_command "last -1 ${userlastconnect} | head -1 | awk ''{print `$4, `$5, `$6, `$7}''"
+                    $lastconnection = bash_command "last -1 ${userlastconnect} | head -1 | awk '{print `$4, `$5, `$6, `$7}'"
                     
                     if ($lastconnection) {
                         Write-Host $lastconnection
@@ -141,7 +141,7 @@ function date_lastpassmodif_linux {
                     Write-Host "► L'utilisateur ${userlastpass} a changé son mot de passe la dernière fois : "
                     
                     # Récupération via chage -l (nécessite sudo)
-                    $lastpasschange = bash_sudo_command "chage -l ${userlastpass} | head -1 | awk ''{print `$8, `$9, `$10}''"
+                    $lastpasschange = bash_sudo_command "chage -l ${userlastpass} | head -1 | awk '{print `$8, `$9, `$10}'"
                     
                     if ($lastpasschange) {
                         Write-Host $lastpasschange

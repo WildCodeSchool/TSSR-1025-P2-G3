@@ -1,7 +1,7 @@
 ﻿# Script Gestion de groupes Windows en Powershell
 
 
-# Liste des fonctions :
+# Sommaire :
 # 01. Menu Groupe
 # 02. Ajouter un utilisateur au groupe Admin
 # 03. Ajouter un utilisateur à un groupe
@@ -338,3 +338,4 @@ function del_user_group_windows {
     }
 }
 #endregion
+

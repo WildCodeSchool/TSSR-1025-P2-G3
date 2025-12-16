@@ -14,7 +14,7 @@
 
 
 #==============================================================
-#region 01 - RECHERCHE UTILISATEURS
+# 01 - RECHERCHE UTILISATEURS
 #==============================================================
 function searchUser() {
 
@@ -43,11 +43,10 @@ function searchUser() {
     logsMainMenu
 
 }
-#endregion
 
 
 #==============================================================
-#region 02 - RECHERCHE UTILISATEURS SSH
+# 02 - RECHERCHE UTILISATEURS SSH
 #==============================================================
 function searchUserSsh() {
 
@@ -75,11 +74,10 @@ function searchUserSsh() {
     logsMainMenu
 
 }
-#endregion
 
 
 #==============================================================
-#region 03 - RECHERCHE ORDINATEURS LOCAL
+# 03 - RECHERCHE ORDINATEURS LOCAL
 #==============================================================
 function searchComputerLocal() {
 
@@ -99,11 +97,10 @@ function searchComputerLocal() {
     logsMainMenu
 
 }
-#endregion
 
 
 #==============================================================
-#region 04 - RECHERCHE ORDINATEURS SSH
+# 04 - RECHERCHE ORDINATEURS SSH
 #==============================================================
 function searchComputerSsh() {
 
@@ -131,11 +128,10 @@ function searchComputerSsh() {
     logsMainMenu
 
 }
-#endregion
 
 
 #==============================================================
-#region 05 - FONCTION FILTRAGE DE RECHERCHE
+# 05 - FONCTION FILTRAGE DE RECHERCHE
 #==============================================================
 function menuSearchlog() {
 
@@ -178,4 +174,4 @@ function menuSearchlog() {
         ;;
     esac
 }
-#endregion
+

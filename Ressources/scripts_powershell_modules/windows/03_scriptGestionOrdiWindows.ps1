@@ -3,14 +3,14 @@
 # Auteur : Safi
 
 # Sommaire :
-# 01. Menu Gestion Répertoire
-# 02. Création de répertoire
-# 03. Création de répertoire Linux (SUDO)
-# 04. Suppression de répertoire
-# 05. Redémmarage
-# 06. Prise en main à distance (CLI)
-# 07. Activation du pare-feu
-# 08. Exécution de scripts sur une machine distante
+# 0& - Menu Gestion Répertoire
+# 02 - Création de répertoire
+# 03 - Création de répertoire Linux (SUDO)
+# 04 - Suppression de répertoire
+# 05 - Redémmarage
+# 06 - Prise en main à distance (CLI)
+# 07 - Activation du pare-feu
+# 08 - Exécution de scripts sur une machine distante
 
 
 #==============================================================
@@ -351,6 +351,7 @@ function exec_script_windows {
 
 }
 #endregion
+
 
 
 

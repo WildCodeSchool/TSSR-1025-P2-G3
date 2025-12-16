@@ -1,6 +1,7 @@
 # Script de recherche dans le fichier de journalisation
 # Auteur : Christian
 
+
 # Sommaire :
 # 01 - Recherche utilisateurs
 # 02 - Recherche utilisateurs SSH
@@ -198,5 +199,6 @@ function menuSearchlog {
     }
 }
 #endregion
+
 
 

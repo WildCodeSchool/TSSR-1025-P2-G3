@@ -289,7 +289,7 @@ function mises_a_jour_linux {
     Write-Host "`n► MISES À JOUR CRITIQUES`n"
     
     try {
-        $maj = ssh_command "apt list --upgradable 2>/dev/null | grep -i security"
+        $maj = bash_sudo_command "apt list --upgradable 2>/dev/null | grep -i security"
         
         if ($maj) {
             Write-Host $maj -ForegroundColor Yellow
@@ -369,6 +369,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

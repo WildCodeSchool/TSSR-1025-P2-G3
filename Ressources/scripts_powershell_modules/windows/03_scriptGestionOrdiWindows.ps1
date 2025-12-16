@@ -1,4 +1,8 @@
-﻿# Sommaire :
+
+# Script Gestion Ordinateur Windows
+# Auteur : Safi
+
+# Sommaire :
 # 01. Menu Gestion Répertoire
 # 02. Création de répertoire
 # 03. Création de répertoire Linux (SUDO)
@@ -348,4 +352,5 @@ function exec_script_windows {
 
 }
 #endregion
+
 

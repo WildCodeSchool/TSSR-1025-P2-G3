@@ -10,7 +10,7 @@
 # 06 - 5 DERNIERS LOGINS
 # 07 - INFORMATIONS RÉSEAU
 # 08 - VERSION DU OS
-# 09 -  MISES À JOUR CRITIQUES
+# 09 - MISES À JOUR CRITIQUES
 # 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
 
 
@@ -439,4 +439,5 @@ function marque_modele_windows {
     informationMainMenu
 }
 #endregion
+
 

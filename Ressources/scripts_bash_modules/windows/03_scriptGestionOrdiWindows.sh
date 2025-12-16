@@ -16,7 +16,7 @@
 
 
 #==============================================================
-#region 01 - MENU GESTION REPERTOIRE
+# 01 - MENU GESTION REPERTOIRE
 #==============================================================
 gestion_repertoire_menu_windows() {
 
@@ -74,11 +74,10 @@ gestion_repertoire_menu_windows() {
 
     done
 }
-#endregion
 
 
 #==============================================================
-#region 02 - CREATION DE REPERTOIRE
+# 02 - CREATION DE REPERTOIRE
 #==============================================================
 fonction_creer_dossier_windows() {
     logEvent "CRÉATION_DE_DOSSIER"
@@ -104,11 +103,10 @@ fonction_creer_dossier_windows() {
         echo "► Le dossier existe déjà"
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 03 - SUPPRESSION DE REPERTOIRE
+# 03 - SUPPRESSION DE REPERTOIRE
 #==============================================================
 fonction_supprimer_dossier_windows() {
 
@@ -134,11 +132,10 @@ fonction_supprimer_dossier_windows() {
 
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 04 - REDEMARRAGE
+# 04 - REDEMARRAGE
 #==============================================================
 fonction_redemarrage_windows() {
 
@@ -161,11 +158,10 @@ fonction_redemarrage_windows() {
     fi
 
 }
-#endregion
 
 
 #==============================================================
-#region 05 - PRISE EN MAIN A DISTANCE
+# 05 - PRISE EN MAIN A DISTANCE
 #==============================================================
 fonction_prise_main_windows() {
 
@@ -187,11 +183,10 @@ fonction_prise_main_windows() {
 
     fi
 }
-#endregion
 
 
 #==============================================================
-#region 06 - ACTIVATION PARE-FEU
+# 06 - ACTIVATION PARE-FEU
 #==============================================================
 fonction_activer_parefeu_windows() {
     logEvent "DEMANDE_ACTIVATION_PAREFEU"
@@ -227,11 +222,10 @@ fonction_activer_parefeu_windows() {
     read -p "► Appuyez sur ENTRÉE pour revenir au menu..."
     computerMainMenu
 }
-#endregion
 
 
 #==============================================================
-#region 07 - EXECUTION DE SCRIPT LOCAL
+# 07 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 fonction_exec_script_windows() {
 
@@ -257,4 +251,4 @@ fonction_exec_script_windows() {
     powershell_command "& $scriptlocal"
 
 }
-#endregion
+

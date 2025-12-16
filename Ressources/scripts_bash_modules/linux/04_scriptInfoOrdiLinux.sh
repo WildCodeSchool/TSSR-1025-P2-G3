@@ -1,8 +1,25 @@
 #!/bin/bash
 
-##################################### Menu Gestion Disques ####################################
+# Script Informations Système Windows en Powershell
+# Auteur : Safi
 
-# Menu principal de gestion des disques
+# Sommaire :
+# 01 - MENU GESTION DISQUE
+# 02 - NOMBRE DE DISQUES
+# 03 - PARTITIONS
+# 04 - LECTEURS MONTÉS
+# 05 - LISTE UTILISATEURS LOCAUX
+# 06 - 5 DERNIERS LOGINS
+# 07 - INFORMATIONS RÉSEAU
+# 08 - VERSION DU OS
+# 09-  MISES À JOUR CRITIQUES
+# 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
+
+
+
+#==============================================================
+#region 01 - MENU GESTION DISQUES
+#==============================================================
 gestion_disques_menu_linux() {
 
     logEvent "MENU_GESTION_DISQUES"
@@ -62,10 +79,12 @@ gestion_disques_menu_linux() {
 
     done
 }
+#endregion
 
-#################################### Fonction Nombre de disques ##########################################
 
-# Compte et affiche le nombre de disques physiques
+#==============================================================
+#region 02 - NOMBRE DE DISQUES
+#==============================================================
 fonction_nombre_disques_linux() {
 
     logEvent "DEMANDE_NOMBRE_DISQUES"
@@ -76,10 +95,12 @@ fonction_nombre_disques_linux() {
     infoFile "$HOSTNAME" "Nombre de disques:" "$nombreDisques"
 
 }
+#endregion
 
-#################################### Fonction Partitions ###################################################
 
-# Affiche les partitions avec leurs détails et leur nombre total
+#==============================================================
+#region 03 - PARTITIONS
+#==============================================================
 fonction_partitions_linux() {
 
     logEvent "DEMANDE_LISTE_PARTITIONS"
@@ -96,10 +117,12 @@ fonction_partitions_linux() {
     infoFile "$HOSTNAME" "Nombre de partitions:" "$nombrePartitions"
 
 }
+#endregion
 
-#################################### Fonction Lecteurs montés ############################################
 
-# Affiche tous les lecteurs physiques actuellement montés
+#==============================================================
+#region 04 - LECTEURS MONTÉS
+#==============================================================
 fonction_lecteurs_montes_linux() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
@@ -110,10 +133,12 @@ fonction_lecteurs_montes_linux() {
     infoFile "$HOSTNAME" "Lecteurs montés:" "$lecteursList"
 
 }
+#endregion
 
-#################################### Fonction liste utilisateurs locaux #################################
 
-# Liste les utilisateurs locaux (non système)
+#==============================================================
+#region 05 - LISTE UTILISATEURS LOCAUX
+#==============================================================
 fonction_liste_utilisateurs_linux() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
@@ -123,10 +148,12 @@ fonction_liste_utilisateurs_linux() {
     userList=$(command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd" | tee /dev/tty)
     infoFile "$HOSTNAME" "Liste d'utilisateurs:" "$userList"
 }
+#endregion
 
-#################################### Fonction 5 derniers logins #######################################
 
-# Affiche les 5 dernières connexions utilisateurs
+#==============================================================
+#region 06 - 5 DERNIERS LOGINS
+#==============================================================
 fonction_5_derniers_logins_linux() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
@@ -137,10 +164,12 @@ fonction_5_derniers_logins_linux() {
     infoFile "$HOSTNAME" "5 derniers logins:" "$loginsList"
 
 }
+#endregion
 
-#################################### Fonction IP, masque, passerelle ####################################
 
-# Affiche les informations réseau (IP, masque et passerelle)
+#==============================================================
+#region 07 - INFORMATIONS RÉSEAU
+#==============================================================
 fonction_infos_reseau_linux() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
@@ -158,10 +187,12 @@ fonction_infos_reseau_linux() {
     infoFile "$HOSTNAME" "Passerelle par défaut:" "$passerelle"
 
 }
+#endregion
 
-#################################### Fonction : Version OS ####################################
 
-# Affiche la version du système d'exploitation
+#==============================================================
+#region 08 - VERSION DU SYSTÈME
+#==============================================================
 fonction_version_os_linux() {
 
     logEvent "DEMANDE_VERSION_OS"
@@ -172,10 +203,12 @@ fonction_version_os_linux() {
     infoFile "$HOSTNAME" "Version OS:" "$versionOS"
 
 }
+#endregion
 
-#################################### Fonction : Mises à jour critiques ####################################
 
-# Liste les mises à jour disponibles
+#==============================================================
+#region 09 - MISES À JOUR CRITIQUES
+#==============================================================
 fonction_mises_a_jour_linux() {
 
     logEvent "DEMANDE_MISES_A_JOUR"
@@ -188,10 +221,12 @@ fonction_mises_a_jour_linux() {
     echo ""
 
 }
+#endregion
 
-#################################### Fonction : Marque / Modèle ####################################
 
-# Affiche les informations matérielles marque et modèle
+#==============================================================
+#region 10 - MARQUE ET MODÈLE
+#==============================================================
 fonction_marque_modele_linux() {
 
     logEvent "DEMANDE_MARQUE_MODELE"
@@ -214,3 +249,4 @@ fonction_marque_modele_linux() {
     infoFile "$HOSTNAME" "Version:" "$version"
 
 }
+#endregion

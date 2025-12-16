@@ -248,25 +248,18 @@ function command_ssh {
         [string]$cmd
     )
 
-
     if ($script:connexionMode -eq "local") {
 
         Invoke-Expression $cmd
 
-    } elseif ($script:connexionMode -eq "ssh") {
+    } else {
 
         $bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
         $encodedCmd = [Convert]::ToBase64String($bytes)
         $remoteCmd = "powershell.exe -NoProfile -EncodedCommand $encodedCmd"
 
-
         ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" $remoteCmd 2>&1
-
-    } else {
-        
-        Write-Host "ERREUR : Mode de connexion inconnu ($script:connexionMode)" -ForegroundColor Red
-        return
-    }
+    } 
 }
 
 function bash_command {
@@ -789,6 +782,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

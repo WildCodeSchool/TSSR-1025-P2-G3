@@ -148,24 +148,19 @@ function lecteurs_montes_windows {
     
     logEvent "DEMANDE_LECTEURS_MONTES"
     
-    Write-Host ""
-    Write-Host "► LECTEURS MONTÉS"
-    Write-Host ""
+    Write-Host "`n► LECTEURS MONTÉS`n"
     
-    # Je récupère tous les lecteurs de type fichiers (disques, USB, CD, etc.)
-    $lecteursList = ssh_command "Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name = 'UsedGB'; Expression = { [math]::Round(`$_.Used / 1GB, 2) } }, @{Name = 'FreeGB'; Expression = { [math]::Round(`$_.Free / 1GB, 2) } }, Root"
+    # Récupération et affichage des lecteurs montés
+    $lecteurs = ssh_command "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
+    Write-Host $lecteurs
     
-    # J'affiche le tableau
-    Write-Host $lecteursList
-    
-    # J'enregistre dans le fichier d'infos
+    # Enregistrement si disponible
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
+        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
     }
     
     Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
+    Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
 }
 #endregion
 
@@ -482,4 +477,5 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 

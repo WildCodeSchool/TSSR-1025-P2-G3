@@ -142,10 +142,8 @@ function lecteurs_montes_windows {
     $lecteurs = ssh_command "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
     Write-Host $lecteurs
     
-    # Enregistrement si disponible
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
-    }
+    infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
+ 
     
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
@@ -175,10 +173,8 @@ function liste_utilisateurs_windows {
     $nombreUtilisateurs = (ssh_command "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
-    }
+    infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
+ 
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -202,10 +198,8 @@ function 5_derniers_logins_windows {
         $logins = ssh_command "Get-EventLog Security -Newest 5 -InstanceId 4624"
         Write-Host $logins
         
-        # Enregistrement
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
-        }
+        infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
+        
     }
     catch {
         Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
@@ -267,10 +261,8 @@ function version_os_windows {
     # J'affiche les informations
     Write-Host $versionOS
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Version OS:" $versionOS
-    }
+    infoFile $env:COMPUTERNAME "Version OS:" $versionOS
+ 
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -391,13 +383,12 @@ function marque_modele_windows {
     $serial = ssh_command "(Get-CimInstance -ClassName Win32_BIOS).SerialNumber"
     Write-Host "► N° série  : $serial"
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
-        infoFile $env:COMPUTERNAME "Modèle:" $modele
-        infoFile $env:COMPUTERNAME "Version:" $version
-        infoFile $env:COMPUTERNAME "Numéro de série:" $serial
-    }
+
+    infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
+    infoFile $env:COMPUTERNAME "Modèle:" $modele
+    infoFile $env:COMPUTERNAME "Version:" $version
+    infoFile $env:COMPUTERNAME "Numéro de série:" $serial
+
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -434,10 +425,8 @@ function verifier_uac_windows {
         $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
     }
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
-    }
+    infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
+
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -446,6 +435,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

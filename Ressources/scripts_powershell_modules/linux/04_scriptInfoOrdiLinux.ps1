@@ -262,24 +262,15 @@ function infos_reseau_linux {
 #region 08 - VERSION DU SYSTÈME
 #==============================================================
 function version_os_linux {
-    
     logEvent "DEMANDE_VERSION_OS"
+    Write-Host "`n► VERSION DU SYSTÈME`n"
     
-    Write-Host ""
-    Write-Host "► VERSION DU SYSTÈME"
-    Write-Host ""
+    bash_command "hostnamectl | grep -E 'Operating System|Kernel|Architecture'"
     
-    $osName = bash_command "cat /etc/os-release | grep PRETTY_NAME | cut -d'=' -f2 | tr -d '\"'"
-    $osVersion = bash_command "cat /etc/os-release | grep VERSION_ID | cut -d'=' -f2 | tr -d '\"'"
-    $kernelVersion = bash_command "uname -r"
-    $architecture = bash_command "uname -m"
+    $info = bash_command "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"'; uname -r"
+    $lines = $info -split "`n"
     
-    Write-Host "Nom du système : $osName"
-    Write-Host "Version        : $osVersion"
-    Write-Host "Kernel         : $kernelVersion"
-    Write-Host "Architecture   : $architecture"
-
-    infoFile $env:COMPUTERNAME "Version OS:" "$osName - $osVersion - Kernel: $kernelVersion"
+    infoFile $env:COMPUTERNAME "Version OS:" "$($lines[0]) - $($lines[1])"
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -294,36 +285,25 @@ function version_os_linux {
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_linux {
-    
     logEvent "DEMANDE_MISES_A_JOUR"
-    
-    Write-Host ""
-    Write-Host "► MISES À JOUR CRITIQUES"
-    Write-Host ""
+    Write-Host "`n► MISES À JOUR CRITIQUES`n"
     
     try {
-        Write-Host "► Recherche des mises à jour..."
-        Write-Host ""
-            
-        $majList = ssh_command "apt list --upgradable 2>/dev/null"
+        $maj = ssh_command "apt list --upgradable 2>/dev/null | grep -i security"
         
-        if ($majList) {
-            Write-Host $majList
-            
-            $updateCount = (ssh_command "apt list --upgradable 2>/dev/null | wc -l").Trim() - 1
-            Write-Host ""
-            Write-Host "► $updateCount mise(s) à jour disponible(s)" -ForegroundColor Yellow
+        if ($maj) {
+            Write-Host $maj -ForegroundColor Yellow
+        } else {
+            Write-Host "► Aucune mise à jour critique" -ForegroundColor Green
         }
-        else {
-            Write-Host "► Aucune mise à jour en attente" -ForegroundColor Green
-        }
-        
     }
     catch {
-        Write-Host "► Erreur lors de la vérification des mises à jour" -ForegroundColor Red
-        Write-Host "► Conseil : Vérifiez manuellement avec 'apt list --upgradable'"
+        Write-Host "► Erreur de vérification"
     }
     
+    infoFile $env:COMPUTERNAME "MISES À JOUR CRITIQUES:" "$maj"
+
+
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -344,29 +324,28 @@ function marque_modele_linux {
     Write-Host "► MARQUE / MODÈLE"
     Write-Host ""
     
-    # Je récupère le fabricant
+    # Récupère le fabricant
     $fabricant = bash_sudo_command "dmidecode -s system-manufacturer"
     Write-Host "► Fabricant : $fabricant"
     
-    # Je récupère le modèle
+    # Récupère le modèle
     $modele = bash_sudo_command "dmidecode -s system-product-name"
     Write-Host "► Modèle    : $modele"
     
-    # Je récupère la version
+    # Récupère la version
     $version = bash_sudo_command "dmidecode -s system-version"
     Write-Host "► Version   : $version"
     
-    # Je récupère le numéro de série
+    # Récupère le numéro de série
     $serial = bash_sudo_command "dmidecode -s system-serial-number"
     Write-Host "► N° série  : $serial"
     
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
+    # enregistre les info dans le fichier d'infos
         infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
         infoFile $env:COMPUTERNAME "Modèle:" $modele
         infoFile $env:COMPUTERNAME "Version:" $version
         infoFile $env:COMPUTERNAME "Numéro de série:" $serial
-    }
+    
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -380,7 +359,7 @@ function marque_modele_linux {
 #==============================================================
 #region 11 - VÉRIFIER UAC
 #==============================================================
-function uac_info_linux {
+function status_uac_linux {
     Write-Host " Pas de UAC sous Linux " -ForegroundColor Yellow
 
     Write-Host ""
@@ -390,5 +369,6 @@ function uac_info_linux {
     informationMainMenu
 }
 #endregion
+
 
 

@@ -1,6 +1,8 @@
 # Script PowerShell principal du Projet 2
 
+
 # Liste des fonctions :
+# 0. Lancement en administrateur
 # 1. Chargement des modules
 # 2. Journalisation
 # 3. Menu exécution locale ou SSH  
@@ -16,18 +18,23 @@
 # 13. Exécution du script
 
 
-# Force le lancement en administrateur
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process -FilePath "powershell.exe" `
-        -ArgumentList "-File", $PSCommandPath `
-        -Verb RunAs
-    exit
-}
 
-
-#region 1 -Chargement des modules
 #=====================================================
-# 1 - CHARGEMENT DES MODULES
+#region 0 - Force le lancement en administrateur
+#=====================================================
+function lancementAdministrateur {
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Start-Process -FilePath "powershell.exe" `
+            -ArgumentList "-File", $PSCommandPath `
+            -Verb RunAs
+        exit
+    }
+}
+#endregion
+
+
+#=====================================================
+#region 1 - CHARGEMENT DES MODULES
 #=====================================================
 
 # GENERAL
@@ -49,9 +56,9 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_s
 
 #endregion
 
-#region 2 - Journalisation
+
 #=====================================================
-# 2 - JOURNALISATION
+#region 2 - JOURNALISATION
 #=====================================================
 $LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
@@ -106,9 +113,9 @@ function stopScript {
 }
 #endregion
 
-#region 3 - Menu Execution Local ou SSH
+
 #=====================================================
-# 3 - MENU EXECUTION LOCAL OU SSH
+#region 3 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
 function executionMode {
 
@@ -195,9 +202,9 @@ function executionMode {
 }
 #endregion
 
-#region 4 -Detection du système d'exploitation
+
 #=====================================================
-# 4 - DETECTION DU SYSTEME D'EXPLOITATION
+#region 4 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
 
@@ -232,9 +239,9 @@ function detectionRemoteOS {
 }
 #endregion
 
-#region 5 - Fonctions des commandes
+
 #=====================================================
-# 5 - FONCTIONS DES COMMANDES
+#region 5 - FONCTIONS DES COMMANDES
 #=====================================================
 function command_ssh {
     param (
@@ -278,9 +285,9 @@ function bash_sudo_command {
 }
 #endregion
 
-#region 6 - Fichiers de stockage informations
+
 #=====================================================
-# 6 - FICHIERS STOCKAGE INFORMATIONS
+#region 6 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
 function infoFile {
     param(
@@ -306,9 +313,9 @@ function infoFile {
 }
 #endregion
 
-#region 7 - Menu principal
+
 #=====================================================
-# 7 - MENU PRINCIPAL
+#region 7 - MENU PRINCIPAL
 #=====================================================
 function mainMenu {
         
@@ -373,9 +380,9 @@ function mainMenu {
 }
 #endregion
 
-#region 8 - Menu gestion utilisateurs
+
 #=====================================================
-# 8 - MENU GESTION UTILISATEUR
+#region 8 - MENU GESTION UTILISATEUR
 #=====================================================
 function userMainMenu {
 
@@ -429,9 +436,9 @@ function userMainMenu {
 }
 #endregion
 
-#region 9 - Menu gestion ordinateurs
+
 #=====================================================
-# 9 - MENU GESTION ORDINATEURS
+#region 9 - MENU GESTION ORDINATEURS
 #=====================================================
 function computerMainMenu {
 
@@ -513,9 +520,9 @@ function computerMainMenu {
 }
 #endregion
 
-#region 10 - Menu informations système
+
 #=====================================================
-# 10 - MENU INFORMATIONS SYSTEME
+#region 10 - MENU INFORMATIONS SYSTEME
 #=====================================================
 function informationMainMenu {
 
@@ -637,9 +644,9 @@ function informationMainMenu {
 }
 #endregion
 
-#region 11 - Menu informations utilisateur
+
 #=====================================================
-# 11 - MENU INFORMATIONS UTILISATEUR
+#region 11 - MENU INFORMATIONS UTILISATEUR
 #=====================================================
 function informationUserMainMenu {
 
@@ -704,9 +711,9 @@ function informationUserMainMenu {
 }
 #endregion
 
-#region 12 - Menu journalisation
+
 #=====================================================
-# 12 - MENU JOURNALISATION
+#region 12 - MENU JOURNALISATION
 #=====================================================
 function logsMainMenu {
 
@@ -770,11 +777,12 @@ function logsMainMenu {
 }
 #endregion
 
-#region 13 - Execution du script
+
 #=====================================================
-# 13 - EXECUTION DU SCRIPT
+#region 13 - EXECUTION DU SCRIPT
 #=====================================================
 
+lancementAdministrateur
 logInit -LogFile $LogFile
 startScript
 executionMode

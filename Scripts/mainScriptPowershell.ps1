@@ -442,7 +442,7 @@ function computerMainMenu {
     Write-Host "│                                                  │"
     Write-Host "│  1. Gestion Répertoire                           │" 
     Write-Host "│  2. Redémarrage                                  │" 
-    Write-Host "│  3. Prise de main à distance (CLI)               │" 
+    Write-Host "│  3. Prise en main à distance (CLI)               │" 
     Write-Host "│  4. Activation du pare-feu                       │" 
     Write-Host "│  5. Exécution de script sur machine distante     │" 
     Write-Host "│  6. Retour au menu principal                     │" 
@@ -794,4 +794,5 @@ logInit
 startScript
 executionMode
 mainMenu
+
 

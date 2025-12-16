@@ -135,7 +135,7 @@ function addUserMenu_Windows {
                         # Vérification si l'utilisateur a été créé
                         $userExists = command_ssh "Get-LocalUser -Name $addUserCommand -ErrorAction SilentlyContinue"
 
-                        if ($userCreated) {
+                        if ($userExists) {
 
                             Write-Host "► L'utilisateur $addUserCommand a été créé."
                             Write-Host ""
@@ -394,3 +394,4 @@ function changePasswordUserMenu_windows {
         }
     }
 }
+

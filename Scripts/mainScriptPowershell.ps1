@@ -133,6 +133,7 @@ function executionMode {
     Write-Host ""
 
     $executionmode = Read-Host "► Voulez-vous exécuter le script en Local ou à distance ? "
+    Write-Host ""
 
     switch ($executionmode) {
 
@@ -140,7 +141,7 @@ function executionMode {
             logEvent "EXECUTION_LOCAL"
             $script:connexionMode = "local"
             Write-Host "► Exécution du script sur la machine hôte."
-            Write-Host
+            Write-Host ""
         }
 
         2 {
@@ -207,15 +208,16 @@ function detectionRemoteOS {
             logEvent "DETECTION_OS:LINUX"
 
             Write-Host "► Système d'exploitation distant détecté : Linux"
+            Write-Host ""
         } else {
 
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
             Write-Host "► Système d'exploitation distant détecté : Windows"
+            Write-Host ""
 
         }
 
-        Write-Host ""
     } else {
 
         $script:remoteOS = "Windows"
@@ -285,8 +287,8 @@ function infoFile {
     )
     
     $date = Get-Date -Format "yyyyMMdd"
-    $dossierInfo = "info"
-    $fichierInfo = "$dossierInfo\info_${cible}_${date}.txt"
+    $dossierInfo = Join-Path $PSScriptRoot "info"
+    $fichierInfo = Join-Path $dossierInfo "info_${cible}_${date}.txt"
     
     if (!(Test-Path $dossierInfo)) {
         New-Item -ItemType Directory -Path $dossierInfo | Out-Null
@@ -748,6 +750,7 @@ function logsMainMenu {
         5 {
             logEvent "MENU_JOURNALISATION:AFFICHAGE_FICHIER_JOURNALISATION"
             Get-Content -Path $LogFile
+            logsMainMenu
         }   
 
         6 {

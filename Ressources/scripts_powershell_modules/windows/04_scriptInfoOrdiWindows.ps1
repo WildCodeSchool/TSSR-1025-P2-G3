@@ -84,21 +84,13 @@ function nombre_disques_windows {
     Write-Host "► NOMBRE DE DISQUES"
     Write-Host ""
     
-    # Récupère tous les disques physiques
-    $disks = ssh_command "Get-Disk"
-    # Compte le nombre de disques
-    $nombreDisques = (ssh_command "Get-Disk | Measure-Object").Count
+    $nombreDisques = (command_ssh "Get-Disk | Measure-Object").Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     Write-Host ""
-    
-    # Affiche les détails de chaque disque
-    ssh_command "Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle | Format-Table -AutoSize"
-    
-    # Enregistre dans le fichier d'infos si la fonction existe
-        if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-        }
+   
+    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+
         
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -454,6 +446,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

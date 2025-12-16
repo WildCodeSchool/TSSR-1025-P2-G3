@@ -192,7 +192,6 @@ function addUserMenu_linux {
 #endregion
 
 
-
 #==============================================================
 #region 3 - SUPPRIMER UTILISATEURS
 #==============================================================
@@ -398,3 +397,4 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+

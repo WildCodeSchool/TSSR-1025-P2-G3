@@ -16,7 +16,7 @@
 
 
 #==============================================================
-# MENU GESTION DISQUES
+#region 01 - MENU GESTION DISQUES
 #==============================================================
 function gestion_disques_menu_windows {
     
@@ -68,10 +68,11 @@ function gestion_disques_menu_windows {
         }
     }
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : NOMBRE DE DISQUES
+#region 02 - NOMBRE DE DISQUES
 #==============================================================
 function nombre_disques_windows {
     
@@ -101,10 +102,11 @@ function nombre_disques_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : PARTITIONS
+#region 03 - PARTITIONS
 #==============================================================
 function partitions_windows {
     
@@ -134,10 +136,11 @@ function partitions_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : LECTEURS MONTÉS
+#region 04 - LECTEURS MONTÉS
 #==============================================================
 function lecteurs_montes_windows {
     
@@ -162,10 +165,11 @@ function lecteurs_montes_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : LISTE UTILISATEURS LOCAUX
+#region 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
 function liste_utilisateurs_windows {
     
@@ -196,10 +200,11 @@ function liste_utilisateurs_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : 5 DERNIERS LOGINS
+#region 06 - 5 DERNIERS LOGINS
 #==============================================================
 function 5_derniers_logins_windows {
     
@@ -231,10 +236,11 @@ function 5_derniers_logins_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : INFORMATIONS RÉSEAU
+#region 07 - INFORMATIONS RÉSEAU
 #==============================================================
 function infos_reseau_windows {
     
@@ -275,10 +281,11 @@ function infos_reseau_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : VERSION DU SYSTÈME
+#region 08 - VERSION DU SYSTÈME
 #==============================================================
 function version_os_windows {
     
@@ -305,10 +312,11 @@ function version_os_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : MISES À JOUR CRITIQUES
+#region 09 - MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_windows {
     
@@ -387,10 +395,11 @@ function mises_a_jour_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : MARQUE ET MODÈLE
+#region 10 - MARQUE ET MODÈLE
 #==============================================================
 function marque_modele_windows {
     
@@ -430,43 +439,4 @@ function marque_modele_windows {
     
     informationMainMenu
 }
-
-
-#==============================================================
-# FONCTION : VÉRIFIER UAC
-#==============================================================
-function verifier_uac_windows {
-    
-    logEvent "DEMANDE_VERIFICATION_UAC"
-    
-    Write-Host ""
-    Write-Host "► STATUT UAC (Contrôle de Compte Utilisateur)"
-    Write-Host ""
-    
-    # Je lis la valeur UAC dans le registre (1=activé, 0=désactivé)
-    $uacValue = ssh_command "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
-    
-    if ($uacValue -eq 1) {
-        Write-Host "► UAC est ACTIVÉ (Sécurisé)" -ForegroundColor Green
-        $uacStatus = "UAC est ACTIVÉ (Sécurisé)"
-    }
-    else {
-        Write-Host "► UAC est DÉSACTIVÉ (Non sécurisé)" -ForegroundColor Red
-        Write-Host ""
-        Write-Host "  ⚠ ATTENTION : Système vulnérable"
-        Write-Host "  Pour activer : Panneau de configuration > Comptes d'utilisateurs"
-        $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
-    }
-    
-    # J'enregistre dans le fichier d'infos
-    if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
-    }
-    
-    Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
-    
-    informationMainMenu
-}
-
+#endregion

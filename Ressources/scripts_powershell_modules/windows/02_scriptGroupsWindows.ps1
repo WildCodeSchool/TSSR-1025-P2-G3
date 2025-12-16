@@ -1,4 +1,5 @@
 ﻿# Script Gestion de groupes Windows en Powershell
+# Auteur : Pierre-Jan
 
 
 # Sommaire :
@@ -338,5 +339,6 @@ function del_user_group_windows {
     }
 }
 #endregion
+
 
 

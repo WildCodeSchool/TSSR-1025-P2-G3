@@ -1,9 +1,70 @@
 #!/bin/bash
 
 # Script de gestion groupes et utilisateurs
-# Auteur : Pierre-Jan
-#---------------------------------Fonctions-------------------------------------------
+# Auteur : Pierre-Jean
 
+# Sommaire :
+# 01 - Menu Groupe
+# 02 - Ajouter un utilisateur au groupe Admin
+# 03 - Ajouter un utilisateur à un groupe
+# 04 - Supprimer un utilisateur d'un groupe
+
+
+#==============================================================
+#region 01 - MENU GROUPE
+#==============================================================
+fonc_menu_group_windows() {
+    logEvent "MENU_GROUPES"
+    while true; do
+        echo ""
+        echo "╭──────────────────────────────────────────────────╮"
+        echo "│                   MENU GROUPES                   │"
+        echo "├──────────────────────────────────────────────────┤"
+        echo "│                                                  │"
+        echo "│  1. Ajouter un utilisateur au groupe sudo        │"
+        echo "│  2. Ajouter un utilisateur à un groupe           │"
+        echo "│  3. Retirer un utilisateur d'un groupe           │"
+        echo "│  4. Retour au menu précédent                     │"
+        echo "│                                                  │"
+        echo "╰──────────────────────────────────────────────────╯"
+        echo ""
+        echo -n "► Votre choix (1-4): "
+        echo ""
+        read selection
+
+        case $selection in
+
+        1)
+            logEvent "MENU_GROUPES:AJOUT_D'_UTILISATEUR_AU_GROUPE_ADMIN"
+            fonc_add_user_admin_windows
+            ;;
+        2)
+            logEvent "MENU_GROUPES:AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
+            fonc_add_user_group_windows
+            ;;
+        3)
+            logEvent "MENU_GROUPES:SORTIE_D'UN_UTLISATEUR_D'UN_GROUPE"
+            fonc_exit_group_windows
+            ;;
+        4)
+
+            userMainMenu
+            ;;
+        *)
+            echo "Erreur de saisie"
+            fonc_menu_group_windows
+            ;;
+
+        esac
+    done
+
+}
+#endregion
+
+
+#==============================================================
+#region 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
+#==============================================================
 fonc_add_user_admin_windows() {
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -77,7 +138,12 @@ fonc_add_user_admin_windows() {
         ;;
     esac
 }
+#endregion
 
+
+#==============================================================
+#region 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
+#==============================================================
 fonc_add_user_group_windows() {
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -164,7 +230,12 @@ fonc_add_user_group_windows() {
         ;;
     esac
 }
+#endregion
 
+
+#==============================================================
+#region 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
+#==============================================================
 fonc_exit_group_windows() {
     echo ""
     echo "╭──────────────────────────────────────────────────╮"
@@ -260,51 +331,4 @@ fonc_exit_menu() {
     exit 0
 
 }
-#-------------------------------Menu--------------------------------
-
-fonc_menu_group_windows() {
-    logEvent "MENU_GROUPES"
-    while true; do
-        echo ""
-        echo "╭──────────────────────────────────────────────────╮"
-        echo "│                   MENU GROUPES                   │"
-        echo "├──────────────────────────────────────────────────┤"
-        echo "│                                                  │"
-        echo "│  1. Ajouter un utilisateur au groupe sudo        │"
-        echo "│  2. Ajouter un utilisateur à un groupe           │"
-        echo "│  3. Retirer un utilisateur d'un groupe           │"
-        echo "│  4. Retour au menu précédent                     │"
-        echo "│                                                  │"
-        echo "╰──────────────────────────────────────────────────╯"
-        echo ""
-        echo -n "► Votre choix (1-4): "
-        echo ""
-        read selection
-
-        case $selection in
-
-        1)
-            logEvent "MENU_GROUPES:AJOUT_D'_UTILISATEUR_AU_GROUPE_ADMIN"
-            fonc_add_user_admin_windows
-            ;;
-        2)
-            logEvent "MENU_GROUPES:AJOUT_D'UN_UTILISATEUR_À_UN_GROUPE"
-            fonc_add_user_group_windows
-            ;;
-        3)
-            logEvent "MENU_GROUPES:SORTIE_D'UN_UTLISATEUR_D'UN_GROUPE"
-            fonc_exit_group_windows
-            ;;
-        4)
-
-            userMainMenu
-            ;;
-        *)
-            echo "Erreur de saisie"
-            fonc_menu_group_windows
-            ;;
-
-        esac
-    done
-
-}
+#endregion

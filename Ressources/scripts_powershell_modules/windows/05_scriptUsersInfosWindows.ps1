@@ -1,5 +1,5 @@
 ﻿# Script Information Utilisateurs Windows en Powershell
-
+# Auteur : Pierre-Jean
 
 # Sommaire :
 # 01. Date dernière connexion
@@ -282,5 +282,6 @@ function list_opensessions_windows {
     }
 }
 #endregion
+
 
 

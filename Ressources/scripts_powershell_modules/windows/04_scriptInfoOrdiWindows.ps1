@@ -128,20 +128,16 @@ function partitions_windows {
 #region 04 - LECTEURS MONTÉS
 #==============================================================
 function lecteurs_montes_windows {
-    
     logEvent "DEMANDE_LECTEURS_MONTES"
     
     Write-Host "`n► LECTEURS MONTÉS`n"
     
-    # Récupération et affichage des lecteurs montés
-    $lecteurs = command_ssh "Get-PSDrive -PSProvider FileSystem | Where-Object Used | Select Name,@{N='UsedGB';E={[math]::Round(`$_.Used/1GB,2)}},@{N='FreeGB';E={[math]::Round(`$_.Free/1GB,2)}},Root | Format-Table -AutoSize"
+    $lecteurs = command_ssh "Get-PSDrive -PSProvider FileSystem | Where Used | FT Name, Used, Free -Auto"
     Write-Host $lecteurs
     
-    infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteurs
- 
+    infoFile $env:COMPUTERNAME "Lecteurs:" $lecteurs
     
-    Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent"
+    Read-Host "`n► ENTRÉE"
     informationMainMenu
 }
 #endregion
@@ -384,6 +380,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

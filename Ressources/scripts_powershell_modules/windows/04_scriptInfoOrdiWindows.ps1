@@ -80,21 +80,16 @@ function nombre_disques_windows {
     
     logEvent "DEMANDE_NOMBRE_DISQUES"
     
-    Write-Host ""
-    Write-Host "► NOMBRE DE DISQUES"
-    Write-Host ""
+    Write-Host "`n► NOMBRE DE DISQUES`n"
     
-    $nombreDisques = (command_ssh "Get-Disk | Measure-Object").Count
+    # La commande retourne directement le nombre
+    $nombreDisques = command_ssh "(Get-Disk).Count"
     
     Write-Host "► Nombre de disques : $nombreDisques"
-    Write-Host ""
-   
+    
     infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-
-        
-    Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
+    
+    Read-Host "`n► Appuyez sur ENTRÉE"
 }
 #endregion
 
@@ -185,7 +180,7 @@ function liste_utilisateurs_windows {
 #==============================================================
 #region 06 - 5 DERNIERS LOGINS
 #==============================================================
-function 5_derniers_logins_windows {
+function cinq_derniers_logins_windows {
     
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
     Write-Host "`n► LES 5 DERNIERS LOGINS`n"
@@ -357,7 +352,7 @@ function marque_modele_windows {
 #==============================================================
 #region 11 - VÉRIFIER UAC
 #==============================================================
-function verifier_uac_windows {
+function status_uac_windows {
     
     logEvent "DEMANDE_VERIFICATION_UAC"
     
@@ -389,6 +384,7 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

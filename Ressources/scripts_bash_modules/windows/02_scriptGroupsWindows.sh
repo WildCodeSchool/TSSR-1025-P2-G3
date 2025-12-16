@@ -11,7 +11,7 @@
 
 
 #==============================================================
-#region 01 - MENU GROUPE
+# 01 - MENU GROUPE
 #==============================================================
 fonc_menu_group_windows() {
     logEvent "MENU_GROUPES"
@@ -59,11 +59,10 @@ fonc_menu_group_windows() {
     done
 
 }
-#endregion
 
 
 #==============================================================
-#region 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
+# 02 - FONCTION AJOUTER UN UTILISATEUR AU GROUPE ADMIN
 #==============================================================
 fonc_add_user_admin_windows() {
     echo ""
@@ -138,11 +137,10 @@ fonc_add_user_admin_windows() {
         ;;
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
+# 03 - FONCTION AJOUTER UN UTILISATEUR A UN GROUPE
 #==============================================================
 fonc_add_user_group_windows() {
     echo ""
@@ -230,11 +228,10 @@ fonc_add_user_group_windows() {
         ;;
     esac
 }
-#endregion
 
 
 #==============================================================
-#region 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
+# 04 - FONCTION RETIRER UN UTILISATEUR D'UN GROUPE
 #==============================================================
 fonc_exit_group_windows() {
     echo ""
@@ -331,4 +328,3 @@ fonc_exit_menu() {
     exit 0
 
 }
-#endregion

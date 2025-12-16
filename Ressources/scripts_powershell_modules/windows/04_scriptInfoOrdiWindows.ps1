@@ -206,33 +206,27 @@ function liste_utilisateurs_windows {
 function 5_derniers_logins_windows {
     
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
-    
-    Write-Host ""
-    Write-Host "► LES 5 DERNIERS LOGINS"
-    Write-Host ""
+    Write-Host "`n► LES 5 DERNIERS LOGINS`n"
     
     try {
-        # Je récupère les 5 derniers événements de connexion réussie (ID 4624)
-        $loginsList = ssh_command "Get-EventLog -LogName Security -InstanceId 4624 -Newest 5 | Select-Object TimeGenerated, @{Name = 'Utilisateur'; Expression = { if (`$_.Message -match 'Account Name:\s+(\S+)') { `$matches[1] } else { 'N/A' } }}, @{Name = 'Domaine'; Expression = { if (`$_.Message -match 'Account Domain:\s+(\S+)') { `$matches[1] } else { 'N/A' } }}"
+        # Récupération simple des 5 derniers logins
+        $logins = ssh_command "Get-EventLog Security -Newest 5 -InstanceId 4624"
+        Write-Host $logins
         
-        # J'affiche le tableau
-        Write-Host $loginsList
-        
-        # J'enregistre dans le fichier d'infos
+        # Enregistrement
         if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-            infoFile $env:COMPUTERNAME "5 derniers logins:" $loginsList
+            infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
         }
     }
     catch {
-        Write-Host "► Erreur : Cette fonction nécessite des privilèges administrateur"
+        Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
     }
     
     Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
-    
+    Read-Host "► Appuyez sur ENTRÉE pour continuer"
     informationMainMenu
 }
+    
 #endregion
 
 
@@ -242,40 +236,26 @@ function 5_derniers_logins_windows {
 function infos_reseau_windows {
     
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
+    Write-Host "`n► INFORMATIONS RÉSEAU`n"
     
-    Write-Host ""
-    Write-Host "► INFORMATIONS RÉSEAU"
-    Write-Host ""
+    # Affichage des adresses IP
+    Write-Host "► Adresses IP :`n"
+    $ip = ssh_command "Get-NetIPAddress -AddressFamily IPv4"
+    Write-Host $ip
     
-    Write-Host "► Adresse IP et masque :"
-    Write-Host ""
+    # Affichage de la passerelle
+    Write-Host "`n► Passerelle :`n"
+    $gw = ssh_command "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
+    Write-Host $gw
     
-    # Je récupère les adresses IPv4 (sauf loopback)
-    $ipMasque = ssh_command "Get-NetIPAddress | Where-Object { `$_.AddressFamily -eq 'IPv4' -and `$_.InterfaceAlias -notlike 'Loopback*' } | Select-Object InterfaceAlias, IPAddress, PrefixLength"
-    
-    # J'affiche le tableau
-    Write-Host $ipMasque
-    
-    Write-Host ""
-    Write-Host "► Passerelle par défaut :"
-    Write-Host ""
-    
-    # Je récupère la passerelle par défaut (route 0.0.0.0/0)
-    $passerelle = ssh_command "Get-NetRoute | Where-Object { `$_.DestinationPrefix -eq '0.0.0.0/0' } | Select-Object InterfaceAlias, NextHop"
-    
-    # J'affiche le tableau
-    Write-Host $passerelle
-    
-    # J'enregistre dans le fichier d'infos
+    # Enregistrement
     if (Get-Command infoFile -ErrorAction SilentlyContinue) {
-        infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
-        infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
+        infoFile $env:COMPUTERNAME "IP:" $ip
+        infoFile $env:COMPUTERNAME "Passerelle:" $gw
     }
     
     Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
-    
+    Read-Host "► Appuyez sur ENTRÉE pour continuer"
     informationMainMenu
 }
 #endregion
@@ -477,5 +457,6 @@ function verifier_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 

@@ -1,19 +1,22 @@
-# Liste des fonctions :
-# 1. FONCTION : MENU GESTION DISQUE
-# 2. FONCTION : NOMBRE DE DISQUES
-# 3. FONCTION : PARTITIONS
-# 4. FONCTION : LECTEURS MONTÉS
-# 5. FONCTION : LISTE UTILISATEURS LOCAUX
-# 6. FONCTION : 5 DERNIERS LOGINS
-# 7. FONCTION : INFORMATIONS RÉSEAU
-# 8. FONCTION : VERSION DU OS
-# 9. FONCTION : MISES À JOUR CRITIQUES
-# 10. FONCTION : MARQUE ET MODÈLE DE L'ORDINATEUR
-# 11. FONCTION : VÉRIFIER UAC
+# Script Informations Système Windows en Powershell
+# Auteur : Safi
+
+# Sommaire :
+# 01 - MENU GESTION DISQUE
+# 02 - NOMBRE DE DISQUES
+# 03 - PARTITIONS
+# 04 - LECTEURS MONTÉS
+# 05 - LISTE UTILISATEURS LOCAUX
+# 06 - 5 DERNIERS LOGINS
+# 07 - INFORMATIONS RÉSEAU
+# 08 - VERSION DU OS
+# 09-  MISES À JOUR CRITIQUES
+# 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
+# 11 - VÉRIFIER UAC
 
 
 #==============================================================
-# MENU GESTION DISQUES
+#region 01 - MENU GESTION DISQUES
 #==============================================================
 function gestion_disques_menu_windows {
     
@@ -65,10 +68,11 @@ function gestion_disques_menu_windows {
         }
     }
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : NOMBRE DE DISQUES
+#region 02 - NOMBRE DE DISQUES
 #==============================================================
 function nombre_disques_windows {
     
@@ -98,10 +102,11 @@ function nombre_disques_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : PARTITIONS
+#region 03 - PARTITIONS
 #==============================================================
 function partitions_windows {
     
@@ -131,10 +136,11 @@ function partitions_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : LECTEURS MONTÉS
+#region 04 - LECTEURS MONTÉS
 #==============================================================
 function lecteurs_montes_windows {
     
@@ -159,10 +165,11 @@ function lecteurs_montes_windows {
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : LISTE UTILISATEURS LOCAUX
+#region 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
 function liste_utilisateurs_windows {
     
@@ -193,10 +200,11 @@ function liste_utilisateurs_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : 5 DERNIERS LOGINS
+#region 06 - 5 DERNIERS LOGINS
 #==============================================================
 function 5_derniers_logins_windows {
     
@@ -228,10 +236,11 @@ function 5_derniers_logins_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : INFORMATIONS RÉSEAU
+#region 07 - INFORMATIONS RÉSEAU
 #==============================================================
 function infos_reseau_windows {
     
@@ -272,10 +281,11 @@ function infos_reseau_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : VERSION DU SYSTÈME
+#region 08 - VERSION DU SYSTÈME
 #==============================================================
 function version_os_windows {
     
@@ -302,10 +312,11 @@ function version_os_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : MISES À JOUR CRITIQUES
+#region 09 - MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_windows {
     
@@ -384,10 +395,11 @@ function mises_a_jour_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : MARQUE ET MODÈLE
+#region 10 - MARQUE ET MODÈLE
 #==============================================================
 function marque_modele_windows {
     
@@ -427,10 +439,11 @@ function marque_modele_windows {
     
     informationMainMenu
 }
+#endregion
 
 
 #==============================================================
-# FONCTION : VÉRIFIER UAC
+#region 11 - VÉRIFIER UAC
 #==============================================================
 function verifier_uac_windows {
     
@@ -466,3 +479,4 @@ function verifier_uac_windows {
     
     informationMainMenu
 }
+#endregion

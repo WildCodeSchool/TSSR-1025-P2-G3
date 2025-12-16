@@ -1,14 +1,14 @@
 ﻿# Script Information Utilisateurs Linux en Powershell
 # Auteur : Pierre-Jean
 
-# Liste des fonctions :
-# 1. Date dernière connexion
-# 2. Date dernière modification mot de passe
-# 3. Liste des sessions ouvertes
+# Sommaire :
+# 01. Date dernière connexion
+# 02. Date dernière modification mot de passe
+# 03. Liste des sessions ouvertes
 
 
 #==============================================================
-# 1 - DATE DERNIERE CONNEXION
+#region 01 - DATE DERNIERE CONNEXION
 #==============================================================
 function date_lastconnection_linux {
 
@@ -92,12 +92,11 @@ function date_lastconnection_linux {
         }
     }
 }
-
-
+#endregion
 
 
 #==============================================================
-# 2 - DATE DERNIERE MODIFICATION MOT DE PASSE
+#region 02 - DATE DERNIERE MODIFICATION MOT DE PASSE
 #==============================================================
 function date_lastpassmodif_linux {
 
@@ -181,11 +180,11 @@ function date_lastpassmodif_linux {
         }
     }
 }
-
+#endregion
 
 
 #==============================================================
-# 3 - LISTE DES SESSIONS OUVERTES
+#region 03 - LISTE DES SESSIONS OUVERTES
 #==============================================================
 function list_opensessions_linux {
 
@@ -270,4 +269,5 @@ function list_opensessions_linux {
         }
     }
 }
+#endregion
 

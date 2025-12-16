@@ -2,13 +2,13 @@
 
 
 # Liste des fonctions :
-# 1. Date dernière connexion
-# 2. Date dernière modification mot de passe
-# 3. Liste des sessions ouvertes
+# 01. Date dernière connexion
+# 02. Date dernière modification mot de passe
+# 03. Liste des sessions ouvertes
 
 
 #==============================================================
-# 1 - DATE DERNIERE CONNEXION
+#region 01 - DATE DERNIERE CONNEXION
 #==============================================================
 function date_lastconnection_windows {
 
@@ -95,12 +95,12 @@ function date_lastconnection_windows {
         }
     }
 }
-
+#endregion
 
 
 
 #==============================================================
-# 2 - DATE DERNIERE MODIFICATION MOT DE PASSE
+#region 02 - DATE DERNIERE MODIFICATION MOT DE PASSE
 #==============================================================
 function date_lastpassmodif_windows {
 
@@ -192,11 +192,11 @@ function date_lastpassmodif_windows {
         }
     }
 }
-
+#endregion
 
 
 #==============================================================
-# 3 - LISTE DES SESSIONS OUVERTES
+#region 03 - LISTE DES SESSIONS OUVERTES
 #==============================================================
 function list_opensessions_windows {
 
@@ -281,4 +281,5 @@ function list_opensessions_windows {
         }
     }
 }
+#endregion
 

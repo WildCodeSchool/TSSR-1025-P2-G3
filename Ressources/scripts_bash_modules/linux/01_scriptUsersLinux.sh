@@ -3,11 +3,16 @@
 # Script de création, suppression d'utilisateur et modification de mot de passe utilisateurs.
 # Auteur : Christian
 
-#=====================================================
-# FONCTIONS
-#=====================================================
+# Sommaire :
+# 01. Menu Utilisateurs
+# 02. Ajouter utilisateur
+# 03. Supprimer utilisateur
+# 04. Changer mot de passe utilisateur
 
-# Sous menu "Utilisateurs"
+
+#==============================================================
+#region 01 - MENU UTILISATEURS
+#==============================================================
 function userMenuLinux() {
 
     logEvent "MENU_UTILISATEUR"
@@ -74,8 +79,12 @@ function userMenuLinux() {
 
     done
 }
+#endregion
 
-# Ajouter un utilisateur
+
+#==============================================================
+#region 02 - AJOUTER UTILISATEURS
+#==============================================================
 function addUserMenuLinux() {
 
     logEvent "MENU_AJOUT_UTILISATEUR"
@@ -180,8 +189,12 @@ function addUserMenuLinux() {
     esac
 
 }
+#endregion
 
-# Supprimer un utilisateur
+
+#==============================================================
+#region 03 - SUPPRIMER UTILISATEURS
+#==============================================================
 function deleteUserMenuLinux() {
 
     logEvent "MENU_SUPPRIMER_UTILISATEUR"
@@ -294,8 +307,12 @@ function deleteUserMenuLinux() {
 
     esac
 }
+#endregion
 
-# Changer mot de passe utilisateur
+
+#==============================================================
+#region 04 - CHANGER MOT DE PASSE UTILISATEUR
+#==============================================================
 function changePasswordUserMenuLinux() {
 
     logEvent "MENU_CHANGER_MOT_DE_PASSE"
@@ -400,3 +417,4 @@ function changePasswordUserMenuLinux() {
     esac
 
 }
+#endregion

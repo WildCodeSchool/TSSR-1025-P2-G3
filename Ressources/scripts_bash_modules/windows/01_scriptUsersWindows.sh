@@ -3,11 +3,17 @@
 # Script de création, suppression d'utilisateur et modification de mot de passe utilisateurs.
 # Auteur : Christian
 
-#=====================================================
-# FONCTIONS
-#=====================================================
 
-# Sous menu "Utilisateurs"
+# Sommaire :
+# 01 - Menu Utilisateurs
+# 02 - Ajouter utilisateur
+# 03 - Supprimer utilisateur
+# 04 - Changer mot de passe utilisateur
+
+
+#==============================================================
+#region 01 - MENU UTILISATEURS
+#==============================================================
 function userMenuWindows() {
     logEvent "MENU_UTILISATEUR"
 
@@ -73,8 +79,12 @@ function userMenuWindows() {
 
     done
 }
+#endregion
 
-# Ajouter un utilisateur
+
+#==============================================================
+#region 02 - AJOUTER UTILISATEURS
+#==============================================================
 function addUserMenuWindows() {
 
     logEvent "MENU_AJOUT_UTILISATEUR"
@@ -179,8 +189,12 @@ function addUserMenuWindows() {
     esac
 
 }
+#endregion
 
-# Supprimer un utilisateur
+
+#==============================================================
+#region 03 - SUPPRIMER UTILISATEURS
+#==============================================================
 function deleteUserMenuWindows() {
 
     logEvent "MENU_SUPPRIMER_UTILISATEUR"
@@ -295,8 +309,12 @@ function deleteUserMenuWindows() {
 
     esac
 }
+#endregion
 
-# Changer mot de passe utilisateur
+
+#==============================================================
+#region 04 - CHANGER MOT DE PASSE UTILISATEUR
+#==============================================================
 function changePasswordUserMenuWindows() {
 
     logEvent "MENU_CHANGER_MOT_DE_PASSE"
@@ -404,3 +422,4 @@ function changePasswordUserMenuWindows() {
     esac
 
 }
+#endregion

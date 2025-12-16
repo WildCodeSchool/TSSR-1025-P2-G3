@@ -2,10 +2,10 @@
 # Auteur : Christian
 
 # Sommaire :
-# 01. Menu Utilisateurs
-# 02. Ajouter utilisateur
-# 03. Supprimer utilisateur
-# 04. Changer mot de passe utilisateur
+# 01 - Menu Utilisateurs
+# 02 - Ajouter utilisateur
+# 03 - Supprimer utilisateur
+# 04 - Changer mot de passe utilisateur
 
 
 #==============================================================
@@ -397,6 +397,7 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 
 
 

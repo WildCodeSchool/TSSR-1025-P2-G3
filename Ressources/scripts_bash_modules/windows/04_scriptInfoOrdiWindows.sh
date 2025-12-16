@@ -103,7 +103,6 @@ fonction_nombre_disques_windows() {
 #==============================================================
 #region 03 - PARTITIONS
 #==============================================================
-# Affiche les partitions avec leurs détails et leur nombre total
 fonction_partitions_windows() {
 
     logEvent "DEMANDE_LISTE_PARTITIONS"
@@ -131,7 +130,6 @@ fonction_partitions_windows() {
 #==============================================================
 #region 04 - LECTEURS MONTÉS
 #==============================================================
-# Affiche tous les lecteurs physiques actuellement montés
 fonction_lecteurs_montes_windows() {
 
     logEvent "DEMANDE_LECTEURS_MONTES"
@@ -153,7 +151,6 @@ fonction_lecteurs_montes_windows() {
 #==============================================================
 #region 05 - LISTE UTILISATEURS LOCAUX
 #==============================================================
-# Liste les utilisateurs locaux (non système)
 fonction_liste_utilisateurs_windows() {
 
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
@@ -174,7 +171,6 @@ fonction_liste_utilisateurs_windows() {
 #==============================================================
 #region 06 - 5 DERNIERS LOGINS
 #==============================================================
-# Affiche les 5 dernières connexions utilisateurs
 fonction_5_derniers_logins_windows() {
 
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
@@ -195,7 +191,6 @@ fonction_5_derniers_logins_windows() {
 #==============================================================
 #region 07 - INFORMATIONS RÉSEAU
 #==============================================================
-# Affiche les informations réseau (IP, masque et passerelle)
 fonction_infos_reseau_windows() {
 
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
@@ -223,7 +218,6 @@ fonction_infos_reseau_windows() {
 #==============================================================
 #region 08 - VERSION DU SYSTÈME
 #==============================================================
-# Affiche la version du système d'exploitation
 fonction_version_os_windows() {
 
     logEvent "DEMANDE_VERSION_OS"
@@ -244,7 +238,6 @@ fonction_version_os_windows() {
 #==============================================================
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
-# Liste les mises à jour disponibles
 fonction_mises_a_jour_windows() {
     
     logEvent "DEMANDE_MISES_A_JOUR"
@@ -273,7 +266,6 @@ fonction_mises_a_jour_windows() {
 #==============================================================
 #region 10 - MARQUE ET MODÈLE
 #==============================================================
-# Affiche les informations matérielles marque et modèle
 fonction_marque_modele_windows() {
 
     logEvent "DEMANDE_MARQUE_MODELE"

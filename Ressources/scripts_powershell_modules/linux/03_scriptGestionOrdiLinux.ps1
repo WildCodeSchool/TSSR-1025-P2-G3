@@ -1,16 +1,16 @@
-﻿# Liste des fonctions :
-# 1. Menu Gestion Répertoire
-# 2. Création de répertoire
-# 3. Création de répertoire Linux (SUDO)
-# 4. Suppression de répertoire
-# 5. Redémmarage
-# 6. Prise en main à distance (CLI)
-# 7. Activation du pare-feu
-# 8. Exécution de scripts sur une machine distante
+﻿# Sommaire :
+# 01. Menu Gestion Répertoire
+# 02. Création de répertoire
+# 03. Création de répertoire Linux (SUDO)
+# 04. Suppression de répertoire
+# 05. Redémmarage
+# 06. Prise en main à distance (CLI)
+# 07. Activation du pare-feu
+# 08. Exécution de scripts sur une machine distante
 
 
 #==============================================================
-# 1-MENU GESTION REPERTOIRE
+#region 01 - MENU GESTION REPERTOIRE
 #==============================================================
 function gestion_repertoire_menu_linux {
 
@@ -62,10 +62,11 @@ function gestion_repertoire_menu_linux {
         }
     }
 }
+#endregion
 
 
 #==============================================================
-# 2-CREATION DE REPERTOIRE
+#region 02 - CREATION DE REPERTOIRE
 #==============================================================
 function creer_dossier_linux {
 
@@ -95,10 +96,11 @@ function creer_dossier_linux {
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
+#endregion
 
 
 #==============================================================
-# 3-CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
+#region 03 - CREATION DE REPERTOIRE AVEC PRIVILEGES ADMIN
 #==============================================================
 function creer_dossier_admin_linux {
 
@@ -130,9 +132,11 @@ function creer_dossier_admin_linux {
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
+#endregion
+
 
 #==============================================================
-# 4-SUPPRESSION DE REPERTOIRE
+#region 04 - SUPPRESSION DE REPERTOIRE
 #==============================================================
 function supprimer_dossier_linux {
 
@@ -172,12 +176,12 @@ function supprimer_dossier_linux {
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
+#endregion
 
 
 #==============================================================
-# 5-REDEMARRAGE
+#region 05 - REDEMARRAGE
 #==============================================================
-
 function redemarrage_linux {
 
     logEvent "DEMANDE_REDEMARRAGE"
@@ -207,9 +211,11 @@ function redemarrage_linux {
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
+#endregion
+
 
 #==============================================================
-# 6-PRISE EN MAIN A DISTANCE
+#region 06 - PRISE EN MAIN A DISTANCE
 #==============================================================
 function prise_main_distance_linux {
 
@@ -238,9 +244,11 @@ function prise_main_distance_linux {
     computerMainMenu
     
 }
+#endregion
+
 
 #==============================================================
-# 7-ACTIVATION PARE-FEU
+#region 07 - ACTIVATION PARE-FEU
 #==============================================================
 
 function activation_parefeu_linux {
@@ -279,9 +287,11 @@ function activation_parefeu_linux {
     computerMainMenu
 
 }
+#endregion
+
 
 #==============================================================
-# 8-EXECUTION DE SCRIPT LOCAL
+#region 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 function exec_script_linux {
 
@@ -333,4 +343,6 @@ function exec_script_linux {
     
     Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
+
 }
+#endregion

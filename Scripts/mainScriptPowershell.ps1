@@ -1,11 +1,19 @@
 # Script PowerShell principal du Projet 2
 
 # Liste des fonctions :
-# 1. 
-# 2. 
-# 3. 
-# 4. 
-
+# 1. Chargement des modules
+# 2. Journalisation
+# 3. Menu exécution locale ou SSH  
+# 4. Détection du système d'exploitation
+# 5. Fonctions des commandes
+# 6. Fichiers de stockage des informations
+# 7. Menu principal
+# 8. Menu gestion des utilisateurs
+# 9. Menu gestion des ordinateurs
+# 10. Menu informations système
+# 11. Menu informations utilisateur
+# 12. Menu journalisation
+# 13. Exécution du script
 
 
 # Force le lancement en administrateur
@@ -16,9 +24,12 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit
 }
 
+
+#region 1 -Chargement des modules
 #=====================================================
-# CHARGEMENT DES MODULES
+# 1 - CHARGEMENT DES MODULES
 #=====================================================
+
 # GENERAL
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\00_scriptSearchLog.ps1" -Force
 
@@ -31,20 +42,16 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\windows\05
 
 # LINUX
 Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\01_scriptUsersLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\02_scriptGroupsLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\03_scriptGestionOrdiLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\04_scriptInfoOrdiLinux.ps1" -Force
-# Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_scriptUsersInfosLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\02_scriptGroupsLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\03_scriptGestionOrdiLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\04_scriptInfoOrdiLinux.ps1" -Force
+Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_scriptUsersInfosLinux.ps1" -Force
 
+#endregion
+
+#region 2 - Journalisation
 #=====================================================
-# VARIABLES DES COULEURS
-#=====================================================
-
-
-
-
-#=====================================================
-# JOURNALISATION
+# 2 - JOURNALISATION
 #=====================================================
 $LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
@@ -97,15 +104,11 @@ function stopScript {
     Write-Host "► Fermeture du script..."
     exit
 }
+#endregion
 
-$script:connexionMode = ""
-$script:remoteUser = ""
-$script:remoteComputer = ""
-$script:portSSH = ""
-$script:remoteOS = ""
-
+#region 3 - Menu Execution Local ou SSH
 #=====================================================
-# MENU EXECUTION LOCAL OU SSH
+# 3 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
 function executionMode {
 
@@ -190,11 +193,11 @@ function executionMode {
 
     detectionRemoteOS
 }
+#endregion
 
-
-
+#region 4 -Detection du système d'exploitation
 #=====================================================
-# DETECTION DU SYSTEME D'EXPLOITATION
+# 4 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
 
@@ -227,11 +230,11 @@ function detectionRemoteOS {
 
     }
 }
+#endregion
 
-
-
+#region 5 - Fonctions des commandes
 #=====================================================
-# FONCTIONS DES COMMANDES
+# 5 - FONCTIONS DES COMMANDES
 #=====================================================
 function command_ssh {
     param (
@@ -273,11 +276,11 @@ function bash_sudo_command {
     )
     ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
 }
+#endregion
 
-
-
+#region 6 - Fichiers de stockage informations
 #=====================================================
-# FICHIERS STOCKAGE INFORMATIONS
+# 6 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
 function infoFile {
     param(
@@ -301,11 +304,11 @@ function infoFile {
     $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Add-Content -Path $fichierInfo -Value "[$time] $description : $informations"
 }
+#endregion
 
-
-
+#region 7 - Menu principal
 #=====================================================
-# MENU PRINCIPAL
+# 7 - MENU PRINCIPAL
 #=====================================================
 function mainMenu {
         
@@ -368,11 +371,11 @@ function mainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 8 - Menu gestion utilisateurs
 #=====================================================
-# MENU GESTION UTILISATEUR
+# 8 - MENU GESTION UTILISATEUR
 #=====================================================
 function userMainMenu {
 
@@ -424,11 +427,11 @@ function userMainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 9 - Menu gestion ordinateurs
 #=====================================================
-# MENU GESTION ORDINATEURS
+# 9 - MENU GESTION ORDINATEURS
 #=====================================================
 function computerMainMenu {
 
@@ -508,11 +511,11 @@ function computerMainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 10 - Menu informations système
 #=====================================================
-# MENU INFORMATIONS SYSTEME
+# 10 - MENU INFORMATIONS SYSTEME
 #=====================================================
 function informationMainMenu {
 
@@ -632,11 +635,11 @@ function informationMainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 11 - Menu informations utilisateur
 #=====================================================
-# MENU INFORMATIONS UTILISATEUR
+# 11 - MENU INFORMATIONS UTILISATEUR
 #=====================================================
 function informationUserMainMenu {
 
@@ -699,11 +702,11 @@ function informationUserMainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 12 - Menu journalisation
 #=====================================================
-# MENU JOURNALISATION
+# 12 - MENU JOURNALISATION
 #=====================================================
 function logsMainMenu {
 
@@ -765,11 +768,11 @@ function logsMainMenu {
         }
     }
 }
+#endregion
 
-
-
+#region 13 - Execution du script
 #=====================================================
-# EXECUTION DU SCRIPT
+# 13 - EXECUTION DU SCRIPT
 #=====================================================
 
 logInit -LogFile $LogFile
@@ -777,3 +780,4 @@ startScript
 executionMode
 mainMenu
 
+#endregion

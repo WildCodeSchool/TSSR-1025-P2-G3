@@ -12,7 +12,6 @@
 # 08 - VERSION DU OS
 # 09 -  MISES À JOUR CRITIQUES
 # 10 - MARQUE ET MODÈLE DE L'ORDINATEUR
-# 11 - VÉRIFIER UAC
 
 
 #==============================================================
@@ -440,3 +439,4 @@ function marque_modele_windows {
     informationMainMenu
 }
 #endregion
+

@@ -1,5 +1,5 @@
 # Script Gestion Utilisateurs Windows en Powershell
-
+# Auteur : Christian
 
 # Sommaire :
 # 01. Menu Utilisateurs
@@ -397,3 +397,4 @@ function changePasswordUserMenu_windows {
     }
 }
 #endregion
+

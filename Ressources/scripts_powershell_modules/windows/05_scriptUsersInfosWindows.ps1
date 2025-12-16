@@ -2,9 +2,9 @@
 # Auteur : Pierre-Jean
 
 # Sommaire :
-# 01. Date dernière connexion
-# 02. Date dernière modification mot de passe
-# 03. Liste des sessions ouvertes
+# 01 - Date dernière connexion
+# 02 - Date dernière modification mot de passe
+# 03 - Liste des sessions ouvertes
 
 
 #==============================================================
@@ -282,6 +282,7 @@ function list_opensessions_windows {
     }
 }
 #endregion
+
 
 
 

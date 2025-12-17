@@ -295,58 +295,45 @@ function activation_parefeu_windows {
 #region 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 function exec_script_windows {
-
     logEvent "DEMANDE_CHEMIN_SCRIPT"
     
-    Write-Host "► Entrez le chemin du script local à exécuter :"
-    $scriptLocal = Read-Host "► "
+    Write-Host "► Entrez le chemin du script :"
+    $scriptLocal = (Read-Host "► ").Trim().Trim('"')
     
-    logEvent "SCRIPT_SÉLECTIONNÉ:$scriptLocal"
-
-    # Vérification existence du fichier
+    logEvent "SCRIPT_SELECTIONNE:$scriptLocal"
+    
+    # Test existence
     if (-not (Test-Path $scriptLocal)) {
-        logEvent "SCRIPT_INTROUVABLE:$scriptLocal"
-        Write-Host "► Erreur : fichier introuvable"
-        Write-Host ""
-        Read-Host "► Appuyez sur ENTRÉE pour continuer"
+        logEvent "SCRIPT_INTROUVABLE"
+        Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+        Read-Host "► ENTREE pour continuer"
         return
     }
-
-    # Vérification extension .ps1
-    if ([System.IO.Path]::GetExtension($scriptLocal) -ne ".ps1") {
-        Write-Host "► Avertissement : Le fichier n'a pas l'extension .ps1" -ForegroundColor Yellow
-        if ((Read-Host "► Continuer quand même ? (o/n)") -ne "o") {
-            logEvent "EXECUTION_ANNULEE"
-            return
-        }
-    }
-
-    logEvent "EXÉCUTION_SCRIPT:$scriptLocal"
     
-    Write-Host ""
-    Write-Host "► Exécution du script sur : $global:remoteComputer"
-    Write-Host "► Envoi en cours..."
+    logEvent "EXECUTION_SCRIPT"
+    Write-Host "► Execution sur $global:remoteComputer..."
     
-    # Lecture et encodage du script en base64
+    # Lecture et encodage
     $contenu = Get-Content $scriptLocal -Raw
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($contenu)
-    $encoded = [Convert]::ToBase64String($bytes)
+    $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($contenu))
     
-    # Exécution du script encodé sur la machine distante
-    command_ssh "powershell -EncodedCommand $encoded"
+    # Exécution SSH
+    command_ssh "powershell.exe -EncodedCommand $encoded"
     
     if ($LASTEXITCODE -eq 0) {
-        logEvent "SCRIPT_EXECUTE_SUCCESS"
-        Write-Host "► Script exécuté avec succès" -ForegroundColor Green
+        Write-Host "► Succes" -ForegroundColor Green
+        logEvent "SUCCES"
     }
     else {
-        logEvent "ERREUR_EXECUTION_SCRIPT:$scriptLocal"
-        Write-Host "► Erreur lors de l'exécution" -ForegroundColor Red
+        Write-Host "► Echec (code: $LASTEXITCODE)" -ForegroundColor Red
+        logEvent "ECHEC:$LASTEXITCODE"
     }
-
+    
     Write-Host ""
+    computerMainMenu
 }
 #endregion
+
 
 
 

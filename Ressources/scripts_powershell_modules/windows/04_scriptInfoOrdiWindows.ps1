@@ -86,8 +86,8 @@ function nombre_disques_windows {
     
     # Filtre les lignes vides et les séparateurs (----)
     $nombreDisques = ($output -split "`n" | Where-Object { 
-        $_ -match '^\d+\s+' 
-    }).Count
+            $_ -match '^\d+\s+' 
+        }).Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
     
@@ -106,13 +106,17 @@ function nombre_disques_windows {
 
 function partitions_windows {
     logEvent "DEMANDE_LISTE_PARTITIONS"
-    Write-Host "`n► PARTITIONS`n"
+    Write-Host "► Partitions"
     
     $partitions = command_ssh "Get-Volume | FT -Auto"
-    Write-Host $partitions
+    $partitions -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
+    Write-Host ""
     
     $nombre = command_ssh "(Get-Partition).Count"
-    Write-Host "`n► Nombre : $nombre"
+    Write-Host "► Nombre : $nombre"
+    Write-Host ""
     
     infoFile $env:COMPUTERNAME "Partitions:" $partitions
     infoFile $env:COMPUTERNAME "Nombre:" $nombre
@@ -133,7 +137,9 @@ function lecteurs_montes_windows {
     Write-Host "`n► LECTEURS MONTÉS`n"
     
     $lecteurs = command_ssh "Get-PSDrive -PSProvider FileSystem | Where Used | FT Name, Used, Free -Auto"
-    Write-Host $lecteurs
+    $lecteurs -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
     
     infoFile $env:COMPUTERNAME "Lecteurs:" $lecteurs
     
@@ -386,6 +392,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

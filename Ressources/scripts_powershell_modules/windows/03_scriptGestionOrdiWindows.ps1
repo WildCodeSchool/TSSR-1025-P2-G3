@@ -297,47 +297,69 @@ function activation_parefeu_windows {
 function exec_script_windows {
     logEvent "DEMANDE_CHEMIN_SCRIPT"
     
-    Write-Host "► Entrez le chemin du script :"
-    $scriptLocal = (Read-Host "► ").Trim().Trim('"')
+    Write-Host "► Entrez le chemin du script sur $global:remoteComputer :"
+    $scriptRemote = (Read-Host "► ").Trim().Trim('"')
     
-    logEvent "SCRIPT_SELECTIONNE:$scriptLocal"
+    logEvent "SCRIPT_SELECTIONNE:$scriptRemote"
     
-    # Test existence avec support .txt si nécessaire
-    if (-not (Test-Path $scriptLocal)) {
-        if (Test-Path "$scriptLocal.txt") {
-            $scriptLocal = "$scriptLocal.txt"
+    # Échapper les caractères spéciaux pour SSH
+    $scriptEscaped = $scriptRemote -replace '\\', '\\\\'
+    
+    # Test d'existence sur la machine distante
+    Write-Host "► Vérification de l'existence du fichier..." -ForegroundColor Cyan
+    
+    $testCmd = "if (Test-Path '$scriptEscaped') { exit 0 } else { exit 1 }"
+    $testResult = command_ssh "powershell.exe -NoProfile -Command `"$testCmd`""
+    
+    if ($LASTEXITCODE -ne 0) {
+        # Tester avec extension .txt
+        $scriptWithTxt = "$scriptEscaped.txt"
+        $testCmdTxt = "if (Test-Path '$scriptWithTxt') { exit 0 } else { exit 1 }"
+        $testResultTxt = command_ssh "powershell.exe -NoProfile -Command `"$testCmdTxt`""
+        
+        if ($LASTEXITCODE -eq 0) {
+            $scriptRemote = "$scriptRemote.txt"
+            $scriptEscaped = $scriptWithTxt
+            Write-Host "► Fichier trouvé avec extension .txt" -ForegroundColor Yellow
         }
         else {
-            logEvent "SCRIPT_INTROUVABLE"
-            Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+            logEvent "SCRIPT_INTROUVABLE:$scriptRemote"
+            Write-Host "► Erreur : fichier introuvable sur $global:remoteComputer" -ForegroundColor Red
+            Write-Host "   Chemin recherché : $scriptRemote" -ForegroundColor Gray
             Read-Host "► ENTREE pour continuer"
             computerMainMenu
+            
         }
     }
-    # Lecture et encodage
+    
+    Write-Host "► Fichier trouvé !" -ForegroundColor Green
+    
+    # Exécution directe du script distant
+    logEvent "EXECUTION_SCRIPT:$scriptRemote"
+    Write-Host "► Exécution sur $global:remoteComputer..." -ForegroundColor Cyan
+    Write-Host ""
+    
+    # Commande pour exécuter le script avec gestion d'erreur
+    $execCmd = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$scriptEscaped`" 2>&1"
+    
     try {
-        $contenu = Get-Content $scriptLocal -Raw -ErrorAction Stop
-        $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($contenu))
+        command_ssh $execCmd
+        
+        if ($LASTEXITCODE -eq 0) {
+            logEvent "SUCCES"
+            Write-Host ""
+            Write-Host "► Script exécuté avec succès" -ForegroundColor Green
+        }
+        else {
+            logEvent "ERREUR:CODE_$LASTEXITCODE"
+            Write-Host ""
+            Write-Host "► Erreur d'exécution (code: $LASTEXITCODE)" -ForegroundColor Red
+        }
     }
     catch {
-        logEvent "ERREUR_LECTURE"
-        Write-Host "► Erreur lecture du fichier" -ForegroundColor Red
-        Read-Host "► ENTREE pour continuer"
-        computerMainMenu
-    }
-    # Exécution
-    logEvent "EXECUTION_SCRIPT"
-    Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
-    
-    command_ssh "powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand $encoded"
-    
-    if ($LASTEXITCODE -eq 0) {
-        logEvent "SUCCES"
-        Write-Host "► Script execute avec succes" -ForegroundColor Green
-    }
-    else {
-        logEvent "ERREUR:CODE_$LASTEXITCODE"
-        Write-Host "► Erreur execution (code: $LASTEXITCODE)" -ForegroundColor Red
+        logEvent "ERREUR_EXECUTION:$($_.Exception.Message)"
+        Write-Host ""
+        Write-Host "► Erreur lors de l'exécution : $($_.Exception.Message)" -ForegroundColor Red
     }
     
     Write-Host ""
@@ -346,6 +368,7 @@ function exec_script_windows {
 }
 
 #endregion
+
 
 
 

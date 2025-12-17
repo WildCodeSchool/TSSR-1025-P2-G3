@@ -348,7 +348,7 @@ function changePasswordUserMenu_windows {
 
                 if ($userExists) {
 
-                    $newPassword = Read-Host "► Entrez le nouveau mot de passe" -AsSecureString
+                    $newPassword = Read-Host "► Entrez le nouveau mot de passe"
                     Write-Host ""
                     logEvent "CHANGER_MOT_DE_PASSE:NOUVEAU_MOT_DE_PASSE_ENTRE:$changePasswordUserCommand"
 
@@ -400,6 +400,7 @@ function changePasswordUserMenu_windows {
     }
 }
 #endregion
+
 
 
 

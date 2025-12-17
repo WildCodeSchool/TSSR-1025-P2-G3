@@ -302,37 +302,51 @@ function exec_script_windows {
     
     logEvent "SCRIPT_SELECTIONNE:$scriptLocal"
     
-    # Test existence
+    # Test existence avec support .txt si nécessaire
     if (-not (Test-Path $scriptLocal)) {
-        logEvent "SCRIPT_INTROUVABLE"
-        Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+        if (Test-Path "$scriptLocal.txt") {
+            $scriptLocal = "$scriptLocal.txt"
+        }
+        else {
+            logEvent "SCRIPT_INTROUVABLE"
+            Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+            Read-Host "► ENTREE pour continuer"
+            computerMainMenu
+        }
+    }
+    # Lecture et encodage
+    try {
+        $contenu = Get-Content $scriptLocal -Raw -ErrorAction Stop
+        $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($contenu))
+    }
+    catch {
+        logEvent "ERREUR_LECTURE"
+        Write-Host "► Erreur lecture du fichier" -ForegroundColor Red
         Read-Host "► ENTREE pour continuer"
         computerMainMenu
     }
-    
+    # Exécution
     logEvent "EXECUTION_SCRIPT"
-    Write-Host "► Execution sur $global:remoteComputer..."
+    Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
     
-    # Lecture et encodage
-    $contenu = Get-Content $scriptLocal -Raw
-    $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($contenu))
-    
-    # Exécution SSH
-    command_ssh "powershell.exe -EncodedCommand $encoded"
+    command_ssh "powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand $encoded"
     
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "► Succes" -ForegroundColor Green
         logEvent "SUCCES"
+        Write-Host "► Script execute avec succes" -ForegroundColor Green
     }
     else {
-        Write-Host "► Echec (code: $LASTEXITCODE)" -ForegroundColor Red
-        logEvent "ECHEC:$LASTEXITCODE"
+        logEvent "ERREUR:CODE_$LASTEXITCODE"
+        Write-Host "► Erreur execution (code: $LASTEXITCODE)" -ForegroundColor Red
     }
     
     Write-Host ""
+    Read-Host "► ENTREE pour continuer"
     computerMainMenu
 }
+
 #endregion
+
 
 
 

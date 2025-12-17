@@ -215,14 +215,13 @@ function cinq_derniers_logins_linux {
 }
 #endregion
 
-
 #==============================================================
 #region 07 - INFORMATIONS RÉSEAU
 #==============================================================
 function infos_reseau_linux {
-
+    
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
-
+    
     Write-Host ""
     Write-Host "► INFORMATIONS RÉSEAU"
     Write-Host ""
@@ -232,7 +231,9 @@ function infos_reseau_linux {
     
     $ipMasque = bash_command "ip -4 addr show | grep -v '127.0.0.1' | grep inet"
     
-    Write-Host $ipMasque
+    $ipMasque -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
     
     Write-Host ""
     Write-Host "► Passerelle par défaut :"
@@ -240,15 +241,18 @@ function infos_reseau_linux {
     
     $passerelle = bash_command "ip route | grep default"
 
-    Write-Host $passerelle
-
+    $passerelle -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
+    Write-Host ""
+    
     infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
     infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
-
+    
     informationMainMenu
 }
 #endregion
@@ -367,6 +371,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

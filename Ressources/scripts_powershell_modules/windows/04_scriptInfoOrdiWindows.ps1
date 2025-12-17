@@ -94,6 +94,7 @@ function nombre_disques_windows {
     infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
     
     Read-Host "`n► Appuyez sur ENTRÉE"
+    gestion_disques_menu_windows
 }
 #endregion
 
@@ -116,7 +117,7 @@ function partitions_windows {
     infoFile $env:COMPUTERNAME "Nombre:" $nombre
     
     Read-Host "`n► ENTRÉE"
-    informationMainMenu
+    gestion_disques_menu_windows
 }
 #endregion
 
@@ -135,7 +136,7 @@ function lecteurs_montes_windows {
     infoFile $env:COMPUTERNAME "Lecteurs:" $lecteurs
     
     Read-Host "`n► ENTRÉE"
-    informationMainMenu
+    gestion_disques_menu_windows
 }
 #endregion
 
@@ -377,6 +378,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

@@ -91,8 +91,7 @@ function nombre_disques_windows {
     
     Write-Host "► Nombre de disques : $nombreDisques"
 
-    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
-    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+    infoFile $$script:remoteComputerName "Nombre de disques:" $nombreDisques
     
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -119,8 +118,8 @@ function partitions_windows {
     Write-Host "► Nombre : $nombre"
     Write-Host ""
     
-    infoFile $env:COMPUTERNAME "Partitions:" $partitions
-    infoFile $env:COMPUTERNAME "Nombre:" $nombre
+    infoFile $script:remoteComputerName "Partitions:" $partitions
+    infoFile $script:remoteComputerName "Nombre:" $nombre
     
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -142,7 +141,7 @@ function lecteurs_montes_windows {
         Write-Host $_
     }
     
-    infoFile $env:COMPUTERNAME "Lecteurs:" $lecteurs
+    infoFile $script:remoteComputerName "Lecteurs:" $lecteurs
     
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -169,7 +168,7 @@ function liste_utilisateurs_windows {
     $nombreUtilisateurs = (command_ssh "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
     
-    infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
+    infoFile $script:remoteComputerName "Liste d'utilisateurs:" $userList
  
     
     Write-Host ""
@@ -200,6 +199,8 @@ function cinq_derniers_logins_windows {
     catch {
         Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
     }
+
+    infoFile $script:remoteComputerName "5 derniers logins:" $logins
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -232,8 +233,8 @@ function infos_reseau_windows {
         Write-Host $_
     }
     
-    infoFile $env:COMPUTERNAME "IP:" $ip_brut
-    infoFile $env:COMPUTERNAME "Passerelle:" $gw_brut
+    infoFile $script:remoteComputerName "IP:" $ip_brut
+    infoFile $script:remoteComputerName "Passerelle:" $gw_brut
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -258,7 +259,7 @@ function version_os_windows {
     
     Write-Host $versionOS
     
-    infoFile $env:COMPUTERNAME "Version OS:" $versionOS
+    infoFile $script:remoteComputerName "Version OS:" $versionOS
  
     
     Write-Host ""
@@ -306,6 +307,8 @@ function mises_a_jour_windows {
         Write-Host "► Erreur lors de la vérification des mises à jour" -ForegroundColor Red
         Write-Host "► Conseil : Vérifiez manuellement via Windows Update"
     }
+
+    infoFile $script:remoteComputerName "Mises à jour critiques:" $$majList
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -343,10 +346,10 @@ function marque_modele_windows {
     Write-Host "► N° série  : $serial"
     
 
-    infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
-    infoFile $env:COMPUTERNAME "Modèle:" $modele
-    infoFile $env:COMPUTERNAME "Version:" $version
-    infoFile $env:COMPUTERNAME "Numéro de série:" $serial
+    infoFile script:remoteComputerName "Fabricant:" $fabricant
+    infoFile script:remoteComputerName "Modèle:" $modele
+    infoFile script:remoteComputerName "Version:" $version
+    infoFile script:remoteComputerName "Numéro de série:" $serial
 
     
     Write-Host ""
@@ -383,7 +386,7 @@ function status_uac_windows {
         $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
     }
     
-    infoFile $env:COMPUTERNAME "Statut UAC:" $uacStatus
+    infoFile script:remoteComputerName "Statut UAC:" $uacStatus
 
     
     Write-Host ""
@@ -393,6 +396,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

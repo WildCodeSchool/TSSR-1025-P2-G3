@@ -167,28 +167,28 @@ function menuSearchlog {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_20_DERNIERS_RESULTATS"
             $resultats | Select-Object -Last 20
-
+            menuSearchlog
         }
         
         2 {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_PAGE_PAR_PAGE"
             $resultats | Out-Host -Paging
-
+            menuSearchlog
         }
         
         3 {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_TOUS_LES_RESULTATS"
             $resultats
-
+            menuSearchlog
         }
         
         4 {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:MENU_PRECEDENT"
             logsMainMenu
-
+            
         }
 
         default {
@@ -199,6 +199,7 @@ function menuSearchlog {
     }
 }
 #endregion
+
 
 
 

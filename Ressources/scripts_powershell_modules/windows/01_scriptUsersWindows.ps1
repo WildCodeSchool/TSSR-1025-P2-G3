@@ -132,7 +132,7 @@ function addUserMenu_Windows {
                     if ($ConfirmUser -eq "o") {
 
                         logEvent "AJOUT_UTILISATEUR:CREATION:$addUserCommand"
-                        command_ssh "New-LocalUser -Name $addUserCommand -NoPassword"
+                        command_ssh "New-LocalUser -Name $addUserCommand -NoPassword | Out-Null"
 
                         logEvent "AJOUT_UTILISATEUR:VERIFICATION_CREATION:$addUserCommand"
 
@@ -400,6 +400,7 @@ function changePasswordUserMenu_windows {
     }
 }
 #endregion
+
 
 
 

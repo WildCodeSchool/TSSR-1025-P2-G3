@@ -130,7 +130,7 @@ function add_user_sudo_group_linux {
             }
             else {
                 Write-Host ""
-                $conf = Read-Host "► L'utilisateur demandé n'existe pas, souhaitez-vous choisir un autre utilisateur ? (o/n) : "
+                $conf = Read-Host "► L'utilisateur demandé n'existe pas, souhaitez-vous choisir un autre utilisateur ? (o/n) "
                 if ($conf -eq "o") {
                     logEvent "UTILISATEUR_INEXISTANT_AUTRE_CHOIX"
                     add_user_sudo_group_linux
@@ -206,7 +206,7 @@ function add_user_group_linux {
                         logEvent "UTILISATEUR_AJOUTE_AU_GROUPE:${useraddgroup}:${namegroup}"
 
                         Write-Host ""
-                        $conf = Read-Host "► Souhaitez-vous ajouter un autre utilisateur ? (o/n) : "
+                        $conf = Read-Host "► Souhaitez-vous ajouter un autre utilisateur ? (o/n) "
                         if ($conf -eq "o") {
                             add_user_group_linux
                         }
@@ -221,7 +221,7 @@ function add_user_group_linux {
                 }
                 else {
                     Write-Host ""
-                    $conf = Read-Host "► Le groupe n'existe pas, souhaitez-vous le créer et y ajouter l'utilisateur ? (o/n) : "
+                    $conf = Read-Host "► Le groupe n'existe pas, souhaitez-vous le créer et y ajouter l'utilisateur ? (o/n) "
                     if ($conf -eq "o") {
                         bash_sudo_command "groupadd '$namegroup'"
                         bash_sudo_command "usermod -aG '$namegroup' '$useraddgroup'"
@@ -235,7 +235,7 @@ function add_user_group_linux {
             }
             else {
                 Write-Host ""
-                $conf = Read-Host "► Cet utilisateur n'existe pas, souhaitez-vous choisir un autre utilisateur ? (o/n) : "
+                $conf = Read-Host "► Cet utilisateur n'existe pas, souhaitez-vous choisir un autre utilisateur ? (o/n) "
                 if ($conf -eq "o") {
                     logEvent "UTILISATEUR_INEXISTANT_AUTRE_CHOIX"
                     add_user_group_linux
@@ -362,6 +362,7 @@ function del_user_group_linux {
     }
 }
 #endregion
+
 
 
 

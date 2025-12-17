@@ -173,7 +173,11 @@ function menuSearchlog {
         2 {
 
             logEvent "MENU_FILTRAGE_RECHERCHE:AFFICHAGE_PAGE_PAR_PAGE"
-            $resultats | Out-Host -Paging 2>$null
+            try {
+                $resultats | Out-Host -Paging
+            } catch {
+                # Ferme sans erreur
+            }
             menuSearchlog
         }
         
@@ -199,6 +203,7 @@ function menuSearchlog {
     }
 }
 #endregion
+
 
 
 

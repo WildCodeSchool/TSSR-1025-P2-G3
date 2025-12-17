@@ -90,7 +90,8 @@ function nombre_disques_windows {
         }).Count
     
     Write-Host "► Nombre de disques : $nombreDisques"
-    
+
+    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
     infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
     
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -193,7 +194,7 @@ function cinq_derniers_logins_windows {
         $logins = command_ssh "Get-EventLog Security -Newest 5 -InstanceId 4624"
         Write-Host $logins
         
-        infoFile $env:COMPUTERNAME "5 derniers logins:" $logins
+        infoFile $script:remoteComputerName "5 derniers logins:" $logins 
         
     }
     catch {
@@ -392,6 +393,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

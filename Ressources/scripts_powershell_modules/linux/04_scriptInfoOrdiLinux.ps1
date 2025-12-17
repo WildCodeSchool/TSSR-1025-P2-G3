@@ -91,7 +91,7 @@ function nombre_disques_linux {
     
     bash_command "lsblk -d -o NAME,SIZE,TYPE,MODEL | grep disk"
     
-    infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
+    infoFile $$script:remoteComputerName "Nombre de disques:" $nombreDisques
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -120,8 +120,8 @@ function partitions_linux {
     Write-Host "► Nombre total de partitions : $nombrePartitions"
     
 
-    infoFile $env:COMPUTERNAME "Liste de partitions:" $partitionsList
-    infoFile $env:COMPUTERNAME "Nombre de partitions:" $nombrePartitions
+    infoFile $script:remoteComputerName "Liste de partitions:" $partitionsList
+    infoFile $script:remoteComputerName "Nombre de partitions:" $nombrePartitions
  
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -144,7 +144,7 @@ function lecteurs_montes_linux {
     $lecteursList = bash_command "df -h | grep '^/dev/'"
     Write-Host $lecteursList
  
-    infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
+    infoFile $script:remoteComputerName "Lecteurs montés:" $lecteursList
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -170,7 +170,7 @@ function liste_utilisateurs_linux {
         Write-Host $_
     }
 
-    infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
+    infoFile $script:remoteComputerName "Liste d'utilisateurs:" $userList
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -204,6 +204,8 @@ function cinq_derniers_logins_linux {
     catch {
         Write-Host "► Erreur : Cette fonction nécessite des privilèges administrateur"
     }
+    
+    infoFile $script:remoteComputerName "5 derniers logins:" $loginsList
     
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -244,8 +246,8 @@ function infos_reseau_linux {
     }
     Write-Host ""
     
-    infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
-    infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
+    infoFile $script:remoteComputerName "Adresse IP et masque:" $ipMasque
+    infoFile $script:remoteComputerName "Passerelle par défaut:" $passerelle
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -268,7 +270,7 @@ function version_os_linux {
     $info = bash_command "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"\"'; uname -r"
     $lines = $info -split "`n"
     
-    infoFile $env:COMPUTERNAME "Version OS:" "$($lines[0]) - $($lines[1])"
+    infoFile $script:remoteComputerName "Version OS:" "$($lines[0]) - $($lines[1])"
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -300,7 +302,7 @@ function mises_a_jour_linux {
         Write-Host "► Erreur de vérification"
     }
     
-    infoFile $env:COMPUTERNAME "MISES À JOUR CRITIQUES:" "$maj"
+    infoFile $script:remoteComputerName "MISES À JOUR CRITIQUES:" "$maj"
 
 
     Write-Host ""
@@ -341,10 +343,10 @@ function marque_modele_linux {
     Write-Host "► N° série  : $serial"
     
     # enregistre les info dans le fichier d'infos
-        infoFile $env:COMPUTERNAME "Fabricant:" $fabricant
-        infoFile $env:COMPUTERNAME "Modèle:" $modele
-        infoFile $env:COMPUTERNAME "Version:" $version
-        infoFile $env:COMPUTERNAME "Numéro de série:" $serial
+        infoFile $script:remoteComputerName "Fabricant:" $fabricant
+        infoFile $script:remoteComputerName "Modèle:" $modele
+        infoFile $script:remoteComputerName "Version:" $version
+        infoFile $script:remoteComputerName "Numéro de série:" $serial
     
     
     Write-Host ""
@@ -369,6 +371,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

@@ -100,6 +100,7 @@ function creer_dossier_linux {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_linux
 }
 #endregion
 
@@ -135,6 +136,7 @@ function creer_dossier_admin_linux {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_linux
 }
 #endregion
 
@@ -178,6 +180,7 @@ function supprimer_dossier_linux {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_linux
 }
 #endregion
 
@@ -344,6 +347,7 @@ function exec_script_linux {
     computerMainMenu
 }
 #endregion
+
 
 
 

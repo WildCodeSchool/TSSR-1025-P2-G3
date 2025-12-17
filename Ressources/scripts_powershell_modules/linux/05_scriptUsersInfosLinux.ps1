@@ -122,18 +122,6 @@ function date_lastpassmodif_linux {
             logEvent "MENU_DATE_LAST_MODIFICATION_PASSWORD:SAISIE_NOM_UTILISATEUR"
 
             $continueChoice = "o"
-            Write-Host ""
-            Write-Host "► Authentification sudo requise..."
-            $testAuth = bash_sudo_command "whoami"
-
-            if ($testAuth -notmatch "root") {
-                Write-Host "► Erreur d'authentification sudo."
-                Read-Host "Appuyez sur Entrée pour continuer"
-                date_lastpassmodif_linux
-                return
-            }
-
-            Write-Host "► Authentification réussie !"
             while ($continueChoice -eq "o") {
 
                 Write-Host ""
@@ -152,7 +140,7 @@ function date_lastpassmodif_linux {
                     Write-Host "► L'utilisateur ${userlastpass} a changé son mot de passe la dernière fois : "
                     
                     # Récupération via chage -l (nécessite sudo)
-                    bash_command "chage -l ${userlastpass} | head -1 | awk '{print `$8, `$9, `$10}'"
+                    bash_sudo_command "chage -l ${userlastpass} | head -1 | awk '{print `$8, `$9, `$10}'"
                     
                     Write-Host ""
                     infoFile "${userlastpass}" "À changé son mot de passe pour la dernière fois" "${lastpasschange}"

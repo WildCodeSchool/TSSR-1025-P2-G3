@@ -93,7 +93,8 @@ function logEvent {
 
     $context = if ($connexionMode -eq "ssh") {
         "ssh:$RemoteUser@$RemoteComputer" 
-    } else {
+    }
+    else {
         "local" 
     }
 
@@ -177,7 +178,8 @@ function executionMode {
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "► Connexion SSH réussie à $remoteUser@$remoteComputer :$portSSH."
                 logEvent "SSH_CONNEXION_REUSSIE:$remoteUser@$remoteComputer :$portSSH"
-            } else {
+            }
+            else {
                 Write-Host "► Impossible de se connecter à $remoteUser@$remoteComputer :$portSSH."
                 logEvent "SSH_CONNEXION_ECHEC:$remoteUser@$remoteComputer :$portSSH"
                 executionMode
@@ -222,7 +224,8 @@ function detectionRemoteOS {
 
             Write-Host "► Système d'exploitation distant détecté : Linux"
             Write-Host ""
-        } else {
+        }
+        else {
 
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
@@ -235,7 +238,8 @@ function detectionRemoteOS {
 
         }
 
-    } else {
+    }
+    else {
 
         $script:remoteOS = "Windows"
         $script:remoteComputerName = $env:COMPUTERNAME
@@ -259,7 +263,8 @@ function command_ssh {
     
         Invoke-Expression $cmd
         
-    } else {
+    }
+    else {
     
         $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmd))
         ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "powershell.exe -NoProfile -EncodedCommand $encodedCmd" 2>&1
@@ -281,8 +286,8 @@ function bash_sudo_command {
     )
 
     ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
-    }
 }
+
 #endregion
 
 
@@ -408,7 +413,8 @@ function userMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 userMenu_windows
-            } else {
+            }
+            else {
                 userMenu_linux
             }
         }
@@ -418,7 +424,8 @@ function userMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_menu_group_windows
-            } else {
+            }
+            else {
                 gestion_menu_group_linux
             }          
         }
@@ -465,7 +472,8 @@ function computerMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_repertoire_menu_windows
-            } else {
+            }
+            else {
                 gestion_repertoire_menu_linux
             }
         }
@@ -475,7 +483,8 @@ function computerMainMenu {
 
             if ($remoteOS -eq "Windows") { 
                 redemarrage_windows
-            } else {
+            }
+            else {
                 redemarrage_linux
             }
         }
@@ -484,7 +493,8 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:PRISE_EN_MAIN_A_DISTANCE"
             if ($remoteOS -eq "Windows") { 
                 prise_main_distance_windows
-            } else {
+            }
+            else {
                 prise_main_distance_linux
             }
         } 
@@ -493,7 +503,8 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:ACTIVATION_PAREFEU"
             if ($remoteOS -eq "Windows") { 
                 activation_parefeu_windows
-            } else {
+            }
+            else {
                 activation_parefeu_linux
             }
         } 
@@ -502,7 +513,8 @@ function computerMainMenu {
             logEvent "MENU_GESTION_ORDINATEURS:EXECUTION_SCRIPT"
             if ($remoteOS -eq "Windows") { 
                 exec_script_windows
-            } else {
+            }
+            else {
                 exec_script_linux
             }
         } 
@@ -555,7 +567,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 liste_utilisateurs_windows
-            } else {
+            }
+            else {
                 liste_utilisateurs_linux
             }
         }
@@ -565,7 +578,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 cinq_derniers_logins_windows
-            } else {
+            }
+            else {
                 cinq_derniers_logins_linux
             }
         }
@@ -575,7 +589,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 infos_reseau_windows
-            } else {
+            }
+            else {
                 infos_reseau_linux
             }
         } 
@@ -585,7 +600,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 gestion_disques_menu_windows
-            } else {
+            }
+            else {
                 gestion_disques_menu_linux
             }
         } 
@@ -595,7 +611,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 version_os_windows
-            } else {
+            }
+            else {
                 version_os_linux
             }
         } 
@@ -605,7 +622,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 mises_a_jour_windows
-            } else {
+            }
+            else {
                 mises_a_jour_linux
             }
         }  
@@ -615,7 +633,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 marque_modele_windows
-            } else {
+            }
+            else {
                 marque_modele_linux
             }
         }  
@@ -625,7 +644,8 @@ function informationMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 status_uac_windows
-            } else {
+            }
+            else {
                 status_uac_linux
             }
         }  
@@ -673,7 +693,8 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 date_lastconnection_windows
-            } else {
+            }
+            else {
                 date_lastconnection_linux
             }
         }
@@ -683,7 +704,8 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 date_lastpassmodif_windows
-            } else {
+            }
+            else {
                 date_lastpassmodif_linux
             }
         }
@@ -693,7 +715,8 @@ function informationUserMainMenu {
 
             if ($remoteOS -eq "Windows") {
                 list_opensessions_windows
-            } else {
+            }
+            else {
                 list_opensessions_linux
             }
         } 

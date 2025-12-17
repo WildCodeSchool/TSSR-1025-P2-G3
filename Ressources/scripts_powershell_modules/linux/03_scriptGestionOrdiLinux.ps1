@@ -341,7 +341,9 @@ function exec_script_linux {
     }
     
     Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
+    computerMainMenu
 }
 #endregion
+
 
 

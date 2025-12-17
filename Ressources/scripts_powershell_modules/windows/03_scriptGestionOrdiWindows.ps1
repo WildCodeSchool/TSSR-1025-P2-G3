@@ -307,7 +307,7 @@ function exec_script_windows {
         logEvent "SCRIPT_INTROUVABLE"
         Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
         Read-Host "► ENTREE pour continuer"
-        return
+        computerMainMenu
     }
     
     logEvent "EXECUTION_SCRIPT"
@@ -333,6 +333,7 @@ function exec_script_windows {
     computerMainMenu
 }
 #endregion
+
 
 
 

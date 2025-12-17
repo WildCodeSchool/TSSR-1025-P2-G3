@@ -168,7 +168,7 @@ function liste_utilisateurs_linux {
     Write-Host "► LISTE DES UTILISATEURS LOCAUX"
     Write-Host ""
     
-    $userList = bash_command "awk -F':' '\$3>=1000 && \$3<60000 { print \$1 }' /etc/passwd"
+    $userList = bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
     
     Write-Host $userList
 
@@ -371,6 +371,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

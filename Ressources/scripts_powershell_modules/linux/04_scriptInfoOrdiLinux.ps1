@@ -141,12 +141,8 @@ function lecteurs_montes_linux {
     Write-Host "► LECTEURS MONTÉS"
     Write-Host ""
     
-    $lecteursList = bash_command "mount | grep -E '^/dev/' | awk '{print $1, $3, $5}'"
-    
+    $lecteursList = bash_command "df -h | grep '^/dev/'"
     Write-Host $lecteursList
-    Write-Host ""
-    
-    bash_command "df -h | grep '^/dev/'"
  
     infoFile $env:COMPUTERNAME "Lecteurs montés:" $lecteursList
     
@@ -373,6 +369,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

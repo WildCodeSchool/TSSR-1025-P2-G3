@@ -241,7 +241,7 @@ function deleteUserMenu_linux {
                     if ($confirmDelUser -eq "o") {
 
                         logEvent "SUPPRIMER_UTILISATEUR:SUPPRESSION:$delUserCommand"
-                        bash_sudo_command "userdel -f -r ${delUserCommand}"
+                        bash_sudo_command "userdel -f -r ${delUserCommand} 2>/dev/null"
 
                         logEvent "SUPPRIMER_UTILISATEUR:VERIFICATION_SUPPRESSION:$delUserCommand"
 
@@ -397,6 +397,7 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 
 
 

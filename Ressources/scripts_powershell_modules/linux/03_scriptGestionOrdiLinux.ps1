@@ -215,6 +215,7 @@ function redemarrage_linux {
     }
 
     Write-Host ""
+    computerMainMenu
 }
 #endregion
 
@@ -347,6 +348,7 @@ function exec_script_linux {
     computerMainMenu
 }
 #endregion
+
 
 
 

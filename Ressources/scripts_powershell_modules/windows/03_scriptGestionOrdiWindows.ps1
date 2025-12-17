@@ -223,7 +223,7 @@ function redemarrage_windows {
 #==============================================================
 #region 06 - PRISE EN MAIN A DISTANCE
 #==============================================================
-function prise_main_windows {
+function prise_main_distance_windows {
 
     logEvent "DEMANDE_PRISE_DE_MAIN_SSH"
     
@@ -333,6 +333,7 @@ function exec_script_windows {
     computerMainMenu
 }
 #endregion
+
 
 
 

@@ -93,7 +93,8 @@ function nombre_disques_windows {
     
     infoFile $env:COMPUTERNAME "Nombre de disques:" $nombreDisques
     
-    Read-Host "`n► Appuyez sur ENTRÉE"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
     gestion_disques_menu_windows
 }
 #endregion
@@ -116,7 +117,8 @@ function partitions_windows {
     infoFile $env:COMPUTERNAME "Partitions:" $partitions
     infoFile $env:COMPUTERNAME "Nombre:" $nombre
     
-    Read-Host "`n► ENTRÉE"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
     gestion_disques_menu_windows
 }
 #endregion
@@ -135,7 +137,8 @@ function lecteurs_montes_windows {
     
     infoFile $env:COMPUTERNAME "Lecteurs:" $lecteurs
     
-    Read-Host "`n► ENTRÉE"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
     gestion_disques_menu_windows
 }
 #endregion
@@ -192,7 +195,8 @@ function cinq_derniers_logins_windows {
     }
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
     informationMainMenu
 }
     
@@ -225,7 +229,8 @@ function infos_reseau_windows {
     infoFile $env:COMPUTERNAME "Passerelle:" $gw_brut
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
     informationMainMenu
 }
 #endregion
@@ -381,6 +386,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

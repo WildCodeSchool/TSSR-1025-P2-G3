@@ -298,7 +298,7 @@ function bash_sudo_command {
         $script:SudoPassword = [System.Net.NetworkCredential]::new("", $securePass).Password
         Write-Host ""
     }
-
+}
 #endregion
 
 
@@ -805,6 +805,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

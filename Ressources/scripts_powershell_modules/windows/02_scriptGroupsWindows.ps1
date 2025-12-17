@@ -88,7 +88,7 @@ function add_user_admin_group_windows {
 
     switch ($addGroupAdmin) {
         1 {
-            logEvent "MENU_AJOUT_GROUPE_ADMIN:SAISIE_UTILISATEUR:"
+            logEvent "MENU_AJOUT_GROUPE_ADMIN:SAISIE_UTILISATEUR"
             
             Write-Host ""
             Write-Host "► Voici la liste des utilisateurs : "
@@ -130,7 +130,7 @@ function add_user_admin_group_windows {
             }
             else {
                 Write-Host ""
-                $conf = Read-Host "► l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                $conf = Read-Host "► l'utilisateur demandé n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) "
                 if ($conf -eq "o") {
                     logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
                     add_user_admin_group_windows
@@ -179,7 +179,7 @@ function add_user_group_windows {
 
     switch ($addGroup) {
         1 {
-            logEvent "MENU_AJOUT_GROUPE:SAISIE_UTILISATEUR:"
+            logEvent "MENU_AJOUT_GROUPE:SAISIE_UTILISATEUR"
             
             $useraddgroup = Read-Host "► Quel utilisateur souhaitez vous ajouter au groupe ? "
             logEvent "ENTRÉE_D'UTILISATEUR:$useraddgroup"
@@ -199,7 +199,7 @@ function add_user_group_windows {
                         logEvent "UTILISATEUR:$namegroup À_ÉTÉ_AJOUTÉ_AU_GROUPE:$useraddgroup"
 
                         Write-Host ""
-                        $conf = Read-Host "souhaitez-vous ajouter un autre utilisateur ? (o/n) : "
+                        $conf = Read-Host "souhaitez-vous ajouter un autre utilisateur ? (o/n) "
                         if ($conf -eq "o") {
                             add_user_group_windows
                         }
@@ -210,7 +210,7 @@ function add_user_group_windows {
                 }
                 else {
                     Write-Host ""
-                    $conf = Read-Host "► Le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? (o/n) : "
+                    $conf = Read-Host "► Le groupe n'existe pas, souhaitez vous le créer et y ajouter l'utilisateur ? (o/n) "
                     if ($conf -eq "o") {
                         command_ssh "New-LocalGroup -Name $namegroup"
                         command_ssh "Add-LocalGroupMember -Group $namegroup -Member $useraddgroup"
@@ -224,7 +224,7 @@ function add_user_group_windows {
             }
             else {
                 Write-Host ""
-                $conf = Read-Host "► Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) : "
+                $conf = Read-Host "► Cet utilisateur n'existe pas, souhaitez vous choisir un autre utilisateur ? (o/n) "
                 if ($conf -eq "o") {
                     logEvent "UTILISATEUR_NON_EXISTENT_CHOIX_D'UN_AUTRE_UTILISATEUR"
                     add_user_group_windows
@@ -336,4 +336,5 @@ function del_user_group_windows {
     }
 }
 #endregion
+
 

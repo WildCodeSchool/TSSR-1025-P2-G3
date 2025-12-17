@@ -105,7 +105,7 @@ function add_user_sudo_group_linux {
                 logEvent "AJOUT_UTILISATEUR_SUDO:${useraddadmin}"
                 
                 # Ajout au groupe sudo
-                $result = bash_sudo_command "usermod -aG sudo '$useraddadmin'"
+                bash_sudo_command "usermod -aG sudo '$useraddadmin'"
                 
                 # Vérification
                 $inSudo = bash_command "groups '$useraddadmin' | grep -q sudo && echo 'true' || echo 'false'"
@@ -362,6 +362,7 @@ function del_user_group_linux {
     }
 }
 #endregion
+
 
 
 

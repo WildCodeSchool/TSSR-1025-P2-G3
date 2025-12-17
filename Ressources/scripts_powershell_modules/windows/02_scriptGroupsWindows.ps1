@@ -107,9 +107,9 @@ function add_user_admin_group_windows {
                 logEvent "AJOUT_DE_L'UTILSATEUR:$useraddadmin"
                 
                 try {
-                    command_ssh "Add-LocalGroupMember -Group "Administrators" -Member $useraddadmin -ErrorAction Stop"
+                    command_ssh "Add-LocalGroupMember -Group 'Administrators' -Member $useraddadmin -ErrorAction Stop"
                     
-                    if (command_ssh "Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -like "*\$useraddadmin" }") {
+                    if (command_ssh "Get-LocalGroupMember -Group 'Administrators' | Where-Object { $_.Name -like "*\$useraddadmin" }") {
                         Write-Host "L'utilisateur $useraddadmin a bien été ajouté au groupe Administrateurs"
                         logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
                         

@@ -290,8 +290,15 @@ function bash_sudo_command {
     param (
         [string]$cmd
     )
-    ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
-}
+
+    # Demander le mot de passe s'il n'est pas encore stocké
+    if ([string]::IsNullOrEmpty($script:SudoPassword)) {
+        Write-Host "► Authentification sudo requise pour les commandes distantes." -ForegroundColor Yellow
+        $securePass = Read-Host "► Mot de passe sudo" -AsSecureString
+        $script:SudoPassword = [System.Net.NetworkCredential]::new("", $securePass).Password
+        Write-Host ""
+    }
+
 #endregion
 
 
@@ -798,6 +805,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

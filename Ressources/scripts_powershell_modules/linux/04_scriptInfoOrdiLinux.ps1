@@ -263,7 +263,7 @@ function version_os_linux {
     
     bash_command "hostnamectl | grep -E 'Operating System|Kernel|Architecture'"
     
-    $info = bash_command "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '\"'; uname -r"
+    $info = bash_command "grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d "'\"'; uname -r"
     $lines = $info -split "`n"
     
     infoFile $env:COMPUTERNAME "Version OS:" "$($lines[0]) - $($lines[1])"
@@ -367,6 +367,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

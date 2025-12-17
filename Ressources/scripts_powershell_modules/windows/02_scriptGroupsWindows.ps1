@@ -92,21 +92,24 @@ function add_user_admin_group_windows {
             
             Write-Host ""
             Write-Host "► Voici la liste des utilisateurs : "
-            $users = command_ssh "Get-LocalUser | Where-Object { $_.Enabled -eq $true }"
+            command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
             $users.Name
             Write-Host ""
 
             $useraddadmin = Read-Host "► Quel utilisateur souhaitez vous ajouter en admin ? "
             logEvent "ENTRÉE_D'UTILISATEUR:$useraddadmin"
 
-            if ($users.Name -contains $useraddadmin) {
+            # Vérification si l'utilisateur existe
+            $userExists = command_ssh "Get-LocalUser -Name '$useraddadmin' -ErrorAction SilentlyContinue"
+            
+            if ($userExists) {
                 Write-Host ""
                 logEvent "AJOUT_DE_L'UTILSATEUR:$useraddadmin"
                 
                 try {
-                    command_ssh "Add-LocalGroupMember -Group "Administrateurs" -Member $useraddadmin -ErrorAction Stop"
+                    command_ssh "Add-LocalGroupMember -Group "Administrators" -Member $useraddadmin -ErrorAction Stop"
                     
-                    if (command_ssh "Get-LocalGroupMember -Group "Administrateurs" | Where-Object { $_.Name -like "*\$useraddadmin" }") {
+                    if (command_ssh "Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -like "*\$useraddadmin" }") {
                         Write-Host "L'utilisateur $useraddadmin a bien été ajouté au groupe Administrateurs"
                         logEvent "AJOUT_DE_L'UTILISATEUR_SUDO:$useraddadmin"
                         
@@ -336,5 +339,6 @@ function del_user_group_windows {
     }
 }
 #endregion
+
 
 

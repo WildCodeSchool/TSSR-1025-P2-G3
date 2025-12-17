@@ -296,58 +296,50 @@ function activation_parefeu_linux {
 #==============================================================
 #region 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
-function exec_script_linux {
-
-    logEvent "DEMANDE_CHEMIN_SCRIPT"
+function exec_script_ubuntu {
+    logEvent "DEMANDE_CHEMIN_SCRIPT_UBUNTU"
     
-    Write-Host "► Entrez le chemin du script local à exécuter :"
-    $scriptLocal = Read-Host "► "
+    Write-Host "► Entrez le chemin du script :"
+    $scriptPath = (Read-Host "► ").Trim().Trim('"').Trim("'")
     
-    logEvent "SCRIPT_SÉLECTIONNÉ:$scriptLocal"
-
-    # Vérification existence du fichier
-    if (-not (Test-Path $scriptLocal)) {
-        logEvent "SCRIPT_INTROUVABLE:$scriptLocal"
-        Write-Host "► Erreur : fichier introuvable`n" -ForegroundColor Red
-        Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    logEvent "SCRIPT_SELECTIONNE:$scriptPath"
+    
+    # Vérification existence
+    Write-Host "► Vérification..." -ForegroundColor Cyan
+    $result = command_ssh "test -f '$scriptPath' && echo 'OK' || echo 'NOK'"
+    
+    if ($result -notmatch 'OK') {
+        logEvent "SCRIPT_INTROUVABLE"
+        Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+        Read-Host "► ENTREE pour continuer"
+        computerMainMenu
         return
     }
-
-    # Vérification extension .sh
-    if ([System.IO.Path]::GetExtension($scriptLocal) -ne ".sh") {
-        Write-Host "► Avertissement : Le fichier n'a pas l'extension .sh" -ForegroundColor Yellow
-        if ((Read-Host "► Continuer quand même ? (o/n)") -ne "o") {
-            logEvent "EXECUTION_ANNULEE"
-            return
-        }
+    
+    # Exécution
+    logEvent "EXECUTION_SCRIPT"
+    Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
+    Write-Host ""
+    
+    command_ssh "bash '$scriptPath'"
+    
+    Write-Host ""
+    if ($LASTEXITCODE -eq 0) {
+        logEvent "SUCCES"
+        Write-Host "► Script execute avec succes" -ForegroundColor Green
     }
-
-    logEvent "EXÉCUTION_SCRIPT:$scriptLocal"
-    
-    Write-Host "`n► Exécution du script sur : $global:remoteComputer"
-    Write-Host "► Envoi en cours...`n"
-    
-    # Lecture et encodage du script en base64 pour éviter les problèmes d'échappement
-    $contenu = Get-Content $scriptLocal -Raw -Encoding UTF8
-    $bytes = [System.Text.Encoding]::UTF8.GetBytes($contenu)
-    $encoded = [Convert]::ToBase64String($bytes)
-    
-    # Exécution via décodage base64 sur la machine distante
-    bash_sudo_command "echo '$encoded' | base64 -d | bash"
-    
-    # Affichage du résultat
-    $message = if ($LASTEXITCODE -eq 0) {
-        logEvent "SCRIPT_EXECUTE_SUCCESS"
-        "► Script exécuté avec succès"
-    } else {
-        logEvent "ERREUR_EXECUTION_SCRIPT:$scriptLocal"
-        "► Erreur lors de l'exécution"
+    else {
+        logEvent "ERREUR:CODE_$LASTEXITCODE"
+        Write-Host "► Erreur execution (code: $LASTEXITCODE)" -ForegroundColor Red
     }
     
-    Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
+    Write-Host ""
+    Read-Host "► ENTREE pour continuer"
     computerMainMenu
 }
+
 #endregion
+
 
 
 

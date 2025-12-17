@@ -209,17 +209,20 @@ function infos_reseau_windows {
     
     # Affichage des adresses IP
     Write-Host "► Adresses IP :`n"
-    $ip = command_ssh "Get-NetIPAddress -AddressFamily IPv4"
-    Write-Host $ip
-    
+    $ip = command_ssh "Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress, InterfaceAlias, PrefixLength | Format-Table -AutoSize"
+
+    $ip -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
     # Affichage de la passerelle
     Write-Host "`n► Passerelle :`n"
-    $gw = command_ssh "Get-NetRoute -DestinationPrefix 0.0.0.0/0"
-    Write-Host $gw
+    $gw = command_ssh "Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Select-Object ifIndex, DestinationPrefix, NextHop, RouteMetric | Format-Table -AutoSize"
+    $gw -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
     
-    infoFile $env:COMPUTERNAME "IP:" $ip
-    infoFile $env:COMPUTERNAME "Passerelle:" $gw
-
+    infoFile $env:COMPUTERNAME "IP:" $ip_brut
+    infoFile $env:COMPUTERNAME "Passerelle:" $gw_brut
     
     Write-Host ""
     Read-Host "► Appuyez sur ENTRÉE pour continuer"
@@ -378,6 +381,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

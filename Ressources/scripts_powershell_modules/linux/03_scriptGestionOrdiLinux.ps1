@@ -122,7 +122,7 @@ function creer_dossier_admin_linux {
     }
     else {
         # Création du dossier avec permissions admin
-        bash_sudo_command "sudo mkdir -p '$chemin' && sudo chmod 700 '$chemin' && sudo chown root:root '$chemin'"
+        bash_sudo_command "mkdir -p '$chemin' && sudo chmod 700 '$chemin' && sudo chown root:root '$chemin'"
         # Vérification de la création
         if ($LASTEXITCODE -eq 0) {
             logEvent "DOSSIER_ADMIN_CRÉÉ:$chemin"
@@ -162,7 +162,7 @@ function supprimer_dossier_linux {
         # Confirmation de la suppression
         if ((Read-Host "► Confirmer la suppression de '$chemin' ? (o/n)") -eq "o") {
             # Suppression du dossier
-            bash_command "rm -rf '$chemin'"
+            bash_sudo_command "rm -rf '$chemin'"
             
             if ($LASTEXITCODE -eq 0) {
                 logEvent "SUPPRESSION_EFFECTUÉE:$chemin" 
@@ -198,7 +198,7 @@ function redemarrage_linux {
         Start-Sleep -Seconds 3
         
         # Redémarrage de la machine distante
-        bash_command "sudo shutdown -r +0"
+        bash_sudo_command "sudo shutdown -r +0"
         
         if ($LASTEXITCODE -eq 0) {
             logEvent "REDEMARRAGE_SUCCESS"
@@ -296,7 +296,7 @@ function activation_parefeu_linux {
 #==============================================================
 #region 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
-function exec_script_ubuntu {
+function exec_script_linux {
     logEvent "DEMANDE_CHEMIN_SCRIPT_UBUNTU"
     
     Write-Host "► Entrez le chemin du script :"
@@ -311,7 +311,7 @@ function exec_script_ubuntu {
     if ($result -notmatch 'OK') {
         logEvent "SCRIPT_INTROUVABLE"
         Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
-        Read-Host "► ENTREE pour continuer"
+        Write-Host ""
         computerMainMenu
         return
     }
@@ -334,11 +334,11 @@ function exec_script_ubuntu {
     }
     
     Write-Host ""
-    Read-Host "► ENTREE pour continuer"
     computerMainMenu
 }
 
 #endregion
+
 
 
 

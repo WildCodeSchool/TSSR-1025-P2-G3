@@ -252,25 +252,6 @@ function detectionRemoteOS {
 #region 05 - FONCTIONS DES COMMANDES
 #=====================================================
 function command_ssh {
-    param (
-        [string]$cmd
-    )
-
-    if ($script:connexionMode -eq "local") {
-
-        Invoke-Expression $cmd
-
-    } else {
-
-        $bytes = [System.Text.Encoding]::Unicode.GetBytes($cmd)
-        $encodedCmd = [Convert]::ToBase64String($bytes)
-        $remoteCmd = "powershell.exe -NoProfile -EncodedCommand $encodedCmd"
-
-        ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" $remoteCmd 2>&1
-    } 
-}
-
-function command_ssh {
 
     param ([string]$cmd)
     
@@ -299,12 +280,7 @@ function bash_sudo_command {
         [string]$cmd
     )
 
-    # Demander le mot de passe s'il n'est pas encore stocké
-    if ([string]::IsNullOrEmpty($script:SudoPassword)) {
-        Write-Host "► Authentification sudo requise pour les commandes distantes." -ForegroundColor Yellow
-        $securePass = Read-Host "► Mot de passe sudo" -AsSecureString
-        $script:SudoPassword = [System.Net.NetworkCredential]::new("", $securePass).Password
-        Write-Host ""
+    ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
     }
 }
 #endregion
@@ -813,6 +789,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

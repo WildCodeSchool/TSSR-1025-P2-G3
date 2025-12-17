@@ -170,7 +170,9 @@ function liste_utilisateurs_linux {
     
     $userList = bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
     
-    Write-Host $userList
+    $userList -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
 
     infoFile $env:COMPUTERNAME "Liste d'utilisateurs:" $userList
     
@@ -371,6 +373,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

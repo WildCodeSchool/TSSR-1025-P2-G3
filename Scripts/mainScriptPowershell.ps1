@@ -217,12 +217,19 @@ function detectionRemoteOS {
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
 
+            $script:remoteComputerName = bash_command "hostname"
+            $script:remoteComputerName = $script:remoteComputerName.Trim()
+
             Write-Host "► Système d'exploitation distant détecté : Linux"
             Write-Host ""
         } else {
 
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
+
+            $script:remoteComputerName = command_ssh '$env:COMPUTERNAME'
+            $script:remoteComputerName = $script:remoteComputerName.Trim()
+
             Write-Host "► Système d'exploitation distant détecté : Windows"
             Write-Host ""
 
@@ -231,6 +238,7 @@ function detectionRemoteOS {
     } else {
 
         $script:remoteOS = "Windows"
+        $script:remoteComputerName = $env:COMPUTERNAME
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
         Write-Host "► Système d'exploitation distant détecté : Windows"
         Write-Host ""
@@ -805,6 +813,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

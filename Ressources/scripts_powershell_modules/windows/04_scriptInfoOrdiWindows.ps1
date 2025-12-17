@@ -80,7 +80,7 @@ function nombre_disques_windows {
     
     logEvent "DEMANDE_NOMBRE_DISQUES"
     
-    Write-Host "`n► NOMBRE DE DISQUES`n"
+    Write-Host "Nombre de disques"
     
     $output = command_ssh "Get-Disk"
     
@@ -134,7 +134,7 @@ function partitions_windows {
 function lecteurs_montes_windows {
     logEvent "DEMANDE_LECTEURS_MONTES"
     
-    Write-Host "`n► LECTEURS MONTÉS`n"
+    Write-Host "Lecteurs montés"
     
     $lecteurs = command_ssh "Get-PSDrive -PSProvider FileSystem | Where Used | FT Name, Used, Free -Auto"
     $lecteurs -split "`n" | ForEach-Object {
@@ -158,7 +158,7 @@ function liste_utilisateurs_windows {
     logEvent "DEMANDE_LISTE_UTILISATEURS_LOCAUX"
     
     Write-Host ""
-    Write-Host "► LISTE DES UTILISATEURS LOCAUX"
+    Write-Host "► Liste des utilisateurs locaux"
     Write-Host ""
     
     $userList = command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
@@ -186,7 +186,7 @@ function liste_utilisateurs_windows {
 function cinq_derniers_logins_windows {
     
     logEvent "DEMANDE_5_DERNIERS_LOGINS"
-    Write-Host "`n► LES 5 DERNIERS LOGINS`n"
+    Write-Host "Les 5 derniers logins"
     
     try {
         # Récupération simple des 5 derniers logins
@@ -215,7 +215,7 @@ function cinq_derniers_logins_windows {
 function infos_reseau_windows {
     
     logEvent "DEMANDE_INFORMATIONS_RESEAU"
-    Write-Host "`n► INFORMATIONS RÉSEAU`n"
+    Write-Host "Informations Réseaux"
     
     # Affichage des adresses IP
     Write-Host "► Adresses IP :`n"
@@ -250,7 +250,7 @@ function version_os_windows {
     logEvent "DEMANDE_VERSION_OS"
     
     Write-Host ""
-    Write-Host "► VERSION DU SYSTÈME"
+    Write-Host "► Version du système"
     Write-Host ""
 
     $versionOS = command_ssh "Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsVersion, OsBuildNumber, WindowsEditionId"
@@ -277,7 +277,7 @@ function mises_a_jour_windows {
     logEvent "DEMANDE_MISES_A_JOUR"
     
     Write-Host ""
-    Write-Host "► MISES À JOUR CRITIQUES"
+    Write-Host "► Mises à jour critiques"
     Write-Host ""
     
     try {
@@ -323,7 +323,7 @@ function marque_modele_windows {
     logEvent "DEMANDE_MARQUE_MODELE"
     
     Write-Host ""
-    Write-Host "► MARQUE / MODÈLE"
+    Write-Host "► Marque / Modèle"
     Write-Host ""
     
 
@@ -365,7 +365,7 @@ function status_uac_windows {
     logEvent "DEMANDE_VERIFICATION_UAC"
     
     Write-Host ""
-    Write-Host "► STATUT UAC (Contrôle de Compte Utilisateur)"
+    Write-Host "► Status UAC"
     Write-Host ""
     
     $uacValue = command_ssh "(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name EnableLUA).EnableLUA"
@@ -392,6 +392,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

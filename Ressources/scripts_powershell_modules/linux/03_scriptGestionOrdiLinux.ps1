@@ -297,7 +297,7 @@ function activation_parefeu_linux {
 #region 08 - EXECUTION DE SCRIPT LOCAL
 #==============================================================
 function exec_script_linux {
-    logEvent "DEMANDE_CHEMIN_SCRIPT_UBUNTU"
+    logEvent "DEMANDE_CHEMIN_SCRIPT_LINUX"
     
     Write-Host "► Entrez le chemin du script :"
     $scriptPath = (Read-Host "► ").Trim().Trim('"').Trim("'")
@@ -306,22 +306,28 @@ function exec_script_linux {
     
     # Vérification existence
     Write-Host "► Vérification..." -ForegroundColor Cyan
-    $result = command_ssh "test -f '$scriptPath' && echo 'OK' || echo 'NOK'"
+    $result = bash_sudo_command "test -f '$scriptPath' && echo 'OK' || echo 'NOK'"
     
     if ($result -notmatch 'OK') {
         logEvent "SCRIPT_INTROUVABLE"
         Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
-        Write-Host ""
+        Read-Host "► ENTREE pour continuer"
         computerMainMenu
         return
     }
     
-    # Exécution
+    Write-Host "► Fichier trouvé !" -ForegroundColor Green
+    
+    # Ajout permissions d'exécution
+    Write-Host "► Ajout permissions..." -ForegroundColor Cyan
+    bash_sudo_command "chmod +x '$scriptPath'"
+    
+    # Exécution avec sudo
     logEvent "EXECUTION_SCRIPT"
     Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
     Write-Host ""
     
-    command_ssh "bash '$scriptPath'"
+    bash_sudo_command "'$scriptPath'"
     
     Write-Host ""
     if ($LASTEXITCODE -eq 0) {
@@ -338,6 +344,7 @@ function exec_script_linux {
 }
 
 #endregion
+
 
 
 

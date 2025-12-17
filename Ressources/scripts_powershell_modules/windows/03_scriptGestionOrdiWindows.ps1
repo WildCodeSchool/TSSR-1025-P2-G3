@@ -99,6 +99,7 @@ function creer_dossier_windows {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_windows
 }
 #endregion
 
@@ -134,6 +135,7 @@ function creer_dossier_admin_windows {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_windows
 }
 #endregion
 
@@ -177,6 +179,7 @@ function supprimer_dossier_windows {
     }
 
     Write-Host ""
+    gestion_repertoire_menu_windows
 }
 #endregion
 
@@ -212,6 +215,7 @@ function redemarrage_windows {
     }
 
     Write-Host ""
+    computerMainMenu
 }
 #endregion
 
@@ -241,7 +245,8 @@ function prise_main_windows {
         write-Host "► Erreur : Vous êtes pas prise de main à distante en (SSH)." -ForegroundColor Red
         
     }
-    Write-Host ""    
+    Write-Host ""  
+    computerMainMenu
 }
 #endregion
 
@@ -342,6 +347,7 @@ function exec_script_windows {
     Write-Host ""
 }
 #endregion
+
 
 
 

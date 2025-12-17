@@ -99,7 +99,6 @@ function creer_dossier_windows {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -135,7 +134,6 @@ function creer_dossier_admin_windows {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -179,7 +177,6 @@ function supprimer_dossier_windows {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -215,7 +212,6 @@ function redemarrage_windows {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -245,9 +241,7 @@ function prise_main_windows {
         write-Host "► Erreur : Vous êtes pas prise de main à distante en (SSH)." -ForegroundColor Red
         
     }
-    Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
-    
+    Write-Host ""    
 }
 #endregion
 
@@ -287,9 +281,7 @@ function activation_parefeu_windows {
         Write-Host "► Activation annulée"
     }
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
     computerMainMenu
-
 }
 #endregion
 
@@ -348,10 +340,9 @@ function exec_script_windows {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
-
 }
 #endregion
+
 
 
 

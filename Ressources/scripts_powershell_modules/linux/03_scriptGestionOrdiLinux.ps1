@@ -100,7 +100,6 @@ function creer_dossier_linux {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -136,7 +135,6 @@ function creer_dossier_admin_linux {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -180,7 +178,6 @@ function supprimer_dossier_linux {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -215,7 +212,6 @@ function redemarrage_linux {
     }
 
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
 
@@ -246,7 +242,6 @@ function prise_main_distance_linux {
         
     }
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
     computerMainMenu
     
 }
@@ -288,7 +283,6 @@ function activation_parefeu_linux {
         Write-Host "► Activation annulée" -ForegroundColor Red
     }
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
     computerMainMenu
 
 }
@@ -347,7 +341,7 @@ function exec_script_linux {
     }
     
     Write-Host "$message`n" -ForegroundColor $(if ($LASTEXITCODE -eq 0) { "Green" } else { "Red" })
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
 }
 #endregion
+
 

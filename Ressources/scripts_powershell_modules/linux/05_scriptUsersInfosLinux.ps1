@@ -141,15 +141,12 @@ function date_lastpassmodif_linux {
                     Write-Host "► L'utilisateur ${userlastpass} a changé son mot de passe la dernière fois : "
                     
                     # Récupération via chage -l (nécessite sudo)
-                    $lastpasschange = bash_sudo_command "chage -l ${userlastpass} | head -1 | awk '{print `$8, `$9, `$10}'"
+                    bash_sudo_command "chage -l ${userlastpass} | head -1 | awk '{print `$8, `$9, `$10}'"
                     
-                    if ($lastpasschange) {
-                        Write-Host $lastpasschange
-                        infoFile "${userlastpass}" "À changé son mot de passe pour la dernière fois" "${lastpasschange}"
-                    }
-                    else {
-                        Write-Host "► Information non disponible"
-                    }
+                    Write-Host ""
+                    Write-Host $lastpasschange
+                    infoFile "${userlastpass}" "À changé son mot de passe pour la dernière fois" "${lastpasschange}"
+
                     Write-Host ""
                     logEvent "AFFICHAGE_DE_LA_DATE_DU_DERNIER_CHANGEMENT_DE_MDP_DE_L'UTILISATEUR"
 
@@ -271,6 +268,7 @@ function list_opensessions_linux {
     }
 }
 #endregion
+
 
 
 

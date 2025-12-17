@@ -219,30 +219,36 @@ function cinq_derniers_logins_linux {
 #==============================================================
 #region 07 - INFORMATIONS RÉSEAU
 #==============================================================
-function infos_reseau_windows {
-    
-    logEvent "DEMANDE_INFORMATIONS_RESEAU"
-    Write-Host "`n► INFORMATIONS RÉSEAU`n"
-    
-    # Affichage des adresses IP
-    Write-Host "► Adresses IP :`n"
-    $ip = command_ssh "Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress, InterfaceAlias, PrefixLength | Format-Table -AutoSize"
+function infos_reseau_linux {
 
-    $ip -split "`n" | ForEach-Object {
-        Write-Host $_
-    }
-    # Affichage de la passerelle
-    Write-Host "`n► Passerelle :`n"
-    $gw = command_ssh "Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Select-Object ifIndex, DestinationPrefix, NextHop, RouteMetric | Format-Table -AutoSize"
-    $gw -split "`n" | ForEach-Object {
-        Write-Host $_
-    }
+    logEvent "DEMANDE_INFORMATIONS_RESEAU"
+
+    Write-Host ""
+    Write-Host "► INFORMATIONS RÉSEAU"
+    Write-Host ""
     
-    infoFile $env:COMPUTERNAME "IP:" $ip_brut
-    infoFile $env:COMPUTERNAME "Passerelle:" $gw_brut
+    Write-Host "► Adresse IP et masque :"
+    Write-Host ""
+    
+    $ipMasque = bash_command "ip -4 addr show | grep -v '127.0.0.1' | grep inet"
+    
+    Write-Host $ipMasque
     
     Write-Host ""
-    Read-Host "► Appuyez sur ENTRÉE pour continuer"
+    Write-Host "► Passerelle par défaut :"
+    Write-Host ""
+    
+    $passerelle = bash_command "ip route | grep default"
+
+    Write-Host $passerelle
+
+    infoFile $env:COMPUTERNAME "Adresse IP et masque:" $ipMasque
+    infoFile $env:COMPUTERNAME "Passerelle par défaut:" $passerelle
+
+    Write-Host ""
+    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
+    $null = Read-Host
+
     informationMainMenu
 }
 #endregion
@@ -361,6 +367,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

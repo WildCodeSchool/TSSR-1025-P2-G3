@@ -196,11 +196,11 @@ function cinq_derniers_logins_linux {
     
     try {
     
-        $loginsList = bash_command "last -n 5 -w"
+        $loginsList = bash_command "last -n 5 -w | head -n 5"
         
-        Write-Host $loginsList
-        
-        infoFile $env:COMPUTERNAME "5 derniers logins:" $loginsList
+        $loginsList -split "`n" | ForEach-Object {
+            Write-Host $_
+        }
 
     }
     catch {
@@ -367,6 +367,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

@@ -193,8 +193,6 @@ function cinq_derniers_logins_windows {
         $logins = command_ssh "Get-EventLog Security -Newest 5 -InstanceId 4624"
         Write-Host $logins
         
-        infoFile $script:remoteComputerName "5 derniers logins:" $logins 
-        
     }
     catch {
         Write-Host "► Erreur : Privilèges admin requis" -ForegroundColor Red
@@ -396,6 +394,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

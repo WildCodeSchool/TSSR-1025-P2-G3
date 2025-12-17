@@ -151,7 +151,7 @@ function liste_utilisateurs_windows {
     Write-Host "► LISTE DES UTILISATEURS LOCAUX"
     Write-Host ""
     
-    $userList = command_ssh "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Select-Object Name, Enabled, LastLogon, Description"
+    $userList = command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
     
     Write-Host $userList
     
@@ -377,6 +377,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

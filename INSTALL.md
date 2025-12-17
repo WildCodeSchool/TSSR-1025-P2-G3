@@ -41,6 +41,8 @@ Il faut un compte **ROOT** et un compte **wilder** sur le  serveur **Debian**
 Il faut un compte **Administrator** et un compte **wilder** sur le **Serveur Windows**  
 Il faut un compte utilisateur **wilder** sur les 2 VM **Client Windows** et **Client Linux**  
 
+---  
+
 ## 2. Configuration sur le serveur Debian ( Debian 12.9 )
 
 ### Instalation de open-ssh
@@ -78,9 +80,14 @@ En ligne de commande, pour générer une paire de clés RSA (4096 bits recommand
 
 Une fois la connection réussie en ssh vers les machines cible à l'aide des clés RSA il sera possible de désactiver l'authentification par mot de passe dans le fichier sshd_config des machine cibles. `PasswordAuthentication yes` => `PasswordAuthentication no`
 
+---  
+
 ## 3. Configuration sur le serveur Windows ( Windows serveur 2022 )
 
 ### Instalation de open-ssh sur windows
+
+---  
+
 
 ## 4. Configuration sur le client Linux ( Ubuntu )
 
@@ -115,6 +122,8 @@ Vérifiez que la clé publique du serveur debian a bien été copié dans le fic
 
 Si ce n'est pas le cas, copiez la clé publique du serveur dans le fichier.
 Chaque ligne dans authorized_keys correspond à une clé publique autorisée à se connecter. Vous pouvez en avoir plusieurs (une par machine autorisé).
+
+---  
 
 ## 5. Configuration sur le client windows ( Windows 10 )
 

@@ -58,7 +58,8 @@ function userMenu_windows {
                 logEvent "MENU_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
     
                 Write-Host "► Liste des utilisateurs : "
-                command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name | Sort-Object"
+                command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
+
                 Write-Host ""
 
                 logEvent "MENU_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
@@ -399,6 +400,7 @@ function changePasswordUserMenu_windows {
     }
 }
 #endregion
+
 
 
 

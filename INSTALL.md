@@ -152,8 +152,6 @@ Redemarez le service ssh avec la commande :
 
 ## 6. FAQ
 
-## 6. FAQ
-
 | Question | Réponse |
 |---------|---------|
 | **Connexion SSH refusée ou Access Denied ** | - Vérifier que la **clé publique SSH** est bien installée<br>- Vérifier que le **pare-feu** est désactivé ou autorise **SSH**<br>- Vérifier que l’**utilisateur est autorisé** dans la configuration `sshd`<br>- Vérifier que les **identifiants utilisateur** fournis sont corrects |

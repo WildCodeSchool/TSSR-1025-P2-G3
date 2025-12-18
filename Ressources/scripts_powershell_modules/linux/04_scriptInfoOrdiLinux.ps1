@@ -91,7 +91,7 @@ function nombre_disques_linux {
     
     bash_command "lsblk -d -o NAME,SIZE,TYPE,MODEL | grep disk"
     
-    infoFile $$script:remoteComputerName "Nombre de disques:" $nombreDisques
+    infoFile $script:remoteComputerName "Nombre de disques:" $nombreDisques
 
     Write-Host ""
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
@@ -371,6 +371,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

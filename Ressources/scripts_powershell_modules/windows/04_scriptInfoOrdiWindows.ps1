@@ -91,7 +91,7 @@ function nombre_disques_windows {
     
     Write-Host "► Nombre de disques : $nombreDisques"
 
-    infoFile $$script:remoteComputerName "Nombre de disques:" $nombreDisques
+    infoFile $script:remoteComputerName "Nombre de disques:" $nombreDisques
     
     Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
     $null = Read-Host
@@ -344,10 +344,10 @@ function marque_modele_windows {
     Write-Host "► N° série  : $serial"
     
 
-    infoFile script:remoteComputerName "Fabricant:" $fabricant
-    infoFile script:remoteComputerName "Modèle:" $modele
-    infoFile script:remoteComputerName "Version:" $version
-    infoFile script:remoteComputerName "Numéro de série:" $serial
+    infoFile $script:remoteComputerName "Fabricant:" $fabricant
+    infoFile $script:remoteComputerName "Modèle:" $modele
+    infoFile $script:remoteComputerName "Version:" $version
+    infoFile $script:remoteComputerName "Numéro de série:" $serial
 
     
     Write-Host ""
@@ -384,7 +384,7 @@ function status_uac_windows {
         $uacStatus = "UAC est DÉSACTIVÉ (Non sécurisé)"
     }
     
-    infoFile script:remoteComputerName "Statut UAC:" $uacStatus
+    infoFile $script:remoteComputerName "Statut UAC:" $uacStatus
 
     
     Write-Host ""
@@ -394,6 +394,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

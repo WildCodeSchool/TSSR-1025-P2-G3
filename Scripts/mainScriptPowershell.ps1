@@ -321,6 +321,8 @@ function mainMenu {
         Write-Host "╭──────────────────────────────────────────────────╮" 
         Write-Host "│                  MENU PRINCIPAL                  │" 
         Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
+        Write-Host "├──────────────────────────────────────────────────┤" 
         Write-Host "│                                                  │"
         Write-Host "│  1. Gestion des Utilisateurs                     │" 
         Write-Host "│  2. Gestion des Ordinateurs                      │" 
@@ -385,7 +387,9 @@ function userMainMenu {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│             MENU GESTION UTILISATEUR             │"
-    Write-Host "├──────────────────────────────────────────────────┤"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
+    Write-Host "├──────────────────────────────────────────────────┤" 
     Write-Host "│                                                  │"
     Write-Host "│  1. Utilisateurs                                 │"
     Write-Host "│  2. Groupes                                      │"
@@ -441,6 +445,8 @@ function computerMainMenu {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮" 
     Write-Host "│               GESTION ORDINATEURS                │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤" 
     Write-Host "│                                                  │"
     Write-Host "│  1. Gestion Répertoire                           │" 
@@ -532,6 +538,8 @@ function informationMainMenu {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮" 
     Write-Host "│            MENU INFORMATIONS SYSTEME             │" 
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤" 
     Write-Host "│                                                  │"
     Write-Host "│  1. Liste des utilisateurs                       │" 
@@ -664,7 +672,9 @@ function informationUserMainMenu {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│          MENU INFORMATIONS UTILISATEUR           │"
-    Write-Host "├──────────────────────────────────────────────────┤"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
+    Write-Host "├──────────────────────────────────────────────────┤" 
     Write-Host "│                                                  │"
     Write-Host "│  1. Date dernière connexion                      │"
     Write-Host "│  2. Date dernière modification de mot de passe   │"
@@ -734,7 +744,9 @@ function logsMainMenu {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│             MENU JOURNALISATION                  │"
-    Write-Host "├──────────────────────────────────────────────────┤"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
+    Write-Host "├──────────────────────────────────────────────────┤" 
     Write-Host "│                                                  │"
     Write-Host "│  1. Recherche log Utilisateur                    │"
     Write-Host "│  2. Recherche log utilisateur distant (SSH)      │"
@@ -801,6 +813,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

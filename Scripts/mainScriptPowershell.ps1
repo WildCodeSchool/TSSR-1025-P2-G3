@@ -209,48 +209,37 @@ function executionMode {
 #region 04 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
-
     if ($script:connexionMode -eq "ssh") {
-
         $osInfo = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "uname -a" 2>$null
         
         if ($osInfo -match "Linux") {
-
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
 
-            $script:remoteComputerName = bash_command "hostname"
+            $script:remoteComputerName = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "hostname" 2>$null
             $script:remoteComputerName = $script:remoteComputerName.Trim()
-
             Write-Host "► Système d'exploitation distant détecté : Linux"
             Write-Host ""
-        }
-        else {
-
+        } else {
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
 
-            $script:remoteComputerName = command_ssh '$env:COMPUTERNAME'
+            $script:remoteComputerName = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" 'powershell -Command "$env:COMPUTERNAME"' 2>$null
             $script:remoteComputerName = $script:remoteComputerName.Trim()
-
             Write-Host "► Système d'exploitation distant détecté : Windows"
             Write-Host ""
-
         }
-
-    }
-    else {
-
+    } else {
         $script:remoteOS = "Windows"
         $script:remoteComputerName = $env:COMPUTERNAME
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
         Write-Host "► Système d'exploitation distant détecté : Windows"
         Write-Host ""
-
     }
+    
+    $script:menuMachineLine = ("│  Machine : $script:remoteComputerName".PadRight(51) + "│")
 }
 #endregion
-
 
 #=====================================================
 #region 05 - FONCTIONS DES COMMANDES
@@ -812,6 +801,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

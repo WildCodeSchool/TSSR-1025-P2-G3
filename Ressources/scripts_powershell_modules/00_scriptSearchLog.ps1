@@ -149,6 +149,8 @@ function menuSearchlog {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│             MENU FILTRAGE RECHERCHE              │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Afficher les 20 derniers logs                │"
@@ -203,6 +205,7 @@ function menuSearchlog {
     }
 }
 #endregion
+
 
 
 

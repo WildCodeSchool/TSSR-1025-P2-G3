@@ -84,7 +84,7 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 ## 3. Configuration sur le serveur Windows ( Windows serveur 2022 )
 
-### Installation de Open-SSH sur Windows Server 2022
+### 3.1 Installation de Open-SSH sur Windows Server 2022
 #### A) Ouvrir le menu **Démarrer** et cliquer sur Paramètres
 
 ![image](Ressources/images/install/openssh_windows_server/01_ssh.png)
@@ -132,6 +132,74 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 #### I) Le service est installé et opérationnel
 
 ![image](Ressources/images/install/openssh_windows_server/09_ssh.png)
+
+---  
+
+### 3.2 Configuration du port SSH (4444)  
+#### A) Modifier le fichier de configuration SSH  
+
+1) Ouvrir PowerShell en tant qu'**Administrateur**  
+2) Éditer le fichier de configuration :
+   ```powershell
+   notepad C:\ProgramData\ssh\sshd_config
+   ```
+
+3) Modifier ou ajouter ces lignes :
+   ```
+   Port 4444
+   PubkeyAuthentication yes
+   PasswordAuthentication no
+   PermitRootLogin no
+   ```
+
+4) Sauvegarder et fermer le fichier
+
+#### B) Configurer le pare-feu Windows
+
+Autoriser le port 4444 dans le pare-feu :
+```powershell
+New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP-4444' -DisplayName 'OpenSSH Server (sshd) Port 4444' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 4444
+```
+
+#### C) Redémarrer le service SSH
+
+```powershell
+Restart-Service sshd
+```
+
+#### D) Vérifier que le port est bien ouvert
+
+```powershell
+Test-NetConnection -ComputerName localhost -Port 4444
+```
+
+![image](Ressources/images/install/port_4444/test_port_4444.png)
+
+---  
+
+### 3.3 Installation du module PSWindowsUpdate
+
+#### A) Ouvrir PowerShell en tant qu'Administrateur
+
+#### B) Installer le module depuis PowerShell Gallery
+
+```powershell
+Install-Module -Name PSWindowsUpdate -Force
+```
+
+Si demandé, accepter l'installation en tapant **Y** (Yes)
+
+#### C) Importer le module
+
+```powershell
+Import-Module PSWindowsUpdate
+```
+
+#### D) Vérifier l'installation
+
+```powershell
+Get-Module -ListAvailable PSWindowsUpdate
+```
 
 ---  
 

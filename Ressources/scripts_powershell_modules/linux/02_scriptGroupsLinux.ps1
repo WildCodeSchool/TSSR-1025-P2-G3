@@ -20,9 +20,11 @@ function gestion_menu_group_linux {
         Write-Host ""
         Write-Host "╭──────────────────────────────────────────────────╮"
         Write-Host "│                   MENU GROUPE                    │"
+        Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
         Write-Host "├──────────────────────────────────────────────────┤"
         Write-Host "│                                                  │"
-        Write-Host "│  1. Ajouter un utilisateur au groupe sudo        │"
+        Write-Host "│  1. Ajouter un utilisateur au groupe Admin       │"
         Write-Host "│  2. Ajouter un utilisateur à un groupe           │"
         Write-Host "│  3. Retirer un utilisateur d'un groupe           │"
         Write-Host "│  4. Retour au menu précédent                     │"
@@ -74,7 +76,9 @@ function add_user_sudo_group_linux {
 
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
-    Write-Host "│       AJOUTER UTILISATEUR AU GROUPE SUDO         │"
+    Write-Host "│      AJOUTER UTILISATEUR AU GROUPE SUDO          │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -166,6 +170,8 @@ function add_user_group_linux {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│          AJOUTER UTILISATEUR A UN GROUPE         │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -267,10 +273,12 @@ function add_user_group_linux {
 function del_user_group_linux {
 
     logEvent "MENU_SUPPRESSION_GROUPE"
-
+    
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│      SUPPRIMER UN UTILISATEUR D'UN GROUPE        │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -362,6 +370,7 @@ function del_user_group_linux {
     }
 }
 #endregion
+
 
 
 

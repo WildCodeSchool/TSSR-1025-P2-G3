@@ -29,6 +29,8 @@ gestion_repertoire_menu_windows() {
         echo "╭──────────────────────────────────────────────────╮"
         echo "│               Gestion Répertoires                │"
         echo "├──────────────────────────────────────────────────┤"
+        echo "$menuMachineLine"
+        echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Créer un répertoire                          │"
         echo "│  2. Supprimer un répertoire                      │"

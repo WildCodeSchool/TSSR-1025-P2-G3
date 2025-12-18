@@ -30,6 +30,8 @@ gestion_repertoire_menu_linux() {
         echo "╭──────────────────────────────────────────────────╮"
         echo "│               Gestion Répertoires                │"
         echo "├──────────────────────────────────────────────────┤"
+        echo "$menuMachineLine"
+        echo "├──────────────────────────────────────────────────┤"
         echo "│                                                  │"
         echo "│  1. Créer un répertoire                          │"
         echo "│  2. Créer une répertoire (SUDO)                  │"

@@ -94,40 +94,43 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 #### c) Cliquer sur **Fonctionnalités facultatives**
 
+![image](Ressources/images/install/openssh_windows_server/03_ssh.png)
+
+#### d) Dans la fenêtre qui s'ouvre :
 1) Entrer le mot **open** dans la barre de recherche
 2) Cocher **Serveur OpenSSH**
 3) Cliquer sur **Installer**
 
-![image](Ressources/images/install/openssh_windows_server/03_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/04_ssh.png)
 
 #### d) Installation de OpenSSH réussie
 
-![image](Ressources/images/install/openssh_windows_server/04_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/05_ssh.png)
 
 #### e) Cliquer sur le menu **Démarrer**
 
 1) Entrer le mot **Services**
 2) Cliquer sur **Services**
     
-![image](Ressources/images/install/openssh_windows_server/05_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/06_ssh.png)
 
 #### f) Chercher **OpenSSH SSH Server** dans la liste
 
 1) Faire un clic droit sur **OpenSSH**
 2) Cliquer sur **Propriétés**
 
-![image](Ressources/images/install/openssh_windows_server/06_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/07_ssh.png)
 
 #### g) Démarrer le Service automatiquement
 
 1) Cliquer sur **Démarrer**
 2) Sélectionner **Automatique** dans *Type de démarrage*
 
-![image](Ressources/images/install/openssh_windows_server/07_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/08_ssh.png)
 
 #### h) Le service est installé et opérationnel
 
-![image](Ressources/images/install/openssh_windows_server/08_ssh.png)
+![image](Ressources/images/install/openssh_windows_server/09_ssh.png)
 
 ---  
 

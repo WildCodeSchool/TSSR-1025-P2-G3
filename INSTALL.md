@@ -86,11 +86,11 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 ### Installation de Open-SSH sur Windows Server 2022
 #### a) Ouvrir le menu **Démarrer** et cliquer sur Paramètres
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/01_ssh.png)
 
 #### b) Cliquer sur Applications
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/02_ssh.png)
 
 #### c) Cliquer sur **Fonctionnalités facultatives**
 
@@ -98,36 +98,36 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 2) Cocher **Serveur OpenSSH**
 3) Cliquer sur **Installer**
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/03_ssh.png)
 
 #### d) Installation de OpenSSH réussie
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/04_ssh.png)
 
 #### e) Cliquer sur le menu **Démarrer**
 
 1) Entrer le mot **Services**
 2) Cliquer sur **Services**
     
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/05_ssh.png)
 
 #### f) Chercher **OpenSSH SSH Server** dans la liste
 
 1) Faire un clic droit sur **OpenSSH**
 2) Cliquer sur **Propriétés**
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/06_ssh.png)
 
 #### g) Démarrer le Service automatiquement
 
 1) Cliquer sur **Démarrer**
 2) Sélectionner **Automatique** dans *Type de démarrage*
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/07_ssh.png)
 
 #### h) Le service est installé et opérationnel
 
-![imagessh]
+![image](Ressources/images/install/openssh_windows_server/08_ssh.png)
 
 ---  
 

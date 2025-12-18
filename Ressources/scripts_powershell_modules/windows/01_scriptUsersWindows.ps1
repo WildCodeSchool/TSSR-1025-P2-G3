@@ -21,17 +21,19 @@ function userMenu_windows {
     while ($true) {
 
         Write-Host ""
-        Write-Host "╭────────────────────────────────────────────────╮"
-        Write-Host "│                MENU UTILISATEUR                │"
-        Write-Host "├────────────────────────────────────────────────┤"
-        Write-Host "│                                                │"
-        Write-Host "│  1. Ajouter un utilisateur                     │"
-        Write-Host "│  2. Supprimer un utilisateur                   │"
-        Write-Host "│  3. Changer le mot de passe d'un Utilisateur   │"
-        Write-Host "│  4. Afficher les Utilisateurs                  │"
-        Write-Host "│  5. Retour au menu précédent                   │"
-        Write-Host "│                                                │"
-        Write-Host "╰────────────────────────────────────────────────╯"
+        Write-Host "╭──────────────────────────────────────────────────╮"
+        Write-Host "│                MENU UTILISATEUR                  │"
+        Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
+        Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host "│                                                  │"
+        Write-Host "│  1. Ajouter un utilisateur                       │"
+        Write-Host "│  2. Supprimer un utilisateur                     │"
+        Write-Host "│  3. Changer le mot de passe d'un Utilisateur     │"
+        Write-Host "│  4. Afficher les Utilisateurs                    │"
+        Write-Host "│  5. Retour au menu précédent                     │"
+        Write-Host "│                                                  │"
+        Write-Host "╰──────────────────────────────────────────────────╯"
         Write-Host ""
         
         $menuUser = Read-Host "► Choisissez une option "
@@ -92,6 +94,8 @@ function addUserMenu_Windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│               AJOUTER UTILISATEUR                │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
@@ -201,6 +205,8 @@ function deleteUserMenu_windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│              SUPPRIMER UTILISATEUR               │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
@@ -314,12 +320,13 @@ function changePasswordUserMenu_windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│         CHANGER MOT DE PASSE UTILISATEUR         │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
     Write-Host "│  2. Afficher la liste des utilisateurs           │"
     Write-Host "│  3. Retour au menu précédent                     │"
-
     Write-Host "│                                                  │"
     Write-Host "╰──────────────────────────────────────────────────╯"
     Write-Host ""
@@ -400,6 +407,7 @@ function changePasswordUserMenu_windows {
     }
 }
 #endregion
+
 
 
 

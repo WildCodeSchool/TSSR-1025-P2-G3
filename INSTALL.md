@@ -203,7 +203,7 @@ Get-Module -ListAvailable PSWindowsUpdate
 
 ---  
 
-## 4. Configuration sur le client Linux ( Ubuntu )
+## 4. Configuration sur le client Linux (Ubuntu 24.04 LTS)
 
 ### Instalation de open-ssh
 

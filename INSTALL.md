@@ -87,7 +87,6 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 ---  
 
-
 ## 4. Configuration sur le client Linux ( Ubuntu )
 
 ### Instalation de open-ssh
@@ -117,6 +116,8 @@ PermitRootLogin no
 
 Vérifiez que la clé publique du serveur debian a bien été copié dans le fichier "authorized_keys" dans le dossier ./ssh grace à la commande `ssh-copy-id`
 
+Vérifiez dans le même pour la clé publique du serveur windows.
+
 `cat ~./ssh/authorized_keys`  
 
 Si ce n'est pas le cas, copiez la clé publique du serveur dans le fichier.
@@ -129,5 +130,24 @@ Chaque ligne dans authorized_keys correspond à une clé publique autorisée à 
 Ajoutez la fonctionnalité facultative "open-ssh server"
 
 ![ssh_install](Ressources/images/install/install_ssh_windows10.png)
+
+### Configuration du fichier sshd_config
+
+Modifiez le fichier de configuration sshd_config situé à l'emplacement C:\ProgramData\ssh\sshd_config en tant qu'administrateur en reprenant/modifiant les mêmes informations que pour la configuration Linux.
+
+### Ajout des clés publiques serveurs
+
+Vérifiez que les clés publiques des serveurs Linux et Windows serveur sont présentes dans le fichier administrators_authorized_keys.
+Ce fichier doit se trouver dans C:\ProgramData\ssh\administrators_authorized_keys.
+
+### Ouverture du port 4444 pour le service ssh
+
+Si un pare-feu est activé, vous devez autoriser les connexions entrantes sur le nouveau port. Utilisez PowerShell en tant qu'administrateur pour exécuter la commande suivante :  
+
+`New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 4444`
+
+Redemarez le service ssh avec la commande :  
+
+ `Restart-Service sshd`
 
 ## 6. FAQ

@@ -26,16 +26,18 @@ function gestion_disques_menu_windows {
     
     while ($true) {
         Write-Host ""
-        Write-Host "╭──────────────────────────────────────────╮"
-        Write-Host "│             Gestion Des Disques          │"
-        Write-Host "├──────────────────────────────────────────┤"
-        Write-Host "│                                          │"
-        Write-Host "│  1. Nombre de disques                    │"
-        Write-Host "│  2. Afficher les partitions              │"
-        Write-Host "│  3. Afficher les lecteurs montés         │"
-        Write-Host "│  4. Retour au menu précédent             │"
-        Write-Host "│                                          │"
-        Write-Host "╰──────────────────────────────────────────╯"
+        Write-Host "╭──────────────────────────────────────────────────╮"
+        Write-Host "│             Gestion Des Disques                  │"
+        Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
+        Write-Host "├──────────────────────────────────────────────────┤"
+        Write-Host "│                                                  │"
+        Write-Host "│  1. Nombre de disques                            │"
+        Write-Host "│  2. Afficher les partitions                      │"
+        Write-Host "│  3. Afficher les lecteurs montés                 │"
+        Write-Host "│  4. Retour au menu précédent                     │"
+        Write-Host "│                                                  │"
+        Write-Host "╰──────────────────────────────────────────────────╯"
         Write-Host ""
 
         $choix = Read-Host "► Choisissez une option "
@@ -394,6 +396,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

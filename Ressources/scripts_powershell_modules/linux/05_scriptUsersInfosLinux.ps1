@@ -17,7 +17,9 @@ function date_lastconnection_linux {
 
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
-    Write-Host "│          DATE DE DERNIÈRE CONNEXION              │"
+    Write-Host "│             DATE DERNIERE CONNEXION              │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
@@ -266,6 +268,7 @@ function list_opensessions_linux {
     }
 }
 #endregion
+
 
 
 

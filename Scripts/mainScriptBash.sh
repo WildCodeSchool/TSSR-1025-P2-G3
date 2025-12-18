@@ -24,7 +24,7 @@
 
 
 #=====================================================
-#region 01 - CHARGEMENT DES MODULES
+# 01 - CHARGEMENT DES MODULES
 #=====================================================
 # GENERAL
 source ../Ressources/scripts_bash_modules/00_scriptSearchLog.sh
@@ -43,11 +43,10 @@ source ../Ressources/scripts_bash_modules/windows/03_scriptGestionOrdiWindows.sh
 source ../Ressources/scripts_bash_modules/windows/04_scriptInfoOrdiWindows.sh
 source ../Ressources/scripts_bash_modules/windows/05_scriptUsersInfosWindows.sh
 
-#endregion
 
 
 #=====================================================
-#region 02 - VARIABLES DES COULEURS
+# 02 - VARIABLES DES COULEURS
 #=====================================================
 
 export RED='\033[0;31m'
@@ -55,11 +54,10 @@ export GREEN='\033[0;32m'
 export YELLOW='\033[1;33m'
 export BLUE='\033[0;34m'
 export NC='\033[0m'
-#endregion
 
 
 #=====================================================
-#region 03 - JOURNALISATION
+# 03 - JOURNALISATION
 #=====================================================
 
 # Chemin du fichier log
@@ -111,23 +109,21 @@ function stopScript() {
     exit 0
 
 }
-#endregion
 
 
 #=====================================================
-#region 04 - VARIABLES DE CONNEXION
+# 04 - VARIABLES DE CONNEXION
 #=====================================================
 export connexionMode=""
 export remoteUser=""
 export remoteComputer=""
 export portSSH=""
 export remoteOS=""
-#endregion
 
 
 
 #=====================================================
-#region 05 - MENU EXECUTION LOCAL OU SSH
+# 05 - MENU EXECUTION LOCAL OU SSH
 #=====================================================
 function chooseExecutionMode() {
 
@@ -226,11 +222,10 @@ function chooseExecutionMode() {
 
     detectionRemoteOS
 }
-#endregion
 
 
 #=====================================================
-#region 06 - DETECTION DU SYSTEME D'EXPLOITATION
+# 06 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS() {
 
@@ -274,11 +269,10 @@ function detectionRemoteOS() {
         fi
     fi
 }
-#endregion
 
 
 #=====================================================
-#region 07 - FONCTION DES COMMANDES
+# 07 - FONCTION DES COMMANDES
 #=====================================================
 # Fonction pour les commandes sans SUDO
 function command() {
@@ -314,11 +308,10 @@ function powershell_command() {
     ssh -p "$portSSH" "$remoteUser@$remoteComputer" "powershell.exe -Command \"$cmd\""
 
 }
-#endregion
 
 
 #=====================================================
-#region 08 - FICHIERS STOCKAGE INFORMATIONS
+# 08 - FICHIERS STOCKAGE INFORMATIONS
 #=====================================================
 function infoFile() {
     local cible="$1"
@@ -340,11 +333,10 @@ function infoFile() {
     local time=$(date +"%Y-%m-%d %H:%M:%S")
     echo "[$time] $description : $informations" >>"$fichierInfo"
 }
-#endregion
 
 
 #=====================================================
-#region 09 - MENU PRINCPAL
+# 09 - MENU PRINCPAL
 #=====================================================
 function mainMenu() {
 
@@ -420,11 +412,10 @@ function mainMenu() {
     done
 
 }
-#endregion
 
 
 #=====================================================
-#region 10 - MENU GESTION UTILISATEUR
+# 10 - MENU GESTION UTILISATEUR
 #=====================================================
 function userMainMenu() {
 
@@ -494,11 +485,10 @@ function userMainMenu() {
     esac
 
 }
-#endregion
 
 
 #=====================================================
-#region 11 - MENU GESTION ORDINATEURS
+# 11 - MENU GESTION ORDINATEURS
 #=====================================================
 function computerMainMenu() {
 
@@ -614,11 +604,10 @@ function computerMainMenu() {
 
     esac
 }
-#endregion
 
 
 #=====================================================
-#region 12 - MENU INFORMATIONS SYSTEME
+# 12 - MENU INFORMATIONS SYSTEME
 #=====================================================
 function informationMainMenu() {
 
@@ -765,11 +754,10 @@ function informationMainMenu() {
 
     esac
 }
-#endregion
 
 
 #=====================================================
-#region 13 - MENU INFORMATIONS UTILISATEUR
+# 13 - MENU INFORMATIONS UTILISATEUR
 #=====================================================
 function informationUserMainMenu() {
 
@@ -851,11 +839,10 @@ function informationUserMainMenu() {
 
     esac
 }
-#endregion
 
 
 #=====================================================
-#region 14 - MENU JOURNALISATION
+# 14 - MENU JOURNALISATION
 #=====================================================
 function logsMainMenu() {
 
@@ -927,14 +914,13 @@ function logsMainMenu() {
     esac
 
 }
-#endregion
 
 
 #=====================================================
-#region 15 - EXECUTION DU SCRIPT
+# 15 - EXECUTION DU SCRIPT
 #=====================================================
 logInit
 startScript
 chooseExecutionMode
 mainMenu
-#endregion
+

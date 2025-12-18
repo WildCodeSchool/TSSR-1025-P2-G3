@@ -108,6 +108,8 @@ function date_lastpassmodif_linux {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│  DATE DE DERNIÈRE MODIFICATION DE MOT DE PASSE   │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
@@ -191,6 +193,8 @@ function list_opensessions_linux {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│  LISTE DES SESSIONS OUVERTES PAR L'UTILISATEUR   │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir un nom d'utilisateur                  │"
@@ -268,6 +272,7 @@ function list_opensessions_linux {
     }
 }
 #endregion
+
 
 
 

@@ -141,6 +141,8 @@ function menuSearchlog() {
     echo "╭──────────────────────────────────────────────────╮"
     echo "│             MENU FILTRAGE RECHERCHE              │"
     echo "├──────────────────────────────────────────────────┤"
+    echo "$menuMachineLine"
+    echo "├──────────────────────────────────────────────────┤"
     echo "│                                                  │"
     echo "│  1. Afficher les 20 derniers logs                │"
     echo "│  2. Afficher page par page                       │"

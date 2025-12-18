@@ -236,23 +236,42 @@ function detectionRemoteOS() {
 
     if [ "$connexionMode" = "local" ]; then
         remoteOS="Linux"
+        remoteComputerName=$(hostname)
         export remoteOS
-        echo -e "► Système d'exploitation détecté :${BLUE}Linux${NC} "
+        export remoteComputerName
+        echo -e "► Système d'exploitation détecté : ${BLUE}Linux${NC}"
         logEvent "DETECTION_OS:Linux"
+
+        menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
+        export menuMachineLine
     fi
 
-    if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
-        remoteOS="Linux"
-        export remoteOS
-        echo -e "► Système d'exploitation détecté :${BLUE}Linux${NC} "
-        logEvent "DETECTION_OS:Linux"
-    fi
+    if [ "$connexionMode" = "ssh" ]; then
+        if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
+            remoteOS="Linux"
 
-    if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
-        remoteOS="Windows"
-        export remoteOS
-        echo -e "► Système d'exploitation détecté : ${BLUE}Windows${NC} "
-        logEvent "DETECTION_OS:Windows"
+            remoteComputerName=$(ssh -p "$portSSH" "$remoteUser@$remoteComputer" "hostname" 2>/dev/null | tr -d '\r\n')
+            export remoteOS
+            export remoteComputerName
+            echo -e "► Système d'exploitation détecté : ${BLUE}Linux${NC}"
+            logEvent "DETECTION_OS:Linux"
+
+            menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
+            export menuMachineLine
+        fi
+
+        if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
+            remoteOS="Windows"
+
+            remoteComputerName=$(ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'powershell.exe -Command "$env:COMPUTERNAME"' 2>/dev/null | tr -d '\r\n')
+            export remoteOS
+            export remoteComputerName
+            echo -e "► Système d'exploitation détecté : ${BLUE}Windows${NC}"
+            logEvent "DETECTION_OS:Windows"
+
+            menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
+            export menuMachineLine
+        fi
     fi
 }
 #endregion

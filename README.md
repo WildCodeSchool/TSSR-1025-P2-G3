@@ -32,7 +32,7 @@ Ce projet consiste à développer deux scripts d'administration système permett
 
 | Membre      | Rôle           | Missions principales |
 |-------------|----------------|----------------------|
-| Safi        | Technicien     | • Mise en place de la VM Windows Server 2022, **Script** : Création et suppression de répertoires |
+| Safiullah   | Technicien     | • Mise en place de la VM Windows Server 2022, **Script** : Création et suppression de répertoires |
 | Christian   | Product Owner  | • Mise en place de la VM Debian Serveur, **Script** : Gestion des mots de passe utilisateur |
 | Jérôme      | Scrum Master   | • Mise en place du client Windows 10, **Script** : Gestion des disques durs |
 | Pierre Jean | Technicien     | • Mise en place du client Ubuntu, **Script** : Gestion des groupes |
@@ -41,7 +41,7 @@ Ce projet consiste à développer deux scripts d'administration système permett
 
 | Membre      | Rôle           | Missions principales |
 |-------------|----------------|----------------------|
-| Safi        | Technicien     | • Script Bash Gestion Ordinateurs Script d'information Ordinateurs  |
+| Safiullah   | Technicien     | • Script Bash Gestion Ordinateurs Script d'information Ordinateurs  |
 | Christian   | Scrum Master   | • Script Bash Gestion des Menu et Journalisation et Script Principal |
 | Pierre Jean | Technicien     | • Script Bash Information Utilisateur Mise en place du SSH avec authentification par clé sur Proxmo |
 
@@ -50,17 +50,17 @@ Ce projet consiste à développer deux scripts d'administration système permett
 
 | Membre      | Rôle | Missions |
 |-------------|------|----------|
-| Safi        | Product Owner  | Adaptation des scripts Bash Gestion Ordinateurs Script d'information Ordinateurs à PowerShell Test des script  sur Proxmox |
-| Christian   | Technicien  | Adaptation des scripts Bash Gestion des Menu et Journalisation et Script Principal à PowerShell Test des script  sur Proxmox |
-| Pierre Jean | Scrum Master | Adaptation des scripts Bash Gestion des groupes et User info à PowerShell Test des script  sur Proxmox |
+| Safiullah   | Product Owner   | • Adaptation des scripts Bash Gestion Ordinateurs Script d'information Ordinateurs à PowerShell Test des script  sur Proxmox |
+| Christian   | Technicien      | • Adaptation des scripts Bash Gestion des Menu et Journalisation et Script Principal à PowerShell Test des script  sur Proxmox |
+| Pierre Jean | Scrum Master    | • Adaptation des scripts Bash Gestion des groupes et User info à PowerShell Test des script  sur Proxmox |
 
 ### Sprint 4
 
 | Membre      | Rôle | Missions |
 |-------------|------|----------|
-| Safi        |  |  |
-| Christian   |  |  |
-| Pierre Jean |  |  |
+| Safiullah   | Scrum Master    | • Script Gestion Ordinateurs, Script d'information Ordinateurs version Prowershell, Documentation |
+| Christian   | Product Owner   | • Script Gestion Utilisateurs, Script Main, Script journalisation version Powershell, Documentation |
+| Pierre Jean | Technicien      | • Script Gestion de groupes, Script Information Utilisateurs version Powershell, Mise en place du SSH sur  Proxmo, Documentation |
 
 
 ---

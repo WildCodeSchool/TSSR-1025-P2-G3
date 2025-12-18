@@ -27,16 +27,18 @@ gestion_disques_menu_windows() {
     while true; do
 
         echo ""
-        echo "╭──────────────────────────────────────────╮"
-        echo "|             Gestion Des Disques          │"
-        echo "├──────────────────────────────────────────┤"
-        echo "│                                          │"
-        echo "│  1. Nombre de disques                    │"
-        echo "│  2. Afficher les partitions              │"
-        echo "│  3. Afficher les lecteurs montés         │"
-        echo "│  4. Retour au menu précédent             │"
-        echo "│                                          │"
-        echo "╰──────────────────────────────────────────╯"
+        echo "╭──────────────────────────────────────────────────╮"
+        echo "|             Gestion Des Disques                  │"
+        echo "├──────────────────────────────────────────────────┤"
+        echo "$menuMachineLine"
+        echo "├──────────────────────────────────────────────────┤"
+        echo "│                                                  │"
+        echo "│  1. Nombre de disques                            │"
+        echo "│  2. Afficher les partitions                      │"
+        echo "│  3. Afficher les lecteurs montés                 │"
+        echo "│  4. Retour au menu précédent                     │"
+        echo "│                                                  │"
+        echo "╰──────────────────────────────────────────────────╯"
         echo ""
 
         read -p "► Choisissez une option : " choix

@@ -27,6 +27,8 @@ function gestion_repertoire_menu_linux {
         Write-Host "╭──────────────────────────────────────────────────╮" 
         Write-Host "│               GESTION REPERTOIRES                │"
         Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
+        Write-Host "├──────────────────────────────────────────────────┤"
         Write-Host "│                                                  │"
         Write-Host "│  1. Créer un répertoire                          │" 
         Write-Host "│  2. Créer un répertoire (ADMIN)                  │" 
@@ -344,6 +346,7 @@ function exec_script_linux {
 }
 
 #endregion
+
 
 
 

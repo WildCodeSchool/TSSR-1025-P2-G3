@@ -21,6 +21,8 @@ function gestion_menu_group_windows {
         Write-Host ""
         Write-Host "╭──────────────────────────────────────────────────╮"
         Write-Host "│                   MENU GROUPE                    │"
+        Write-Host "├──────────────────────────────────────────────────┤" 
+        Write-Host $script:menuMachineLine
         Write-Host "├──────────────────────────────────────────────────┤"
         Write-Host "│                                                  │"
         Write-Host "│  1. Ajouter un utilisateur au groupe Admin       │"
@@ -76,6 +78,8 @@ function add_user_admin_group_windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│      AJOUTER UTILISATEUR AU GROUPE ADMIN         │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -170,6 +174,8 @@ function add_user_group_windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│          AJOUTER UTILISATEUR A UN GROUPE         │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -263,6 +269,8 @@ function del_user_group_windows {
     Write-Host ""
     Write-Host "╭──────────────────────────────────────────────────╮"
     Write-Host "│      SUPPRIMER UN UTILISATEUR D'UN GROUPE        │"
+    Write-Host "├──────────────────────────────────────────────────┤" 
+    Write-Host $script:menuMachineLine
     Write-Host "├──────────────────────────────────────────────────┤"
     Write-Host "│                                                  │"
     Write-Host "│  1. Saisir le nom d'utilisateur                  │"
@@ -339,6 +347,7 @@ function del_user_group_windows {
     }
 }
 #endregion
+
 
 
 

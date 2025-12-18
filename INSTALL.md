@@ -151,3 +151,14 @@ Redemarez le service ssh avec la commande :
  `Restart-Service sshd`
 
 ## 6. FAQ
+
+## 6. FAQ
+
+| Question | Réponse |
+|---------|---------|
+| **Connexion SSH refusée ou Access Denied ** | - Vérifier que la **clé publique SSH** est bien installée<br>- Vérifier que le **pare-feu** est désactivé ou autorise **SSH**<br>- Vérifier que l’**utilisateur est autorisé** dans la configuration `sshd`<br>- Vérifier que les **identifiants utilisateur** fournis sont corrects |
+| **Quels sont les prérequis nécessaires ** | Avant de pouvoir être contrôlée, chaque machine cliente doit :<br>- Autoriser les connexions **SSH** dans son pare-feu<br>- Avoir le service **OpenSSH** activé<br>- Avoir le **port SSH** ouvert<br>- Vérifier que **OpenSSH Client** est installé (déjà présent sur la plupart des systèmes Windows et Linux)<br>- Recevoir la **clé publique SSH du serveur** pour permettre une connexion sécurisée |
+| **Problème réseau : les machines ne communiquent pas entre elles** | Vérifier que :<br>- Toutes les machines sont sur le **même réseau** (`172.16.30.0/24`)<br>- La **passerelle par défaut** est correcte (`172.16.30.254`)<br>- Le **DNS** est configuré (`8.8.8.8`)<br>- Le **pare-feu** n’empêche pas la communication |
+| **Les scripts ne s’exécutent pas** | Vérifier que :<br>- Les scripts sont **exécutables** et que l’utilisateur a le **droit de les exécuter**<br>- Pour les scripts **Bash**, le **shebang** est bien présent (`#!/bin/bash`)<br>- Les **extensions de fichiers** sont correctes |
+
+

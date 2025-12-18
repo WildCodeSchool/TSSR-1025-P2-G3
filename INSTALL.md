@@ -83,7 +83,7 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 ## 3. Configuration sur le serveur Windows ( Windows serveur 2022 )
 
-## Installation de Open-SSH sur Windows Server 2022
+### Installation de Open-SSH sur Windows Server 2022
 #### a) Ouvrir le menu **Démarrer** et cliquer sur Paramètres
 
 ![imagessh]

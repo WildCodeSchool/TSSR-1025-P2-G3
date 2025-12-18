@@ -6,7 +6,7 @@
 
 3. [Configuration sur le serveur Windows ( Windows serveur 2022 )](#3-configuration-sur-le-serveur-windows--windows-serveur-2022-)
 
-4. [Configuration sur le client Linux ( Ubuntu 24.04 LTS )](#4-configuration-sur-le-client-linux-(-Ubuntu-))
+4. [Configuration sur le client Linux ( Ubuntu 24.04 LTS )](#4-configuration-sur-le-client-linux-(-Ubuntu-)-)
 
 5. [Configuration sur le client Windows ( Windows 10 )](#5-configuration-sur-le-client-windows--windows-10-)
 
@@ -51,8 +51,9 @@ Il faut un compte utilisateur **wilder** sur les 2 VM **Client Windows** et **Cl
 
 ### Configuration du fichier config  
 
-Si il n'existe pas, créez le fichier config dans ~./ssh
-`sudo mkdir -p ~./ssh/config`
+Si il n'existe pas, créez le fichier config dans ~/.ssh  
+`mkdir -p ~/.ssh`  
+`nano ~/.ssh/config`
 
 Ajoutez les informations de connection des machines cibles :
 
@@ -165,7 +166,7 @@ Vérifiez que la clé publique du serveur debian a bien été copié dans le fic
 
 Vérifiez dans le même pour la clé publique du serveur windows.
 
-`cat ~./ssh/authorized_keys`  
+`cat ~/.ssh/authorized_keys`  
 
 Si ce n'est pas le cas, copiez la clé publique du serveur dans le fichier.
 Chaque ligne dans authorized_keys correspond à une clé publique autorisée à se connecter. Vous pouvez en avoir plusieurs (une par machine autorisé).

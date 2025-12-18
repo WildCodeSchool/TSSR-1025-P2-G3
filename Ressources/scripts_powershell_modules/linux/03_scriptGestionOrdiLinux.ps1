@@ -296,7 +296,7 @@ function activation_parefeu_linux {
 
 
 #==============================================================
-#region 08 - EXECUTION DE SCRIPT LOCAL
+#region 08 - EXECUTION DE SCRIPT A DISTANCE
 #==============================================================
 function exec_script_linux {
     logEvent "DEMANDE_CHEMIN_SCRIPT_LINUX"
@@ -346,6 +346,7 @@ function exec_script_linux {
 }
 
 #endregion
+
 
 
 

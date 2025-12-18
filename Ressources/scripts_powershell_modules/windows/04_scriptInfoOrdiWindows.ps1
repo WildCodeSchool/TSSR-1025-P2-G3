@@ -165,7 +165,9 @@ function liste_utilisateurs_windows {
     
     $userList = command_ssh "Get-LocalUser | Select-Object -ExpandProperty Name"
     
-    Write-Host $userList
+    $userList -split "`n" | ForEach-Object {
+        Write-Host $_
+    }
     
     $nombreUtilisateurs = (command_ssh "Get-LocalUser | Where-Object { `$_.Enabled -eq `$true } | Measure-Object").Count
     Write-Host "► Nombre d'utilisateurs actifs : $nombreUtilisateurs"
@@ -396,6 +398,7 @@ function status_uac_windows {
     informationMainMenu
 }
 #endregion
+
 
 
 

@@ -294,7 +294,7 @@ function activation_parefeu_windows {
 
 
 #==============================================================
-#region 08 - EXECUTION DE SCRIPT LOCAL
+#region 08 - EXECUTION DE SCRIPT A DISTANCE
 #==============================================================
 function exec_script_windows {
     logEvent "DEMANDE_CHEMIN_SCRIPT"
@@ -370,6 +370,7 @@ function exec_script_windows {
 }
 
 #endregion
+
 
 
 

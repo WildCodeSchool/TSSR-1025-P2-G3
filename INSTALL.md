@@ -44,12 +44,12 @@ Il faut un compte utilisateur **wilder** sur les 2 VM **Client Windows** et **Cl
 
 ## 2. Configuration sur le serveur Debian ( Debian 12.9 )
 
-### Instalation de open-ssh
+### 2.1 Instalation de open-ssh
 
 - Mettre à jour les paquets avec `sudo apt update`
 - Installer open-ssh avec `sudo apt install openssh-server`
 
-### Configuration du fichier config  
+### 2.2 Configuration du fichier config  
 
 Si il n'existe pas, créez le fichier config dans ~/.ssh  
 `mkdir -p ~/.ssh`  
@@ -63,14 +63,14 @@ IdentityFile renseigne le chemin de la clé RSA utilisé en regard de la clé pu
 
 Nous pouvons y renseigner les informations des machines cibles :
 
-### Génération des clés RSA
+### 2.3 Génération des clés RSA
 
 En ligne de commande, pour générer une paire de clés RSA (4096 bits recommandé)  
 `ssh-keygen -t rsa -b 4096`
   
   Il est alors de possible de choisir un nom de clé personnalisé ("projet2deb" et "winprojet2" dans notre cas) ou d'appuyer sur Entrée pour obtenir un nom de clé par défaut.
 
-### Transfert des clés publiques sur les machines cibles (Ubuntu et Windows 10 dans notre cas)
+### 2.4 Transfert des clés publiques sur les machines cibles (Ubuntu et Windows 10 dans notre cas)
 
 - Vers Ubuntu :
   - `ssh-copy-id -p 4444 -i ~/.ssh/projet2deb.pub wilder@172.16.30.30`
@@ -85,6 +85,7 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 ## 3. Configuration sur le serveur Windows ( Windows serveur 2022 )
 
 ### 3.1 Installation de Open-SSH sur Windows Server 2022
+
 #### A) Ouvrir le menu **Démarrer** et cliquer sur Paramètres
 
 ![image](Ressources/images/install/openssh_windows_server/01_ssh.png)
@@ -97,7 +98,8 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 ![image](Ressources/images/install/openssh_windows_server/03_ssh.png)
 
-#### D) Dans la fenêtre qui s'ouvre :
+#### D) Dans la fenêtre qui s'ouvre
+
 1) Entrer le mot **open** dans la barre de recherche
 2) Cocher **Serveur OpenSSH**
 3) Cliquer sur **Installer**
@@ -112,7 +114,7 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 
 1) Entrer le mot **Services**
 2) Cliquer sur **Services**
-    
+
 ![image](Ressources/images/install/openssh_windows_server/06_ssh.png)
 
 #### G) Chercher **OpenSSH SSH Server** dans la liste
@@ -136,15 +138,18 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 ---  
 
 ### 3.2 Configuration du port SSH (4444)  
+
 #### A) Modifier le fichier de configuration SSH  
 
 1) Ouvrir PowerShell en tant qu'**Administrateur**  
 2) Éditer le fichier de configuration :
+
    ```powershell
    notepad C:\ProgramData\ssh\sshd_config
    ```
 
 3) Modifier ou ajouter ces lignes :
+
    ```
    Port 4444
    PubkeyAuthentication yes
@@ -157,6 +162,7 @@ Une fois la connection réussie en ssh vers les machines cible à l'aide des cl�
 #### B) Configurer le pare-feu Windows
 
 Autoriser le port 4444 dans le pare-feu :
+
 ```powershell
 New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP-4444' -DisplayName 'OpenSSH Server (sshd) Port 4444' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 4444
 ```
@@ -205,17 +211,17 @@ Get-Module -ListAvailable PSWindowsUpdate
 
 ## 4. Configuration sur le client Linux (Ubuntu 24.04 LTS)
 
-### Instalation de open-ssh
+### 4.1 Instalation de open-ssh
 
 - Mettre à jour les paquets avec `sudo apt update`
 - Installer open-ssh avec `sudo apt install openssh-server`
 
-### Ouverture du port 4444 pour le service ssh
+### 4.2 Ouverture du port 4444 pour le service ssh
 
 `sudo ufw allow 4444/tcp`  
 `sudo ufw enable`
 
-### Configuration du fichier sshd_config
+### 4.3 Configuration du fichier sshd_config
 
 `sudo nano /etc/ssh/sshd_config`
 
@@ -228,7 +234,7 @@ PasswordAuthentication no
 PermitRootLogin no
 ```
 
-### Ajout des clés publiques serveurs
+### 4.4 Ajout des clés publiques serveurs
 
 Vérifiez que la clé publique du serveur debian a bien été copié dans le fichier "authorized_keys" dans le dossier ./ssh grace à la commande `ssh-copy-id`
 
@@ -247,16 +253,16 @@ Ajoutez la fonctionnalité facultative "open-ssh server"
 
 ![ssh_install](Ressources/images/install/install_ssh_windows10.png)
 
-### Configuration du fichier sshd_config
+### 5.1 Configuration du fichier sshd_config
 
 Modifiez le fichier de configuration sshd_config situé à l'emplacement C:\ProgramData\ssh\sshd_config en tant qu'administrateur en reprenant/modifiant les mêmes informations que pour la configuration Linux.
 
-### Ajout des clés publiques serveurs
+### 5.2 Ajout des clés publiques serveurs
 
 Vérifiez que les clés publiques des serveurs Linux et Windows serveur sont présentes dans le fichier administrators_authorized_keys.
 Ce fichier doit se trouver dans C:\ProgramData\ssh\administrators_authorized_keys.
 
-### Ouverture du port 4444 pour le service ssh
+### 5.3 Ouverture du port 4444 pour le service ssh
 
 Si un pare-feu est activé, vous devez autoriser les connexions entrantes sur le nouveau port. Utilisez PowerShell en tant qu'administrateur pour exécuter la commande suivante :  
 
@@ -274,5 +280,3 @@ Redemarez le service ssh avec la commande :
 | **Quels sont les prérequis nécessaires** | Avant de pouvoir être contrôlée, chaque machine cliente doit :<br>- Autoriser les connexions **SSH** dans son pare-feu<br>- Avoir le service **OpenSSH** activé<br>- Avoir le **port SSH** ouvert<br>- Vérifier que **OpenSSH Client** est installé (déjà présent sur la plupart des systèmes Windows et Linux)<br>- Recevoir la **clé publique SSH du serveur** pour permettre une connexion sécurisée |
 | **Problème réseau : les machines ne communiquent pas entre elles** | Vérifier que :<br>- Toutes les machines sont sur le **même réseau** (`172.16.30.0/24`)<br>- La **passerelle par défaut** est correcte (`172.16.30.254`)<br>- Le **DNS** est configuré (`8.8.8.8`)<br>- Le **pare-feu** n’empêche pas la communication |
 | **Les scripts ne s’exécutent pas** | Vérifier que :<br>- Les scripts sont **exécutables** et que l’utilisateur a le **droit de les exécuter**<br>- Pour les scripts **Bash**, le **shebang** est bien présent (`#!/bin/bash`)<br>- Les **extensions de fichiers** sont correctes |
-
-

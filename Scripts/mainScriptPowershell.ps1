@@ -60,8 +60,10 @@ Import-Module "$PSScriptRoot\..\Ressources\scripts_powershell_modules\Linux\05_s
 #=====================================================
 #region 02 - JOURNALISATION
 #=====================================================
+# Emplacement Fichier LOG
 $LogFile = "$env:USERPROFILE\Documents\log_event.log"
 
+# Vérification et création du dossier stockage log
 function logInit {
     param (
         [Parameter(Mandatory)]
@@ -81,6 +83,7 @@ function logInit {
     } 
 }
 
+# Formatage données Log
 function logEvent {
     param(
         [Parameter(Mandatory)]
@@ -102,6 +105,7 @@ function logEvent {
 
     Add-Content -Path $LogFile -Value $Entry
 }
+
 
 function startScript {
     logEvent "START_SCRIPT"
@@ -149,6 +153,7 @@ function executionMode {
     switch ($executionmode) {
 
         1 {
+            # Exécution du script en Local
             logEvent "EXECUTION_LOCAL"
             $script:connexionMode = "local"
             Write-Host "► Exécution du script sur la machine hôte."
@@ -156,6 +161,7 @@ function executionMode {
         }
 
         2 {
+            # Exécition du script en SSH
             logEvent "EXECUTION_DISTANTE_SSH"
             $script:connexionMode = "ssh"
 
@@ -210,9 +216,11 @@ function executionMode {
 #=====================================================
 function detectionRemoteOS {
     if ($script:connexionMode -eq "ssh") {
+    
         $osInfo = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "uname -a" 2>$null
         
         if ($osInfo -match "Linux") {
+        
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
 
@@ -220,7 +228,9 @@ function detectionRemoteOS {
             $script:remoteComputerName = $script:remoteComputerName.Trim()
             Write-Host "► Système d'exploitation distant détecté : Linux"
             Write-Host ""
+            
         } else {
+        
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
 
@@ -229,7 +239,9 @@ function detectionRemoteOS {
             Write-Host "► Système d'exploitation distant détecté : Windows"
             Write-Host ""
         }
+        
     } else {
+    
         $script:remoteOS = "Windows"
         $script:remoteComputerName = $env:COMPUTERNAME
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
@@ -248,16 +260,13 @@ function command_ssh {
 
     param ([string]$cmd)
     
-    if ($script:connexionMode -eq "local") {
-    
-        Invoke-Expression $cmd
-        
+    if ($script:connexionMode -eq "local") {    
+        Invoke-Expression $cmd        
     }
-    else {
     
+    else {    
         $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmd))
-        ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "powershell.exe -NoProfile -EncodedCommand $encodedCmd" 2>&1
-        
+        ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "powershell.exe -NoProfile -EncodedCommand $encodedCmd" 2>&1        
     }
 }
 
@@ -276,7 +285,6 @@ function bash_sudo_command {
 
     ssh -q -t -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "sudo $cmd"
 }
-
 #endregion
 
 
@@ -813,6 +821,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

@@ -161,7 +161,7 @@ function executionMode {
         }
 
         2 {
-            # Exécition du script en SSH
+            # Exécution du script en SSH
             logEvent "EXECUTION_DISTANTE_SSH"
             $script:connexionMode = "ssh"
 
@@ -821,6 +821,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

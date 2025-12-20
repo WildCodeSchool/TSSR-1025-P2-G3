@@ -215,6 +215,7 @@ function executionMode {
 #region 04 - DETECTION DU SYSTEME D'EXPLOITATION
 #=====================================================
 function detectionRemoteOS {
+
     if ($script:connexionMode -eq "ssh") {
     
         $osInfo = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "uname -a" 2>$null
@@ -821,6 +822,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

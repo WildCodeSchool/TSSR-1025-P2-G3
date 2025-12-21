@@ -292,7 +292,7 @@ function mises_a_jour_linux {
     
     Write-Host "► Recherche des mises a jour..." -ForegroundColor Cyan
     
-    $majList = command_ssh "apt list --upgradable 2>/dev/null | grep -v Listing"
+    $majList = bash_command "apt list --upgradable 2>/dev/null | grep -v Listing"
     
     if ([string]::IsNullOrWhiteSpace($majList)) {
         Write-Host "► Aucune mise a jour disponible" -ForegroundColor Green
@@ -368,6 +368,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

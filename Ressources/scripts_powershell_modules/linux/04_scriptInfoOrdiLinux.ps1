@@ -287,30 +287,84 @@ function version_os_linux {
 #region 09 - MISES À JOUR CRITIQUES
 #==============================================================
 function mises_a_jour_linux {
-
     logEvent "DEMANDE_MISES_A_JOUR"
-    Write-Host "`n► MISES À JOUR CRITIQUES`n"
+    Write-Host "`n► MISES À JOUR SYSTÈME`n"
     
-    try {
-        $maj = bash_sudo_command "apt list --upgradable 2>/dev/null | grep -i security"
+    # Demander le mot de passe 
+    Write-Host "► Mot de passe sudo pour $global:remoteComputer :" -ForegroundColor Yellow
+    $password = Read-Host
+    
+    # Test de connexion sudo
+    Write-Host "► Test de connexion..." -ForegroundColor Cyan
+    $testSudo = command_ssh "echo '$password' | sudo -S echo 'OK' 2>&1"
+    
+    if ($testSudo -notmatch 'OK') {
+        Write-Host "► Erreur : mot de passe incorrect ou sudo non disponible" -ForegroundColor Red
+        logEvent "ERREUR_SUDO"
+        Read-Host "► ENTREE pour continuer"
+        informationMainMenu
+        return
+    }
+    
+    # Mise à jour de la liste des paquets
+    Write-Host "► Mise à jour de la liste..." -ForegroundColor Cyan
+    command_ssh "echo '$password' | sudo -S apt update" | Out-Null
+    
+    # Compter les mises à jour disponibles
+    Write-Host "► Vérification..." -ForegroundColor Cyan
+    $nbmaj = command_ssh "apt list --upgradable 2>/dev/null | grep -v 'Listing' | wc -l"
+    $nbmaj = ($nbmaj -replace '\D','').Trim()
+    
+    if ([int]$nbmaj -gt 0) {
+        Write-Host "`n► $nbmaj mise(s) à jour disponible(s)" -ForegroundColor Yellow
         
-        if ($maj) {
-            Write-Host $maj -ForegroundColor Yellow
-        } else {
-            Write-Host "► Aucune mise à jour critique" -ForegroundColor Green
+        # Afficher les 10 premières mises à jour
+        Write-Host "`n► Aperçu des mises à jour :" -ForegroundColor Cyan
+        $maj = command_ssh "apt list --upgradable 2>/dev/null | grep -v 'Listing' | head -10"
+        Write-Host $maj
+        
+        if ([int]$nbmaj -gt 10) {
+            Write-Host "   ... et $([int]$nbmaj - 10) autre(s)" -ForegroundColor Gray
+        }
+        
+        # Demander confirmation
+        Write-Host ""
+        $install = Read-Host "► Installer toutes les mises à jour ? (o/n)"
+        
+        if ($install -eq "o") {
+            Write-Host "`n► Installation en cours (cela peut prendre plusieurs minutes)..." -ForegroundColor Cyan
+            
+            # Installation avec affichage en temps réel
+            command_ssh "echo '$password' | sudo -S apt upgrade -y"
+            
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "`n► Mises à jour installées avec succès" -ForegroundColor Green
+                logEvent "MAJ_INSTALLEES:$nbmaj"
+                $maj = "$nbmaj mise(s) à jour installée(s)"
+            }
+            else {
+                Write-Host "`n► Erreur lors de l'installation" -ForegroundColor Red
+                logEvent "ERREUR_INSTALLATION"
+                $maj = "Erreur d'installation"
+            }
+        }
+        else {
+            Write-Host "► Installation annulée" -ForegroundColor Yellow
+            logEvent "MAJ_ANNULEES"
+            $maj = "$nbmaj mise(s) à jour disponible(s) (non installées)"
         }
     }
-    catch {
-        Write-Host "► Erreur de vérification"
+    else {
+        Write-Host "► Système à jour !" -ForegroundColor Green
+        logEvent "SYSTEME_A_JOUR"
+        $maj = "Système à jour"
     }
     
-    infoFile $script:remoteComputerName "MISES À JOUR CRITIQUES:" "$maj"
-
-
-    Write-Host ""
-    Write-Host "► Appuyez sur ENTRÉE pour revenir au menu précédent..."
-    $null = Read-Host
+    # Enregistrement dans le fichier d'informations
+    infoFile $script:remoteComputerName "MISES À JOUR" "$maj"
     
+    Write-Host ""
+    Read-Host "► ENTREE pour continuer"
     informationMainMenu
 }
 #endregion
@@ -373,6 +427,7 @@ function status_uac_linux {
     informationMainMenu
 }
 #endregion
+
 
 
 

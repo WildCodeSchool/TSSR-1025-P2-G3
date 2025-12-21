@@ -297,62 +297,36 @@ function activation_parefeu_windows {
 #region 08 - EXECUTION DE SCRIPT A DISTANCE
 #==============================================================
 function exec_script_linux {
-    logEvent "DEMANDE_CHEMIN_SCRIPT"
+    logEvent "EXECUTION_DE_SCRIPT_A_DISTANCE"
+    Write-Host "► Chemin du script :"
+    $script = (Read-Host "► ").Trim() -replace '["'']', ''
     
-    Write-Host "► Entrez le chemin du script sur $global:remoteComputer (machine Ubuntu) :"
-    $scriptRemote = (Read-Host "► ").Trim().Trim('"')
+    # Test existence
+    $test = bash_command "[ -f '$script' ] && echo 1 || echo 0"
     
-    logEvent "SCRIPT_SELECTIONNE:$scriptRemote"
-    
-    # Test d'existence avec commande Linux
-    Write-Host "► Verification de l'existence du fichier..." -ForegroundColor Cyan
-    
-    $testResult = bash_command "test -f '$scriptRemote' && echo 'EXISTS' || echo 'NOT_FOUND'"
-    
-    if ($testResult -notmatch "EXISTS") {
-        logEvent "SCRIPT_INTROUVABLE:$scriptRemote"
-        Write-Host "► Erreur : fichier introuvable sur $global:remoteComputer" -ForegroundColor Red
-        Write-Host "   Chemin recherche : $scriptRemote" -ForegroundColor Gray
+    if ($test -match "1") {
+        Write-Host "► Execution..." -ForegroundColor Cyan
+        bash_command "bash '$script'"
         
-        # Afficher les fichiers du répertoire pour aide
-        $dossier = Split-Path $scriptRemote -Parent
-        if ($dossier) {
-            Write-Host "`n► Fichiers dans le repertoire :" -ForegroundColor Yellow
-            bash_command "ls -la '$dossier' 2>/dev/null | head -10"
+        if ($LASTEXITCODE -eq 0) {
+            logEvent "EXECUTION_DE_SCRIPT_A_DISTANCE_SUCCES"
+            Write-Host "► Succes" -ForegroundColor Green
+        } else {
+            logEvent "EXECUTION_DE_SCRIPT_A_DISTANCE_ERREUR"
+            Write-Host "► Erreur" -ForegroundColor Red
         }
-        
-        Read-Host "`n► ENTREE pour continuer"
-        computerMainMenu
-        return
-    }
-    
-    Write-Host "► Fichier trouve !" -ForegroundColor Green
-    
-    # Déterminer le type de script et l'exécuter
-    logEvent "EXECUTION_SCRIPT:$scriptRemote"
-    Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
-    Write-Host ""
-    
-    # Exécution avec bash
-    bash_command "bash '$scriptRemote'"
-    
-    if ($LASTEXITCODE -eq 0) {
-        logEvent "SUCCES"
-        Write-Host ""
-        Write-Host "► Script execute avec succes" -ForegroundColor Green
     }
     else {
-        logEvent "ERREUR:CODE_$LASTEXITCODE"
-        Write-Host ""
-        Write-Host "► Erreur d'execution (code: $LASTEXITCODE)" -ForegroundColor Red
+        logEvent "SCRIPT_A_DISTANCE_INTROUVABLE"
+        Write-Host "► Fichier introuvable : $script" -ForegroundColor Red
     }
     
-    Write-Host ""
-    Read-Host "► ENTREE pour continuer"
+    Read-Host "`n► ENTREE"
     computerMainMenu
 }
 
 #endregion
+
 
 
 

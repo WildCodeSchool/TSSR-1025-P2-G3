@@ -306,13 +306,14 @@ function exec_script_linux {
     
     logEvent "SCRIPT_SELECTIONNE:$scriptPath"
     
-    # Vérification existence
+    # Vérification existence 
     Write-Host "► Vérification..." -ForegroundColor Cyan
-    $result = bash_sudo_command "test -f '$scriptPath' && echo 'OK' || echo 'NOK'"
+    $result = command_ssh "test -f '$scriptPath' && echo 'OK' || echo 'NOK'"
     
     if ($result -notmatch 'OK') {
         logEvent "SCRIPT_INTROUVABLE"
         Write-Host "► Erreur : fichier introuvable" -ForegroundColor Red
+        Write-Host "   Chemin testé : $scriptPath" -ForegroundColor Gray
         Read-Host "► ENTREE pour continuer"
         computerMainMenu
         return
@@ -320,16 +321,29 @@ function exec_script_linux {
     
     Write-Host "► Fichier trouvé !" -ForegroundColor Green
     
+    # Demander si exécution en sudo
+    $useSudo = Read-Host "► Exécuter avec sudo ? (o/n)"
+    
     # Ajout permissions d'exécution
     Write-Host "► Ajout permissions..." -ForegroundColor Cyan
-    bash_sudo_command "chmod +x '$scriptPath'"
+    if ($useSudo -eq "o") {
+        bash_sudo_command "chmod +x '$scriptPath'"
+    }
+    else {
+        command_ssh "chmod +x '$scriptPath'"
+    }
     
-    # Exécution avec sudo
+    # Exécution
     logEvent "EXECUTION_SCRIPT"
     Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
     Write-Host ""
     
-    bash_sudo_command "'$scriptPath'"
+    if ($useSudo -eq "o") {
+        bash_sudo_command "bash '$scriptPath'"
+    }
+    else {
+        command_ssh "bash '$scriptPath'"
+    }
     
     Write-Host ""
     if ($LASTEXITCODE -eq 0) {
@@ -342,10 +356,12 @@ function exec_script_linux {
     }
     
     Write-Host ""
+    Read-Host "► ENTREE pour continuer"
     computerMainMenu
 }
 
 #endregion
+
 
 
 

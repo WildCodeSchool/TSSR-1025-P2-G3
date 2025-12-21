@@ -296,72 +296,55 @@ function activation_parefeu_windows {
 #==============================================================
 #region 08 - EXECUTION DE SCRIPT A DISTANCE
 #==============================================================
-function exec_script_windows {
+function exec_script_linux {
     logEvent "DEMANDE_CHEMIN_SCRIPT"
     
-    Write-Host "► Entrez le chemin du script sur $global:remoteComputer :"
+    Write-Host "► Entrez le chemin du script sur $global:remoteComputer (machine Ubuntu) :"
     $scriptRemote = (Read-Host "► ").Trim().Trim('"')
     
     logEvent "SCRIPT_SELECTIONNE:$scriptRemote"
     
-    # Échapper les caractères spéciaux pour SSH
-    $scriptEscaped = $scriptRemote -replace '\\', '\\\\'
+    # Test d'existence avec commande Linux
+    Write-Host "► Verification de l'existence du fichier..." -ForegroundColor Cyan
     
-    # Test d'existence sur la machine distante
-    Write-Host "► Vérification de l'existence du fichier..." -ForegroundColor Cyan
+    $testResult = bash_command "test -f '$scriptRemote' && echo 'EXISTS' || echo 'NOT_FOUND'"
     
-    $testCmd = "if (Test-Path '$scriptEscaped') { exit 0 } else { exit 1 }"
-    $testResult = command_ssh "powershell.exe -NoProfile -Command `"$testCmd`""
-    
-    if ($LASTEXITCODE -ne 0) {
-        # Tester avec extension .txt
-        $scriptWithTxt = "$scriptEscaped.txt"
-        $testCmdTxt = "if (Test-Path '$scriptWithTxt') { exit 0 } else { exit 1 }"
-        $testResultTxt = command_ssh "powershell.exe -NoProfile -Command `"$testCmdTxt`""
+    if ($testResult -notmatch "EXISTS") {
+        logEvent "SCRIPT_INTROUVABLE:$scriptRemote"
+        Write-Host "► Erreur : fichier introuvable sur $global:remoteComputer" -ForegroundColor Red
+        Write-Host "   Chemin recherche : $scriptRemote" -ForegroundColor Gray
         
-        if ($LASTEXITCODE -eq 0) {
-            $scriptRemote = "$scriptRemote.txt"
-            $scriptEscaped = $scriptWithTxt
-            Write-Host "► Fichier trouvé avec extension .txt" -ForegroundColor Yellow
+        # Afficher les fichiers du répertoire pour aide
+        $dossier = Split-Path $scriptRemote -Parent
+        if ($dossier) {
+            Write-Host "`n► Fichiers dans le repertoire :" -ForegroundColor Yellow
+            bash_command "ls -la '$dossier' 2>/dev/null | head -10"
         }
-        else {
-            logEvent "SCRIPT_INTROUVABLE:$scriptRemote"
-            Write-Host "► Erreur : fichier introuvable sur $global:remoteComputer" -ForegroundColor Red
-            Write-Host "   Chemin recherché : $scriptRemote" -ForegroundColor Gray
-            Read-Host "► ENTREE pour continuer"
-            computerMainMenu
-            
-        }
+        
+        Read-Host "`n► ENTREE pour continuer"
+        computerMainMenu
+        return
     }
     
-    Write-Host "► Fichier trouvé !" -ForegroundColor Green
+    Write-Host "► Fichier trouve !" -ForegroundColor Green
     
-    # Exécution directe du script distant
+    # Déterminer le type de script et l'exécuter
     logEvent "EXECUTION_SCRIPT:$scriptRemote"
-    Write-Host "► Exécution sur $global:remoteComputer..." -ForegroundColor Cyan
+    Write-Host "► Execution sur $global:remoteComputer..." -ForegroundColor Cyan
     Write-Host ""
     
-    # Commande pour exécuter le script avec gestion d'erreur
-    $execCmd = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$scriptEscaped`" 2>&1"
+    # Exécution avec bash
+    bash_command "bash '$scriptRemote'"
     
-    try {
-        command_ssh $execCmd
-        
-        if ($LASTEXITCODE -eq 0) {
-            logEvent "SUCCES"
-            Write-Host ""
-            Write-Host "► Script exécuté avec succès" -ForegroundColor Green
-        }
-        else {
-            logEvent "ERREUR:CODE_$LASTEXITCODE"
-            Write-Host ""
-            Write-Host "► Erreur d'exécution (code: $LASTEXITCODE)" -ForegroundColor Red
-        }
-    }
-    catch {
-        logEvent "ERREUR_EXECUTION:$($_.Exception.Message)"
+    if ($LASTEXITCODE -eq 0) {
+        logEvent "SUCCES"
         Write-Host ""
-        Write-Host "► Erreur lors de l'exécution : $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "► Script execute avec succes" -ForegroundColor Green
+    }
+    else {
+        logEvent "ERREUR:CODE_$LASTEXITCODE"
+        Write-Host ""
+        Write-Host "► Erreur d'execution (code: $LASTEXITCODE)" -ForegroundColor Red
     }
     
     Write-Host ""
@@ -370,6 +353,7 @@ function exec_script_windows {
 }
 
 #endregion
+
 
 
 

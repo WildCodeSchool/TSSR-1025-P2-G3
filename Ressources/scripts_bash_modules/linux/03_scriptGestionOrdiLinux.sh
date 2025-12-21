@@ -170,25 +170,25 @@ fonction_supprimer_dossier_linux() {
     echo "► Suppression de dossier"
 
     # fonction_demander_chemin_linux || return
-    read -rp "► Entrez un chemin: " delfolder
+    read -rp "► Entrez un chemindu dossier: " delfolder
 
-    # vérifier si le dossier existe pas si existe supprime
-    if [ -d "$delfolder" ]; then
+    # vérifier si le dossier existe si existe supprime
+    if sudo_command "[ -d '$delfolder' ]"; then
+        echo "► Suppression en cours..."
         
-        echo " Tappez Le mot de passe"
-        # Suppression du dossier
-        sudo_command "rm -rf  '$delfolder'"
+        # Suppression du dossier distant
+        sudo_command "rm -rf '$delfolder'"
         
-        # Vérifier si la suppression a réussi
         if [ $? -eq 0 ]; then
-
-            logEvent "SUPPRESSION_EFFECTUE"
-            echo " "
-            echo "► Suppression de dossier effectue "
+            logEvent "SUPPRESSION_EFFECTUEE:$delfolder"
+            echo "► Dossier supprime avec succes"
         else
-            logEvent "DOSSIER_INEXISTANT:$delfolder"
-            echo "► Le dossier $delfolder n'existe pas"
+            logEvent "ERREUR_SUPPRESSION:$delfolder"
+            echo "► Erreur lors de la suppression"
         fi
+    else
+        logEvent "DOSSIER_INEXISTANT:$delfolder"
+        echo "► Le dossier n'existe pas : $delfolder"
     fi
 }
 

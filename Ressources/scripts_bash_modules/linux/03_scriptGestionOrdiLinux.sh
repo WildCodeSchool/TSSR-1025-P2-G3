@@ -174,9 +174,12 @@ fonction_supprimer_dossier_linux() {
 
     # vérifier si le dossier existe pas si existe supprime
     if [ -d "$delfolder" ]; then
-
-        sudo_command "rm -rf -- \"$delfolder\""
-
+        
+        echo " Tappez Le mot de passe"
+        # Suppression du dossier
+        sudo_command "rm -rf  '$delfolder'"
+        
+        # Vérifier si la suppression a réussi
         if [ $? -eq 0 ]; then
 
             logEvent "SUPPRESSION_EFFECTUE"

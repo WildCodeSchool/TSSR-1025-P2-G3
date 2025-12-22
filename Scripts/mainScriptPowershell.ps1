@@ -2,20 +2,20 @@
 # Auteur : Christian
 
 # Sommaire :
-# 00. Lancement en administrateur
-# 01. Chargement des modules
-# 02. Journalisation
-# 03. Menu exécution locale ou SSH  
-# 04. Détection du système d'exploitation
-# 05. Fonctions des commandes
-# 06. Fichiers de stockage des informations
-# 07. Menu principal
-# 08. Menu gestion des utilisateurs
-# 09. Menu gestion des ordinateurs
-# 10. Menu informations système
-# 11. Menu informations utilisateur
-# 12. Menu journalisation
-# 13. Exécution du script
+# 00 - Lancement en administrateur
+# 01 - Chargement des modules
+# 02 - Journalisation
+# 03 - Menu exécution locale ou SSH  
+# 04 - Détection du système d'exploitation
+# 05 - Fonctions des commandes
+# 06 - Fichiers de stockage des informations
+# 07 - Menu principal
+# 08 - Menu gestion des utilisateurs
+# 09 - Menu gestion des ordinateurs
+# 10 - Menu informations système
+# 11 - Menu informations utilisateur
+# 12 - Menu journalisation
+# 13 - Exécution du script
 
 
 
@@ -178,9 +178,11 @@ function executionMode {
             Write-Host ""
             
             logEvent "SSH_CONNEXION:$remoteUser@$remoteComputer :$portSSH"
-            
+
+            # Test de la connexion SSH
             ssh -p $portSSH "$remoteUser@$remoteComputer" "exit" 2>$null
 
+            # Vérification du code de retour
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "► Connexion SSH réussie à $remoteUser@$remoteComputer :$portSSH."
                 logEvent "SSH_CONNEXION_REUSSIE:$remoteUser@$remoteComputer :$portSSH"
@@ -261,7 +263,8 @@ function command_ssh {
 
     param ([string]$cmd)
     
-    if ($script:connexionMode -eq "local") {    
+    if ($script:connexionMode -eq "local") {
+    
         Invoke-Expression $cmd        
     }
     
@@ -822,6 +825,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

@@ -60,6 +60,7 @@ function userMenuWindows() {
             logEvent "MENU_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
             echo ""
             echo "► Liste des utilisateurs : "
+            # Affichage de la liste des utilisateurs
             powershell_command "Get-LocalUser | Select-Object Name"
             logEvent "MENU_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
             ;;
@@ -291,6 +292,7 @@ function deleteUserMenuWindows() {
 
         echo ""
         echo "► Liste des utilisateurs : "
+        # Affichage de la liste des utilisateurs
         powershell_command "Get-LocalUser | Select-Object Name"
         echo ""
 
@@ -407,6 +409,7 @@ function changePasswordUserMenuWindows() {
         logEvent "MENU_CHANGER_MOT_DE_PASSE:AFFICHER_LISTE_UTILISATEURS"
         echo ""
         echo "► Liste des utilisateurs : "
+        # Affichage de la liste des utilisateurs
         powershell_command "Get-LocalUser | Select-Object Name"
         logEvent "SUPPRIMER_UTILISATEUR:AFFICHAGE_LISTE_UTILISATEUR"
         changePasswordUserMenuWindows

@@ -57,6 +57,7 @@ function userMenu_linux {
                 logEvent "MENU_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
     
                 Write-Host "► Liste des utilisateurs : "
+                # Affichage de la liste des utilisateurs
                 bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
                 Write-Host ""
 
@@ -287,6 +288,7 @@ function deleteUserMenu_linux {
             logEvent "MENU_SUPPRIMER_UTILISATEUR:AFFICHER_LISTE_UTILISATEURS"
 
             Write-Host "► Liste des utilisateurs : "
+            # Affichage de la liste des utilisateurs
             bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
             Write-Host ""
 
@@ -338,15 +340,21 @@ function changePasswordUserMenu_linux {
         
         1 {
             logEvent "MENU_CHANGER_MOT_DE_PASSE:SAISIR_NOM_UTILISATEUR"
+            
             $changeAnotherPassword = "o"
+            
             while ($changeAnotherPassword -eq "o") {
+            
                 $changePasswordUserCommand = Read-Host "► Entrez un nom d'utilisateur pour changer le mot de passe"
                 Write-Host ""
+                
                 logEvent "CHANGER_MOT_DE_PASSE:ENTREE_UTILISATEUR:$changePasswordUserCommand"
+                
                 logEvent "CHANGER_MOT_DE_PASSE:VERIFICATION_UTILISATEUR_EXISTE:$changePasswordUserCommand"
                 # Vérification si l'utilisateur existe
                 $userExists = bash_command "grep '^${changePasswordUserCommand}:' /etc/passwd"
                 if ($userExists) {
+                
                     $newPassword = Read-Host "► Entrez le nouveau mot de passe"
                     Write-Host ""
                     logEvent "CHANGER_MOT_DE_PASSE:NOUVEAU_MOT_DE_PASSE_ENTRE:$changePasswordUserCommand"
@@ -357,20 +365,29 @@ function changePasswordUserMenu_linux {
                     $exitCode = $LASTEXITCODE
                     
                     if ($exitCode -eq 0) {
+                    
                         Write-Host "► Le mot de passe de l'utilisateur $changePasswordUserCommand a été changé."
                         Write-Host ""
+                        
                         logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_REUSSI:$changePasswordUserCommand"
+                        
                     } else {
+                    
                         Write-Host "► Erreur : Le mot de passe n'a pas pu être changé."
                         Write-Host ""
+                        
                         logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_ECHOUE:$changePasswordUserCommand"
                     }
                     
                     logEvent "CHANGER_MOT_DE_PASSE:CHANGEMENT_EFFECTUE:$changePasswordUserCommand"
+                    
                     $changeAnotherPassword = Read-Host "► Voulez-vous changer le mot de passe d'un autre utilisateur ? (o/n) "
                     Write-Host ""
+                    
                     logEvent "CHANGER_MOT_DE_PASSE:CONTINUER_CHANGEMENT_MOT_DE_PASSE:$changeAnotherPassword"
+                    
                 } else {
+                
                     Write-Host "► L'utilisateur $changePasswordUserCommand n'existe pas."
                     logEvent "CHANGER_MOT_DE_PASSE:UTILISATEUR_INEXISTANT:$changePasswordUserCommand"
                     # Demander si l'utilisateur veut réessayer
@@ -384,6 +401,7 @@ function changePasswordUserMenu_linux {
             logEvent "MENU_CHANGER_MOT_DE_PASSE:AFFICHER_LISTE_UTILISATEURS"
 
             Write-Host "► Liste des utilisateurs : "
+            # Affichage de la liste des utilisateurs
             bash_command 'awk -F'':'' ''$3 >= 1000 && $3 < 60000 {print $1, $3}'' /etc/passwd'
             Write-Host ""
 
@@ -405,6 +423,7 @@ function changePasswordUserMenu_linux {
     }
 }
 #endregion
+
 
 
 

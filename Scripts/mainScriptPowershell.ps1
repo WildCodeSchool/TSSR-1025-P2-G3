@@ -90,10 +90,12 @@ function logEvent {
         [string]$event
     )
 
+    # Récupération informations Temporelles et utilisateur
     $date = Get-Date -Format "yyyy-MM-dd"
     $heure = Get-Date -Format "HH:mm:ss"
     $utilisateur = $($env:USERNAME)
 
+    # Détermine si connexion SSH ou local
     $context = if ($connexionMode -eq "ssh") {
         "ssh:$RemoteUser@$RemoteComputer" 
     }
@@ -101,6 +103,7 @@ function logEvent {
         "local" 
     }
 
+    # Formatage entrée log
     $Entry = "${Date}_${Heure}_${Utilisateur}_${Context}_$event"
 
     Add-Content -Path $LogFile -Value $Entry
@@ -219,24 +222,29 @@ function executionMode {
 function detectionRemoteOS {
 
     if ($script:connexionMode -eq "ssh") {
-    
+
+        # Récupération information système distant
         $osInfo = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "uname -a" 2>$null
-        
+
+        # Si "Linux", détermine le système comme OS Linux
         if ($osInfo -match "Linux") {
         
             $script:remoteOS = "Linux"
             logEvent "DETECTION_OS:LINUX"
 
+            # Récupération du nom de la machine
             $script:remoteComputerName = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "hostname" 2>$null
             $script:remoteComputerName = $script:remoteComputerName.Trim()
             Write-Host "► Système d'exploitation distant détecté : Linux"
             Write-Host ""
             
         } else {
-        
+
+            # Si "Linux" n'est pas détecté, considère comme "Windows"
             $script:remoteOS = "Windows"
             logEvent "DETECTION_OS:WINDOWS"
 
+            # Récupération du nom de la machine
             $script:remoteComputerName = ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" 'powershell -Command "$env:COMPUTERNAME"' 2>$null
             $script:remoteComputerName = $script:remoteComputerName.Trim()
             Write-Host "► Système d'exploitation distant détecté : Windows"
@@ -244,14 +252,15 @@ function detectionRemoteOS {
         }
         
     } else {
-    
+
         $script:remoteOS = "Windows"
         $script:remoteComputerName = $env:COMPUTERNAME
         logEvent "DETECTION_OS:WINDOWS_LOCAL"
         Write-Host "► Système d'exploitation distant détecté : Windows"
         Write-Host ""
     }
-    
+
+    # Affichage du nom de la machine dans les menus
     $script:menuMachineLine = ("│  Machine : $script:remoteComputerName".PadRight(51) + "│")
 }
 #endregion
@@ -268,7 +277,8 @@ function command_ssh {
         Invoke-Expression $cmd        
     }
     
-    else {    
+    else {  
+        # Encodage pour évtier les problèmes d'échappement
         $encodedCmd = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($cmd))
         ssh -p $script:portSSH "$script:remoteUser@$script:remoteComputer" "powershell.exe -NoProfile -EncodedCommand $encodedCmd" 2>&1        
     }
@@ -301,7 +311,8 @@ function infoFile {
         [string]$description,
         [string]$informations
     )
-    
+
+    # Convention de nommage des fichiers d'informations
     $date = Get-Date -Format "yyyyMMdd"
     $dossierInfo = Join-Path $PSScriptRoot "info"
     $fichierInfo = Join-Path $dossierInfo "info_${cible}_${date}.txt"
@@ -313,7 +324,8 @@ function infoFile {
     if (!(Test-Path $fichierInfo)) {
         New-Item -ItemType File -Path $fichierInfo | Out-Null
     }
-    
+
+    # Formatage des informations "info"
     $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Add-Content -Path $fichierInfo -Value "[$time] $description : $informations"
 }
@@ -825,6 +837,7 @@ executionMode
 mainMenu
 
 #endregion
+
 
 
 

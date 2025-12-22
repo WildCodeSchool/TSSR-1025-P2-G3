@@ -157,6 +157,7 @@ function chooseExecutionMode() {
     case $executionMode in
 
     1)
+        # Exécution du script en Local
         logEvent "EXECUTION_LOCAL"
         connexionMode="local"
         export connexionMode
@@ -165,6 +166,7 @@ function chooseExecutionMode() {
         ;;
 
     2)
+        # Exécution du script en SSH
         logEvent "EXECUTION_DISTANTE_SSH"
         connexionMode="ssh"
         export connexionMode
@@ -189,6 +191,7 @@ function chooseExecutionMode() {
 
         logEvent "SSH_CONNEXION:$remoteUser@$remoteComputer:$portSSH"
 
+        # Test connexion SSH
         if ssh -o BatchMode=yes -o ConnectTimeout=5 -p"$portSSH" "$remoteUser@$remoteComputer" "echo 'Test connexion OK'" >/dev/null 2>&1; then
 
             echo -e "► ${GREEN}Connexion SSH réussie à $remoteUser@$remoteComputer:$portSSH. ${NC}"
@@ -229,6 +232,7 @@ function chooseExecutionMode() {
 #=====================================================
 function detectionRemoteOS() {
 
+    # Exécution locale
     if [ "$connexionMode" = "local" ]; then
         remoteOS="Linux"
         remoteComputerName=$(hostname)
@@ -237,33 +241,40 @@ function detectionRemoteOS() {
         echo -e "► Système d'exploitation détecté : ${BLUE}Linux${NC}"
         logEvent "DETECTION_OS:Linux"
 
+        # Affichage du nom de la machine dans les menus
         menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
         export menuMachineLine
     fi
 
+    # Détection si le système distant est Linux
     if [ "$connexionMode" = "ssh" ]; then
         if ssh -p "$portSSH" "$remoteUser@$remoteComputer" "uname" 2>/dev/null | grep -q 'Linux'; then
             remoteOS="Linux"
 
+            # Récupération du nom de la machine
             remoteComputerName=$(ssh -p "$portSSH" "$remoteUser@$remoteComputer" "hostname" 2>/dev/null | tr -d '\r\n')
             export remoteOS
             export remoteComputerName
             echo -e "► Système d'exploitation détecté : ${BLUE}Linux${NC}"
             logEvent "DETECTION_OS:Linux"
 
+            # Affichage du nom de la machine dans les menus
             menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
             export menuMachineLine
         fi
 
+        # Détection si le système distant est Windows
         if ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'echo %OS%' 2>/dev/null | grep -q 'Windows'; then
             remoteOS="Windows"
 
+            # Récupération du nom de la machine
             remoteComputerName=$(ssh -p "$portSSH" "$remoteUser@$remoteComputer" 'powershell.exe -Command "$env:COMPUTERNAME"' 2>/dev/null | tr -d '\r\n')
             export remoteOS
             export remoteComputerName
             echo -e "► Système d'exploitation détecté : ${BLUE}Windows${NC}"
             logEvent "DETECTION_OS:Windows"
 
+            # Affichage du nom de la machine dans les menus
             menuMachineLine=$(printf "│  Machine : %-38s│" "$remoteComputerName")
             export menuMachineLine
         fi
@@ -318,6 +329,7 @@ function infoFile() {
     local description="$2"
     local informations="$3"
 
+    # Convention de nommage des fichiers d'informations
     local date=$(date +%Y%m%d)
     local dossierInfo="info"
     local fichierInfo="${dossierInfo}/info_${cible}_${date}.txt"
@@ -330,6 +342,7 @@ function infoFile() {
         touch "$fichierInfo"
     fi
 
+    # Formatage des informations "info"
     local time=$(date +"%Y-%m-%d %H:%M:%S")
     echo "[$time] $description : $informations" >>"$fichierInfo"
 }
